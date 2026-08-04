@@ -1,0 +1,20 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Hata";
+}
+
+<div class="panel">
+    <h2 class="panel-title" style="color: var(--accent-danger);">Bir hata oluştu</h2>
+    <p style="color: var(--text-muted);">İsteğiniz işlenirken beklenmeyen bir hata meydana geldi.</p>
+
+    @if (Model.ShowRequestId)
+    {
+        <p style="color: var(--text-muted); font-size: .85rem;">
+            <strong>İstek Kimliği:</strong> <code>@Model.RequestId</code>
+        </p>
+    }
+
+    <p style="margin-top: 16px;">
+        <a asp-controller="Dashboard" asp-action="Index" class="btn-primary-hwmon" style="display:inline-block;text-decoration:none;">Panele Dön</a>
+    </p>
+</div>

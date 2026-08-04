@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\HardwareMonitorByYuinn.Entity\HardwareMonitorByYuinn.Entity.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.6" />
+    <PackageReference Include="DiskInfoToolkit" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
+    <!-- Microsoft.Data.Sqlite 10.0.0 hâlâ SQLitePCLRaw.lib.e_sqlite3 2.1.11'i çekiyor; bu sürümde
+         bilinen yüksek önemli bir SQLite güvenlik açığı var (GHSA-2m69-gcr7-jv3q). Düzeltilmiş
+         yerel kütüphaneyi almak için doğrudan daha yeni bir sürüme sabitliyoruz. -->
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.2.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.10" />
+    <PackageReference Include="System.Management" Version="10.0.10" />
+    <!-- Sistem Olayı Zaman Çizelgesi (C21) için Windows Olay Günlüğü'nü (System log) okur; resmi
+         Microsoft paketi, System.Management ile aynı gerekçeyle eklendi (işletim sistemi
+         API'sine erişim, üçüncü parti değil). -->
+    <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="HardwareMonitorByYuinn.Tests" />
+  </ItemGroup>
+
+</Project>

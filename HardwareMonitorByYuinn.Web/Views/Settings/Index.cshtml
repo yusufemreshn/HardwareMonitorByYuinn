@@ -1,0 +1,848 @@
+@{
+    ViewData["Title"] = "Ayarlar";
+}
+
+<div class="settings-shell">
+    <nav class="settings-sidebar" id="settings-sidebar">
+        <button type="button" class="sidebar-toggle" aria-label="Menüyü daralt/genişlet" aria-pressed="false">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="settings-search">
+            <input type="search" id="settings-search-input" placeholder="Ayarlarda ara…" aria-label="Ayarlarda ara">
+        </div>
+        <div class="settings-category" data-category="customize">
+            <button type="button" class="settings-category-toggle">
+                Özelleştirme <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li><button type="button" data-target="preset-themes">Hazır Temalar</button></li>
+                <li><button type="button" data-target="colors-panel">Renkler</button></li>
+                <li class="settings-subnav-group">
+                    <button type="button" class="settings-subnav-group-toggle">
+                        Görünüm <span class="chevron">›</span>
+                    </button>
+                    <ul class="settings-subnav-nested">
+                        <li><button type="button" data-target="appearance-panel">Genel</button></li>
+                        <li><button type="button" data-target="unit-prefs-panel">Birim Tercihi</button></li>
+                        <li><button type="button" data-target="typography-panel">Yazı Tipi</button></li>
+                        <li><button type="button" data-target="glass-effect-panel">Cam Efekti</button></li>
+                        <li><button type="button" data-target="panel-view-panel">Panel Görünümü</button></li>
+                        <li><button type="button" data-target="startup-tab-panel">Açılış Sekmesi</button></li>
+                        <li><button type="button" data-target="chart-types-panel">Grafik Tipi</button></li>
+                    </ul>
+                </li>
+                <li><button type="button" data-target="card-order-panel">Kart Sıralaması ve Detayları</button></li>
+                <li><button type="button" data-target="panel-layout">Panel Düzeni</button></li>
+                <li><button type="button" data-target="snapshot-settings">Anlık Görüntü</button></li>
+                <li><button type="button" data-target="ambient-settings">Ambiyans Modu</button></li>
+                <li><button type="button" data-target="energy-cost-panel">Enerji Maliyeti</button></li>
+            </ul>
+        </div>
+        <div class="settings-category" data-category="thresholds">
+            <button type="button" class="settings-category-toggle">
+                Eşikler ve Bildirimler <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li class="settings-subnav-group">
+                    <button type="button" class="settings-subnav-group-toggle">
+                        Eşik Ayarları <span class="chevron">›</span>
+                    </button>
+                    <ul class="settings-subnav-nested">
+                        <li><button type="button" data-target="thresholds-panel">Sabit Eşikler</button></li>
+                        <li><button type="button" data-target="anomaly-detection-panel">Anomali Tespiti</button></li>
+                        <li><button type="button" data-target="memory-leak-detection-panel">Bellek Sızıntısı Tespiti</button></li>
+                    </ul>
+                </li>
+                <li class="settings-subnav-group">
+                    <button type="button" class="settings-subnav-group-toggle">
+                        Bildirimler <span class="chevron">›</span>
+                    </button>
+                    <ul class="settings-subnav-nested">
+                        <li><button type="button" data-target="notify-settings-panel">Bildirim Kuralları</button></li>
+                        <li><button type="button" data-target="notify-sound-panel">Bildirim Sesi</button></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="settings-category" data-category="games">
+            <button type="button" class="settings-category-toggle">
+                Oyun Profilleri <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li><button type="button" data-target="game-profiles">Oyun Profilleri</button></li>
+            </ul>
+        </div>
+        <div class="settings-category" data-category="network">
+            <button type="button" class="settings-category-toggle">
+                Ağ ve Erişim <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li><button type="button" data-target="remote-access">Yerel Ağa Açma</button></li>
+            </ul>
+        </div>
+        <div class="settings-category" data-category="shortcuts">
+            <button type="button" class="settings-category-toggle">
+                Klavye Kısayolları <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li><button type="button" data-target="keyboard-shortcuts-panel">Kısayolları Düzenle</button></li>
+            </ul>
+        </div>
+        <div class="settings-category" data-category="backup">
+            <button type="button" class="settings-category-toggle">
+                Yedekleme <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li><button type="button" data-target="settings-backup">Ayarları Dışa/İçe Aktar</button></li>
+            </ul>
+        </div>
+        <div class="settings-category" data-category="system">
+            <button type="button" class="settings-category-toggle">
+                Sistem <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li><button type="button" data-target="startup-panel">Otomatik Başlatma</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="settings-content" id="settings-content">
+        <div class="panel" id="thresholds-panel">
+            <h2 class="panel-title">Eşik Ayarları — Sabit Eşikler</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Bir değer "Dikkat" eşiğini aştığında Panel'deki ilgili kart sarıya, "Kritik" eşiğini
+                aştığında kırmızıya döner; kritik eşik aynı zamanda (🔔 ile bildirimlere izin verdiyseniz)
+                bildirim de gönderir. İşlemci ve Ekran Kartı için hangi metriğin izleneceğini de
+                seçebilirsiniz. Ayarlar yalnızca bu tarayıcıda saklanır.
+            </p>
+            <div class="thresholds-form">
+                <label class="threshold-field">İşlemci eşiği
+                    <div class="threshold-metric-row">
+                        <select id="th-cpu-metric">
+                            <option value="temp">Sıcaklık (°C)</option>
+                            <option value="usage">Kullanım (%)</option>
+                        </select>
+                    </div>
+                    <div class="threshold-tier-row">
+                        <label class="threshold-tier-input">Dikkat<input type="number" id="th-cpu-caution" min="0" step="1"></label>
+                        <label class="threshold-tier-input">Kritik<input type="number" id="th-cpu-value" min="0" step="1"></label>
+                    </div>
+                </label>
+                <label class="threshold-field">Ekran kartı eşiği
+                    <div class="threshold-metric-row">
+                        <select id="th-gpu-metric">
+                            <option value="temp">Sıcaklık (°C)</option>
+                            <option value="usage">Kullanım (%)</option>
+                        </select>
+                    </div>
+                    <div class="threshold-tier-row">
+                        <label class="threshold-tier-input">Dikkat<input type="number" id="th-gpu-caution" min="0" step="1"></label>
+                        <label class="threshold-tier-input">Kritik<input type="number" id="th-gpu-value" min="0" step="1"></label>
+                    </div>
+                </label>
+                <label class="threshold-field">Bellek kullanımı (%)
+                    <div class="threshold-metric-row">
+                        <select class="threshold-metric-fixed" disabled title="Bu metrik için tek seçenek var"><option>Kullanım (%)</option></select>
+                    </div>
+                    <div class="threshold-tier-row">
+                        <label class="threshold-tier-input">Dikkat<input type="number" id="th-ram-usage-caution" min="0" max="100" step="1"></label>
+                        <label class="threshold-tier-input">Kritik<input type="number" id="th-ram-usage" min="0" max="100" step="1"></label>
+                    </div>
+                </label>
+                <label class="threshold-field">Disk sıcaklığı (°C)
+                    <div class="threshold-metric-row">
+                        <select class="threshold-metric-fixed" disabled title="Bu metrik için tek seçenek var"><option>Sıcaklık (°C)</option></select>
+                    </div>
+                    <div class="threshold-tier-row">
+                        <label class="threshold-tier-input">Dikkat<input type="number" id="th-disk-temp-caution" min="0" max="150" step="1"></label>
+                        <label class="threshold-tier-input">Kritik<input type="number" id="th-disk-temp" min="0" max="150" step="1"></label>
+                    </div>
+                </label>
+            </div>
+            <div id="thresholds-error" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-top:10px;"></div>
+            <button type="button" id="thresholds-save" class="btn-primary-hwmon" style="margin-top:14px;">Kaydet</button>
+            <span id="thresholds-saved-note" class="stat-sub" style="margin-left:12px;display:none;">Kaydedildi ✓</span>
+        </div>
+
+        <div class="panel" id="anomaly-detection-panel">
+            <h2 class="panel-title">Eşik Ayarları — Anomali Tespiti</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Sabit eşiklere ek olarak, bir metrik son ~2 dakikaya göre ani bir sıçrama
+                yaşadığında (eşiği aşmasa bile) Genel Sağlık Özeti'nde "⚡" ile belirtir.
+            </p>
+            <label class="notify-metric-field">
+                <input type="checkbox" id="anomaly-detection-toggle"> Anomali tespitini etkinleştir
+            </label>
+        </div>
+
+        <div class="panel" id="memory-leak-detection-panel">
+            <h2 class="panel-title">Eşik Ayarları — Bellek Sızıntısı Tespiti</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Kaynak Kullanımı listesindeki bir süreç, listede göründüğü sürece RAM kullanımı sürekli
+                artıyorsa Genel Sağlık Özeti'nde "⚡" ile belirtir. Anomali tespitinden bağımsız, ayrı
+                bir açma/kapama anahtarıdır.
+            </p>
+            <label class="notify-metric-field">
+                <input type="checkbox" id="memory-leak-detection-toggle"> Bellek sızıntısı tespitini etkinleştir
+            </label>
+        </div>
+
+        <div class="panel" id="notify-settings-panel">
+            <h2 class="panel-title">Bildirimler — Bildirim Kuralları</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Bir eşik aşıldığında (🔔 ile izin verdiyseniz) bildirim gönderilir. Eşik aşılı kaldığı
+                sürece ne sıklıkla tekrar bildirim gönderileceğini ve hangi kartlar için bildirim
+                istediğinizi burada seçebilirsiniz. Bu sayfa açık olmasa bile (Detaylar, Geçmiş vb.
+                başka bir sekmedeyken de) bildirimler çalışmaya devam eder.
+            </p>
+            <div class="thresholds-form">
+                <label class="threshold-field">Tekrar sıklığı
+                    <select id="notify-repeat-seconds">
+                        <option value="0">Yalnızca eşik aşıldığında (tekrar etmesin)</option>
+                        <option value="5">Her 5 saniyede bir</option>
+                        <option value="10">Her 10 saniyede bir</option>
+                        <option value="30">Her 30 saniyede bir</option>
+                        <option value="60">Her 1 dakikada bir</option>
+                        <option value="300">Her 5 dakikada bir</option>
+                    </select>
+                </label>
+            </div>
+            <p class="stat-sub" style="margin:18px 0 8px;">Bildirim gönderilecek kartlar</p>
+            <div class="notify-metrics">
+                <label class="notify-metric-field">
+                    <input type="checkbox" id="notify-metric-cpu"> İşlemci
+                </label>
+                <label class="notify-metric-field">
+                    <input type="checkbox" id="notify-metric-gpu"> Ekran Kartı
+                </label>
+                <label class="notify-metric-field">
+                    <input type="checkbox" id="notify-metric-ram"> Bellek
+                </label>
+                <label class="notify-metric-field">
+                    <input type="checkbox" id="notify-metric-storage"> Depolama
+                </label>
+            </div>
+            <button type="button" id="notify-settings-save" class="btn-primary-hwmon" style="margin-top:14px;">Kaydet</button>
+            <span id="notify-settings-saved-note" class="stat-sub" style="margin-left:12px;display:none;">Kaydedildi ✓</span>
+        </div>
+
+        <div class="panel" id="notify-sound-panel">
+            <h2 class="panel-title">Bildirimler — Bildirim Sesi</h2>
+            <div class="thresholds-form">
+                <label class="threshold-field">Ses
+                    <select id="notify-sound-select">
+                        <option value="classic">Klasik</option>
+                        <option value="soft">Yumuşak</option>
+                        <option value="alert">Dikkat Çekici</option>
+                        <option value="none">Sessiz (yalnızca görsel bildirim)</option>
+                    </select>
+                </label>
+                <label class="threshold-field">Ses seviyesi
+                    <input type="range" id="notify-sound-volume" min="0" max="100" step="5" style="width:160px;">
+                </label>
+            </div>
+            <button type="button" id="notify-sound-save" class="btn-primary-hwmon" style="margin-top:14px;">Kaydet</button>
+            <button type="button" id="notify-sound-test" class="legend-item" style="margin-left:8px;">🔊 Test Et</button>
+            <span id="notify-sound-saved-note" class="stat-sub" style="margin-left:12px;display:none;">Kaydedildi ✓</span>
+        </div>
+
+        <div class="panel" id="colors-panel">
+            <h2 class="panel-title">Renkler</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                İşlemci, ekran kartı, bellek, kare hızı, depolama, ağ, kaynak kullanımı ve sistem özetinin
+                Panel'deki kartlarda ve grafikte kullanılan rengini değiştirin. Değişiklik tüm sayfalara ve
+                grafiğe hemen yansır.
+            </p>
+            <div class="panel-layout-columns">
+                <div class="panel-layout-column-main">
+                    <div class="colors-form">
+                        <label class="color-field">İşlemci<input type="color" id="color-cpu" data-color-key="cpu"></label>
+                        <label class="color-field">Ekran Kartı<input type="color" id="color-gpu" data-color-key="gpu"></label>
+                        <label class="color-field">Bellek<input type="color" id="color-ram" data-color-key="ram"></label>
+                        <label class="color-field">Kare Hızı<input type="color" id="color-fps" data-color-key="fps"></label>
+                        <label class="color-field">Depolama<input type="color" id="color-storage" data-color-key="storage"></label>
+                        <label class="color-field">Ağ<input type="color" id="color-network" data-color-key="network"></label>
+                        <label class="color-field">Kaynak Kullanımı<input type="color" id="color-process" data-color-key="process"></label>
+                        <label class="color-field">Sistem Özeti<input type="color" id="color-system" data-color-key="system"></label>
+                    </div>
+                    <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
+                        <button type="button" id="colors-save" class="btn-primary-hwmon">Kaydet</button>
+                        <button type="button" id="colors-reset" class="legend-item">Varsayılanlara Dön</button>
+                        <span id="colors-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+                    </div>
+                </div>
+                <div class="panel-layout-column-preview">
+                    <span class="panel-layout-preview-label">Önizleme</span>
+                    <div class="panel-layout-preview" id="colors-preview"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel" id="preset-themes">
+            <div class="preset-theme-header">
+                <div class="preset-theme-heading">
+                    <h2 class="panel-title">Hazır Temalar</h2>
+                    <p style="color:var(--text-muted);font-size:.9rem;margin:0;">
+                        Tek tıkla hem aksan renklerini hem arka planı bir temaya göre değiştirin. Renkler ve
+                        Görünüm bölümlerindeki değerler de otomatik güncellenir, isterseniz üzerine ince ayar
+                        yapabilirsiniz.
+                    </p>
+                </div>
+                <input type="search" id="preset-theme-search" class="preset-theme-search" placeholder="Tema ara…" aria-label="Tema ara">
+            </div>
+            <div class="preset-theme-grid" id="preset-theme-grid"></div>
+            <p id="preset-theme-empty" class="stat-sub" style="display:none;">Aramanızla eşleşen tema yok.</p>
+            <span id="preset-theme-saved-note" class="stat-sub" style="display:none;margin-top:10px;">Uygulandı ✓</span>
+        </div>
+
+        <div class="panel" id="card-order-panel">
+            <h2 class="panel-title">Kart Sıralaması ve Detayları</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                İşlemci ve Ekran Kartı kartlarında değerlerin gösterim sırasını, tüm kartlarda ise hangi
+                ikincil detayların görüneceğini buradan yönetin. Değişiklik Panel'e hemen yansır.
+            </p>
+
+            <label class="threshold-field" style="margin-bottom:18px;">
+                Yoğunluk (hazır şablon)
+                <div class="chart-range-toggle" id="density-preset-toggle" role="group" aria-label="Kart yoğunluğu">
+                    <button type="button" data-density="compact">Kompakt</button>
+                    <button type="button" data-density="normal">Normal</button>
+                    <button type="button" data-density="detailed">Detaylı</button>
+                </div>
+            </label>
+            <p style="color:var(--text-muted);font-size:.85rem;margin:0 0 18px;">
+                Bir düzeye tıklamak aşağıdaki detay kutucuklarını o düzeye göre toplu ayarlar; "Kompakt"
+                yalnızca ana değerleri bırakır, "Normal"/"Detaylı" hepsini gösterir (aralarındaki fark
+                dolgu/font boyutudur). Kutucukları seçtikten sonra dilediğinizi yine elle
+                açıp kapatabilirsiniz.
+            </p>
+
+            <div class="order-form">
+                <div class="order-group">
+                    <h4>İşlemci</h4>
+                    <ol class="order-list" id="order-cpu"></ol>
+                </div>
+                <div class="order-group">
+                    <h4>Ekran Kartı</h4>
+                    <ol class="order-list" id="order-gpu"></ol>
+                </div>
+            </div>
+            <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
+                <button type="button" id="order-save" class="btn-primary-hwmon">Kaydet</button>
+                <button type="button" id="order-reset" class="legend-item">Varsayılanlara Dön</button>
+                <span id="order-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+            </div>
+
+            <h4 class="panel-title" style="font-size:.9rem;color:var(--text-muted);margin-top:26px;">Diğer Kartların Detayları</h4>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Video Belleği, Bellek, Kare Hızı, Depolama, Ağ ve Sistem Özeti kartlarında hangi ikincil
+                bilgilerin gösterileceğini seçin.
+            </p>
+            <div class="order-form" id="detail-visibility-form"></div>
+        </div>
+
+        <div class="panel" id="panel-layout">
+            <h2 class="panel-title">Panel Düzeni</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Panel'deki kartları sürükleyip bırakarak yeniden sıralayın, istemediğinizi kutucuğundan
+                kapatın. Değişiklik Panel'e hemen yansır.
+            </p>
+            <div class="panel-layout-columns">
+                <div class="panel-layout-column-main">
+                    <ol class="order-list panel-layout-list" id="panel-layout-list" style="min-width:280px;"></ol>
+                    <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
+                        <button type="button" id="panel-layout-save" class="btn-primary-hwmon">Kaydet</button>
+                        <button type="button" id="panel-layout-reset" class="legend-item">Varsayılanlara Dön</button>
+                        <span id="panel-layout-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+                    </div>
+                </div>
+                <div class="panel-layout-column-preview">
+                    <span class="panel-layout-preview-label">Önizleme</span>
+                    <div class="panel-layout-preview" id="panel-layout-preview"></div>
+                </div>
+            </div>
+
+            <h4 class="panel-title" style="font-size:.9rem;color:var(--text-muted);margin-top:22px;">Düzen Profilleri</h4>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Yukarıdaki sıralamayı isimli bir profil olarak kaydedip sonra tek tıkla o profile
+                geri dönebilirsiniz (ör. "İzleme Düzeni" / "Oyun Düzeni").
+            </p>
+            <ol class="order-list" id="panel-layout-profiles-list" style="margin-bottom:14px;"></ol>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <input type="text" id="panel-layout-profile-name" class="hwmon-field" placeholder="Profil adı, ör. Oyun Düzeni" style="width:240px;">
+                <button type="button" id="panel-layout-profile-save" class="btn-primary-hwmon">Mevcut Düzeni Kaydet</button>
+            </div>
+        </div>
+
+        <div class="panel" id="snapshot-settings">
+            <h2 class="panel-title">Anlık Görüntü</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                📸 Anlık Görüntü ile oluşturulan PNG'de hangi kartların (İşlemci, Ekran Kartı, Bellek, Kare
+                Hızı, Depolama) ve her kartın içinde hangi değerlerin (sıcaklık, kullanım, güç, frekans vb.)
+                hangi sırayla gireceğini seçin. Kutucuğu işaretli olmayanlar görüntüde yer almaz; her kartın
+                listesindeki ilk etkin değer büyük, kalanlar altında küçük gösterilir.
+            </p>
+
+            <div class="order-group" style="margin-bottom:20px;">
+                <h4>Gösterilecek Kartlar ve Sırası</h4>
+                <ol class="order-list" id="snapshot-blocks" style="min-width:280px;"></ol>
+            </div>
+
+            <div class="order-form" id="snapshot-metric-groups"></div>
+
+            <div class="order-group" style="margin-top:20px;">
+                <h4>Çözünürlük</h4>
+                <select id="snapshot-resolution" class="hwmon-field">
+                    <option value="1080p">1080p (Varsayılan)</option>
+                    <option value="2k">2K (1440p)</option>
+                    <option value="4k">4K (2160p)</option>
+                </select>
+            </div>
+
+            <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
+                <button type="button" id="snapshot-settings-save" class="btn-primary-hwmon">Kaydet</button>
+                <button type="button" id="snapshot-settings-reset" class="legend-item">Varsayılanlara Dön</button>
+                <span id="snapshot-settings-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+            </div>
+        </div>
+
+        <div class="panel" id="ambient-settings">
+            <h2 class="panel-title">Ambiyans Modu</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                ⛶ Ambiyans Modu'nda (Panel sayfasındaki tam ekran saat görünümü) hangi kartların
+                gösterileceğini seçin.
+            </p>
+            <div class="colors-form" id="ambient-metric-checkboxes"></div>
+        </div>
+
+        <div class="panel" id="appearance-panel">
+            <h2 class="panel-title">Görünüm — Genel</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Aydınlık ve karanlık mod için arka plan rengini ayrı ayrı özelleştirin. Değişiklik tüm
+                sayfalara hemen yansır ve bu tarayıcıda saklanır.
+            </p>
+            <div class="colors-form">
+                <label class="color-field">Gündüz modu arka planı<input type="color" id="bg-light"></label>
+                <label class="color-field">Gece modu arka planı<input type="color" id="bg-dark"></label>
+            </div>
+            <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
+                <button type="button" id="bg-save" class="btn-primary-hwmon">Kaydet</button>
+                <button type="button" id="bg-reset" class="legend-item">Varsayılanlara Dön</button>
+                <span id="bg-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+            </div>
+        </div>
+
+        <div class="panel" id="unit-prefs-panel">
+            <h2 class="panel-title">Görünüm — Birim Tercihi</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Panel, Detaylar, Geçmiş ve Karşılaştırma sayfalarındaki tüm sıcaklık/hız/boyut
+                değerlerini etkiler.
+            </p>
+            <div class="thresholds-form">
+                <label class="threshold-field">Sıcaklık
+                    <select id="unit-temp">
+                        <option value="C">Santigrat (°C)</option>
+                        <option value="F">Fahrenhayt (°F)</option>
+                    </select>
+                </label>
+                <label class="threshold-field">Veri hızı
+                    <select id="unit-speed">
+                        <option value="MBps">MB/s</option>
+                        <option value="Mbps">Mbps</option>
+                    </select>
+                </label>
+                <label class="threshold-field">Boyut
+                    <select id="unit-size">
+                        <option value="GB">GB</option>
+                        <option value="GiB">GiB</option>
+                    </select>
+                </label>
+            </div>
+            <button type="button" id="unit-prefs-save" class="btn-primary-hwmon" style="margin-top:14px;">Kaydet</button>
+            <span id="unit-prefs-saved-note" class="stat-sub" style="margin-left:12px;display:none;">Kaydedildi ✓</span>
+        </div>
+
+        <div class="panel" id="typography-panel">
+            <h2 class="panel-title">Görünüm — Yazı Tipi</h2>
+            <div class="thresholds-form">
+                <label class="threshold-field">Boyut
+                    <select id="typography-font-size">
+                        <option value="sm">Küçük</option>
+                        <option value="md">Normal</option>
+                        <option value="lg">Büyük</option>
+                    </select>
+                </label>
+                <label class="threshold-field">Yazı tipi ailesi
+                    <select id="typography-font-family">
+                        <option value="system">Sistem varsayılanı</option>
+                        <option value="serif">Serif</option>
+                        <option value="mono">Sabit genişlikli (monospace)</option>
+                    </select>
+                </label>
+            </div>
+            <button type="button" id="typography-save" class="btn-primary-hwmon" style="margin-top:14px;">Kaydet</button>
+            <span id="typography-saved-note" class="stat-sub" style="margin-left:12px;display:none;">Kaydedildi ✓</span>
+        </div>
+
+        <div class="panel" id="glass-effect-panel">
+            <h2 class="panel-title">Görünüm — Cam Efekti</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Kartları ve panelleri yarı saydam yapıp arkalarını bulanıklaştırır (glassmorphism).
+            </p>
+            <div class="panel-layout-columns">
+                <div class="panel-layout-column-main">
+                    <label class="notify-metric-field">
+                        <input type="checkbox" id="glass-effect-toggle"> Cam efektini etkinleştir
+                    </label>
+                </div>
+                <div class="panel-layout-column-preview">
+                    <span class="panel-layout-preview-label">Önizleme</span>
+                    <div class="glass-demo-backdrop">
+                        <div class="stat-card glass-demo-card" style="--accent: var(--accent-cpu)">
+                            <div class="stat-card-header"><span class="stat-dot"></span> İşlemci</div>
+                            <div class="stat-value">42%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel" id="panel-view-panel">
+            <h2 class="panel-title">Görünüm — Panel Görünümü</h2>
+            <div class="panel-layout-columns">
+                <div class="panel-layout-column-main">
+                    <div class="thresholds-form">
+                        <label class="threshold-field">Düzen
+                            <select id="panel-view-select">
+                                <option value="grid">Grid (çok sütunlu)</option>
+                                <option value="list">Liste (tek sütun)</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="panel-layout-column-preview">
+                    <span class="panel-layout-preview-label">Önizleme</span>
+                    <div class="panel-layout-preview" id="panel-view-preview"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel" id="startup-tab-panel">
+            <h2 class="panel-title">Görünüm — Açılış Sekmesi</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Uygulamanın kök adresine (<code>127.0.0.1:5250</code>) gidildiğinde hangi sekmenin
+                gösterileceğini seçin.
+            </p>
+            <div class="thresholds-form">
+                <label class="threshold-field">Sekme
+                    <select id="startup-tab-select">
+                        <option value="panel">Panel</option>
+                        <option value="details">Detaylar</option>
+                        <option value="comparison">Karşılaştırma</option>
+                        <option value="history">Geçmiş</option>
+                        <option value="settings">Ayarlar</option>
+                        <option value="notifications">Bildirimler</option>
+                        <option value="about">Hakkında</option>
+                    </select>
+                </label>
+            </div>
+            <button type="button" id="startup-tab-save" class="btn-primary-hwmon" style="margin-top:14px;">Kaydet</button>
+            <span id="startup-tab-saved-note" class="stat-sub" style="margin-left:12px;display:none;">Kaydedildi ✓</span>
+        </div>
+
+        <div class="panel" id="chart-types-panel">
+            <h2 class="panel-title">Görünüm — Grafik Tipi</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Panel'in altındaki grafikte her serinin nasıl çizileceğini seçin. Not: birden fazla
+                seri "Bar" seçilirse üst üste biner, en iyi tek seferde bir seri için kullanılır.
+            </p>
+            <div class="panel-layout-columns">
+                <div class="panel-layout-column-main">
+                    <div class="thresholds-form">
+                        <label class="threshold-field">İşlemci
+                            <select class="chart-type-select" data-series-key="cpu">
+                                <option value="line">Çizgi</option>
+                                <option value="area">Alan</option>
+                                <option value="bar">Bar</option>
+                            </select>
+                        </label>
+                        <label class="threshold-field">Ekran Kartı
+                            <select class="chart-type-select" data-series-key="gpu">
+                                <option value="line">Çizgi</option>
+                                <option value="area">Alan</option>
+                                <option value="bar">Bar</option>
+                            </select>
+                        </label>
+                        <label class="threshold-field">Bellek
+                            <select class="chart-type-select" data-series-key="ram">
+                                <option value="line">Çizgi</option>
+                                <option value="area">Alan</option>
+                                <option value="bar">Bar</option>
+                            </select>
+                        </label>
+                        <label class="threshold-field">Kare Hızı
+                            <select class="chart-type-select" data-series-key="fps">
+                                <option value="line">Çizgi</option>
+                                <option value="area">Alan</option>
+                                <option value="bar">Bar</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="panel-layout-column-preview">
+                    <span class="panel-layout-preview-label">Önizleme</span>
+                    <div class="panel-layout-preview" id="chart-types-preview"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel" id="game-profiles">
+            <h2 class="panel-title">Oyun Profilleri</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Bir işlem (oyun) ön plana geldiğinde renkleri/eşikleri otomatik olarak burada
+                tanımladığınız profile geçirir; oyun kapanınca kendi genel ayarlarınıza döner. İşlem adı,
+                Kare Hızı kartında/Detaylar sayfasında gördüğünüz kaynak adıyla aynı olmalı (ör.
+                <code>VALORANT-Win64-Shipping</code>), büyük/küçük harf önemli değildir. Oyunun kısa adını
+                yazarsanız (ör. "valorant"), bu bilgisayarda daha önce tam ekran çalışırken görülmüş gerçek
+                işlem adıyla otomatik eşleştirmeyi deneriz.
+            </p>
+            <p style="color:var(--accent-caution);font-size:.85rem;margin:0 0 14px;">
+                ⚠ Otomatik eşleştirme yalnızca <strong>HardwareMonitorByYuinn açıkken en az bir kez tam ekran
+                oynadığınız</strong> oyunlar için çalışır. Bir oyunu daha hiç bu şekilde çalıştırmadıysanız
+                kısa adı yazmanız bir şey eşleştirmez — o oyunun tam işlem adını (Kare Hızı kartında/
+                Detaylar sayfasında görünür) kendiniz yazmanız gerekir.
+            </p>
+
+            <ol class="order-list" id="game-profiles-list" style="margin-bottom:20px;"></ol>
+
+            <h4 class="panel-title" style="font-size:.9rem;color:var(--text-muted);">Yeni Profil / Düzenle</h4>
+            <div class="thresholds-form">
+                <label class="threshold-field">İşlem Adı (birden fazlaysa virgülle ayırın)
+                    <input type="text" id="gp-process-name" maxlength="150" placeholder="ör. valorant" style="width:260px;">
+                    <span id="gp-process-name-hint" class="stat-sub" style="display:block;margin-top:4px;"></span>
+                </label>
+                <label class="threshold-field" style="justify-content:center;">
+                    <span class="hwmon-toggle-field">
+                        Otomatik Ambiyans Moduna geç<input type="checkbox" id="gp-auto-ambient">
+                    </span>
+                </label>
+                <label class="threshold-field">Panel düzeni
+                    <select id="gp-panel-layout-profile">
+                        <option value="">Yok (genel düzen kullanılır)</option>
+                    </select>
+                </label>
+                <label class="threshold-field" style="justify-content:center;">
+                    <span class="hwmon-toggle-field">
+                        Oyun kapanınca otomatik anlık görüntü al<input type="checkbox" id="gp-auto-snapshot">
+                    </span>
+                </label>
+            </div>
+
+            <div class="colors-form" style="margin-top:14px;">
+                <label class="color-field">İşlemci<input type="color" id="gp-color-cpu"></label>
+                <label class="color-field">Ekran Kartı<input type="color" id="gp-color-gpu"></label>
+                <label class="color-field">Bellek<input type="color" id="gp-color-ram"></label>
+                <label class="color-field">Kare Hızı<input type="color" id="gp-color-fps"></label>
+                <label class="color-field">Depolama<input type="color" id="gp-color-storage"></label>
+                <label class="color-field">Ağ<input type="color" id="gp-color-network"></label>
+                <label class="color-field">Kaynak Kullanımı<input type="color" id="gp-color-process"></label>
+                <label class="color-field">Sistem Özeti<input type="color" id="gp-color-system"></label>
+            </div>
+
+            <h4 class="panel-title" style="font-size:.9rem;color:var(--text-muted);margin-top:16px;">Bu Profildeki Eşikler</h4>
+            <p style="color:var(--text-muted);font-size:.85rem;margin:0 0 10px;">
+                Dikkat'i boş bırakırsanız genel Eşik Ayarları'ndaki değeriniz kullanılır.
+            </p>
+            <div class="thresholds-form">
+                <label class="threshold-field">İşlemci eşiği
+                    <div class="threshold-metric-row">
+                        <select id="gp-th-cpu-metric">
+                            <option value="temp">Sıcaklık (°C)</option>
+                            <option value="usage">Kullanım (%)</option>
+                        </select>
+                    </div>
+                    <div class="threshold-tier-row">
+                        <label class="threshold-tier-input">Dikkat<input type="number" id="gp-th-cpu-caution" min="0" step="1"></label>
+                        <label class="threshold-tier-input">Kritik<input type="number" id="gp-th-cpu-value" min="0" step="1"></label>
+                    </div>
+                </label>
+                <label class="threshold-field">Ekran kartı eşiği
+                    <div class="threshold-metric-row">
+                        <select id="gp-th-gpu-metric">
+                            <option value="temp">Sıcaklık (°C)</option>
+                            <option value="usage">Kullanım (%)</option>
+                        </select>
+                    </div>
+                    <div class="threshold-tier-row">
+                        <label class="threshold-tier-input">Dikkat<input type="number" id="gp-th-gpu-caution" min="0" step="1"></label>
+                        <label class="threshold-tier-input">Kritik<input type="number" id="gp-th-gpu-value" min="0" step="1"></label>
+                    </div>
+                </label>
+                <label class="threshold-field">Bellek kullanımı (%)
+                    <div class="threshold-tier-row">
+                        <label class="threshold-tier-input">Dikkat<input type="number" id="gp-th-ram-usage-caution" min="0" max="100" step="1"></label>
+                        <label class="threshold-tier-input">Kritik<input type="number" id="gp-th-ram-usage" min="0" max="100" step="1"></label>
+                    </div>
+                </label>
+                <label class="threshold-field">Disk sıcaklığı (°C)
+                    <div class="threshold-tier-row">
+                        <label class="threshold-tier-input">Dikkat<input type="number" id="gp-th-disk-temp-caution" min="0" max="150" step="1"></label>
+                        <label class="threshold-tier-input">Kritik<input type="number" id="gp-th-disk-temp" min="0" max="150" step="1"></label>
+                    </div>
+                </label>
+            </div>
+            <div id="gp-th-error" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-top:8px;"></div>
+
+            <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
+                <button type="button" id="gp-save" class="btn-primary-hwmon">Profili Kaydet</button>
+                <button type="button" id="gp-new" class="legend-item">Yeni Profil</button>
+                <span id="gp-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+                <span id="gp-automatch-note" class="stat-sub" style="display:none;"></span>
+            </div>
+        </div>
+
+        <div class="panel" id="energy-cost-panel">
+            <h2 class="panel-title">Enerji Tüketimi Maliyeti</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Yalnızca İşlemci ve Ekran Kartı'nın anlık paket güçlerinden hesaplanan bir TAHMİNDİR;
+                anakart, depolama, ekran ve diğer bileşenlerin tüketimini içermez, bu yüzden gerçek
+                toplam sistem tüketiminden düşük çıkar.
+            </p>
+            <div class="thresholds-form">
+                <label class="threshold-field" style="justify-content:center;">
+                    <span class="hwmon-toggle-field">
+                        Enerji maliyeti tahminini göster<input type="checkbox" id="energy-cost-enabled">
+                    </span>
+                </label>
+                <label class="threshold-field">Birim Fiyat (₺/kWh)
+                    <input type="number" id="energy-cost-rate" min="0" step="0.01" placeholder="ör. 2.75" style="width:160px;">
+                </label>
+            </div>
+            <div id="energy-cost-preview" style="color:var(--text-muted);font-size:.85rem;margin-top:12px;"></div>
+            <div style="display:flex;align-items:center;gap:12px;margin-top:12px;">
+                <button type="button" id="energy-cost-save" class="btn-primary-hwmon">Kaydet</button>
+                <span id="energy-cost-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+            </div>
+        </div>
+
+        <div class="panel" id="remote-access">
+            <h2 class="panel-title">Yerel Ağa Açma</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Varsayılan olarak bu uygulamaya yalnızca bu bilgisayardan (<code>127.0.0.1</code>) erişilebilir.
+                Bunu açarsanız aynı yerel ağdaki (ev/ofis Wi-Fi'niz gibi) diğer cihazlardan (telefon, tablet)
+                da erişilebilir; bu yüzden bir PIN zorunludur. <strong>Değişiklik ancak uygulamayı yeniden
+                başlattığınızda etkili olur.</strong>
+            </p>
+            <p style="color:var(--accent-danger);font-size:.85rem;margin:0 0 14px;">
+                ⚠ Bu bağlantı varsayılan olarak şifrelenmez (HTTPS değil, düz HTTP) — PIN ve oturum aynı
+                ağdaki başka biri tarafından teorik olarak dinlenebilir. Yalnızca güvendiğiniz bir ev/ofis
+                ağında açın, halka açık/paylaşımlı Wi-Fi'lerde açmayın. Aşağıdaki "HTTPS kullan" ile bunu
+                şifreleyebilir, ya da hiç uyarı almadan tamamen şifreli bağlanmak için
+                <a href="https://tailscale.com" target="_blank" rel="noopener">Tailscale</a> ya da
+                ZeroTier gibi ücretsiz bir VPN kurup uygulamayı yalnızca o VPN üzerinden kullanabilirsiniz.
+            </p>
+            <form id="remote-access-form">
+                @Html.AntiForgeryToken()
+                <div class="thresholds-form">
+                    <div style="display:flex;flex-direction:column;gap:10px;">
+                        <label class="threshold-field" style="justify-content:center;width:auto;">
+                            <span class="hwmon-toggle-field">
+                                <span style="display:inline-block;width:200px;">Yerel ağdan erişime izin ver</span><input type="checkbox" id="ra-enabled">
+                            </span>
+                        </label>
+                        <label class="threshold-field" style="justify-content:center;width:auto;">
+                            <span class="hwmon-toggle-field">
+                                <span style="display:inline-block;width:200px;">HTTPS kullan (gelişmiş)</span><input type="checkbox" id="ra-https-enabled">
+                            </span>
+                        </label>
+                    </div>
+                    <label class="threshold-field">PIN <span id="ra-pin-hint" style="font-weight:400;color:var(--text-muted);"></span>
+                        <input type="password" id="ra-pin" inputmode="numeric" autocomplete="off" maxlength="32" placeholder="ör. 4821" style="width:160px;">
+                    </label>
+                </div>
+            </form>
+            <p id="ra-https-hint" style="color:var(--text-muted);font-size:.82rem;margin:10px 0 0;display:none;">
+                Kendinden imzalı bir sertifika kullanılır (gerçek bir sertifika otoritesi özel ağ
+                adresleri için sertifika vermez). Bağlanan her cihazda tarayıcı <strong>ilk seferde</strong>
+                "bağlantı güvenli değil" uyarısı gösterir — "Gelişmiş → yine de devam et"e bir kez
+                basmanız yeterli, sonrasında genelde tekrar sormaz. Ev/ofis ağınız (yönlendiriciniz) IP
+                adresinizi değiştirirse sertifikayı
+                <button type="button" id="ra-regen-cert" class="legend-item" style="padding:0;border:none;background:none;color:inherit;text-decoration:underline;cursor:pointer;font-size:inherit;">yeniden oluşturabilirsiniz</button>
+                (bir sonraki yeniden başlatmada).
+            </p>
+            <div id="ra-lan-info" style="color:var(--text-muted);font-size:.85rem;margin:12px 0;"></div>
+            <div id="ra-restart-warning" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-bottom:10px;"></div>
+            <div id="ra-error" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-bottom:10px;"></div>
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                <button type="button" id="ra-save" class="btn-primary-hwmon">Kaydet</button>
+                <span id="ra-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+                <button type="button" id="ra-restart" class="legend-item" style="display:none;">Şimdi Yeniden Başlat</button>
+                <span id="ra-restart-note" class="stat-sub" style="display:none;"></span>
+            </div>
+        </div>
+
+        <div class="panel" id="keyboard-shortcuts-panel">
+            <h2 class="panel-title">Klavye Kısayolları</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Bir kısayolu değiştirmek için "Değiştir"e basıp yeni tuş kombinasyonuna basın; Esc ile
+                vazgeçebilirsiniz. Aynı kombinasyon iki eyleme birden atanamaz. Bir metin kutusu/açılır
+                menü gibi bir alana yazı yazarken kısayollar çalışmaz (yanlışlıkla sayfa değişmesin diye).
+            </p>
+            <ol class="order-list" id="shortcuts-list" style="max-width:440px;"></ol>
+            <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
+                <button type="button" id="shortcuts-reset" class="legend-item">Varsayılanlara Dön</button>
+                <span id="shortcuts-conflict-note" class="stat-sub" style="display:none;color:var(--accent-danger);"></span>
+            </div>
+        </div>
+
+        <div class="panel" id="settings-backup">
+            <h2 class="panel-title">Ayarları Dışa/İçe Aktar</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Bu sayfadaki ve Panel'deki tüm tercihleri (eşikler, temalar, panel düzeni, oyun
+                profilleri, bildirim ayarları vb.) tek bir JSON dosyasına kaydedip başka bir tarayıcıya
+                veya bu bilgisayarın yeniden kurulumundan sonra geri yükleyebilirsiniz. Bildirim geçmişi
+                dahil değildir. <strong>Ağ ve Erişim → Yerel Ağa Açma PIN ayarı da dahil değildir</strong>
+                — o, tarayıcıda değil sunucudaki ayrı bir dosyada tutulur, bu yüzden yeniden kurmanız
+                gerekirse onu ayrıca yapılandırmanız gerekir.
+            </p>
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                <button type="button" id="settings-export" class="btn-primary-hwmon">Dışa Aktar (.json indir)</button>
+                <button type="button" id="settings-import-trigger" class="btn-primary-hwmon">İçe Aktar (.json seç)</button>
+                <input type="file" id="settings-import-file" accept="application/json" style="display:none;">
+            </div>
+            <div id="settings-backup-status" style="color:var(--text-muted);font-size:.85rem;margin-top:12px;"></div>
+        </div>
+
+        <div class="panel" id="startup-panel">
+            <h2 class="panel-title">Windows Açılışında Otomatik Başlatma</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Açıksa, Windows'a her giriş yaptığınızda HardwareMonitorByYuinn otomatik başlar. Uygulama
+                yönetici yetkisi gerektirdiğinden (<code>app.manifest</code>), her açılışta yine de
+                bir UAC onayı isteyecektir — bu, Windows'un kendi güvenlik davranışıdır ve atlanamaz.
+            </p>
+            <form id="startup-form">
+                @Html.AntiForgeryToken()
+                <div class="thresholds-form">
+                    <label class="threshold-field" style="justify-content:center;">
+                        <span class="hwmon-toggle-field">
+                            Windows açılışında otomatik başlat<input type="checkbox" id="startup-enabled">
+                        </span>
+                    </label>
+                </div>
+            </form>
+            <div id="startup-path-info" style="color:var(--text-muted);font-size:.85rem;margin:12px 0;"></div>
+            <div id="startup-mismatch-warning" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-bottom:10px;">
+                Kayıtlı başlangıç yolu artık geçerli değil (uygulama taşınmış olabilir) — düzeltmek için tekrar kaydedin.
+            </div>
+            <div id="startup-error" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-bottom:10px;"></div>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button type="button" id="startup-save" class="btn-primary-hwmon">Kaydet</button>
+                <span id="startup-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/settings.js" asp-append-version="true"></script>
+}

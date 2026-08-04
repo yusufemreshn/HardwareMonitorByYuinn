@@ -1,0 +1,91 @@
+@{
+    Layout = null;
+    string returnUrl = ViewBag.ReturnUrl ?? "/";
+    string? error = ViewBag.Error;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+        (function () {
+            var saved = localStorage.getItem("hwmon-theme");
+            document.documentElement.setAttribute("data-theme", saved === "light" ? "light" : "dark");
+        })();
+    </script>
+    <title>Giriş - HardwareMonitorByYuinn</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        .login-shell {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: var(--bg);
+        }
+        .login-card {
+            width: 100%;
+            max-width: 360px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 28px;
+        }
+        .login-brand {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .login-sub {
+            color: var(--text-muted);
+            font-size: .88rem;
+            margin-bottom: 20px;
+        }
+        .login-card input[type="password"] {
+            width: 100%;
+            font-size: 1.4rem;
+            letter-spacing: 0.3em;
+            text-align: center;
+            padding: 12px;
+            border-radius: var(--control-radius);
+            border: 1px solid var(--border);
+            background: var(--bg-elevated);
+            color: var(--text);
+            margin-bottom: 14px;
+        }
+        .login-card input[type="password"]:focus-visible {
+            outline: 2px solid var(--accent-gpu);
+        }
+        .login-error {
+            color: var(--accent-danger);
+            font-size: .85rem;
+            margin: -6px 0 14px;
+        }
+        .login-card button {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-shell">
+        <div class="login-card">
+            <div class="login-brand">● HardwareMonitorByYuinn</div>
+            <div class="login-sub">Bu bilgisayar yerel ağa açık. Devam etmek için PIN girin.</div>
+            <form method="post" asp-controller="RemoteAccess" asp-action="Login">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                <input type="password" name="pin" inputmode="numeric" autocomplete="off" autofocus placeholder="••••" />
+                @if (!string.IsNullOrEmpty(error))
+                {
+                    <div class="login-error">@error</div>
+                }
+                <button type="submit" class="btn-primary-hwmon">Giriş Yap</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

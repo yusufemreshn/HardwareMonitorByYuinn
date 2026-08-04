@@ -1,0 +1,468 @@
+@model HardwareMonitorByYuinn.Web.Models.HistoryViewModel
+@{
+    ViewData["Title"] = "Geçmiş";
+}
+
+<div class="settings-shell">
+    <nav class="settings-sidebar" id="history-sidebar">
+        <button type="button" class="sidebar-toggle" aria-label="Menüyü daralt/genişlet" aria-pressed="false">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="settings-category" data-category="report">
+            <button type="button" class="settings-category-toggle">
+                Sistem Raporu <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li><button type="button" data-target="history-report-panel">Sistem Raporu</button></li>
+            </ul>
+        </div>
+        <div class="settings-category" data-category="rows">
+            <button type="button" class="settings-category-toggle">
+                Kayıtlar <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li><button type="button" data-target="history-summary-panel">Kayıt Bilgileri</button></li>
+                <li><button type="button" data-target="history-rows-panel">Kayıtları Görüntüle</button></li>
+            </ul>
+        </div>
+        <div class="settings-category" data-category="trends">
+            <button type="button" class="settings-category-toggle">
+                Analiz ve Trendler <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li><button type="button" data-target="history-health-trend-panel">Sistem Sağlığı Trendi</button></li>
+                <li><button type="button" data-target="history-heatmap-panel">Isı Haritası</button></li>
+            </ul>
+        </div>
+        <div class="settings-category" data-category="processes">
+            <button type="button" class="settings-category-toggle">
+                Süreç ve Sistem Olayları <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li><button type="button" data-target="process-history-summary-panel">Kayıt Bilgileri</button></li>
+                <li><button type="button" data-target="history-process-panel">Process Geçmişi</button></li>
+                <li><button type="button" data-target="history-events-panel">Sistem Olayı Zaman Çizelgesi</button></li>
+            </ul>
+        </div>
+        <div class="settings-category" data-category="games">
+            <button type="button" class="settings-category-toggle">
+                Oyun Geçmişi <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li><button type="button" data-target="game-history-summary-panel">Kayıt Bilgileri</button></li>
+                <li><button type="button" data-target="game-history">Oyun Geçmişi</button></li>
+            </ul>
+        </div>
+        <div class="settings-category" data-category="security">
+            <button type="button" class="settings-category-toggle">
+                Güvenlik <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li><button type="button" data-target="history-login-summary-panel">Giriş Denemesi Özeti</button></li>
+                <li><button type="button" data-target="history-login-attempts-panel">Giriş Denemeleri</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="settings-content" id="history-content">
+        <div class="panel" id="history-report-panel">
+            <h2 class="panel-title">Sistem Raporu</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Genel özet, sağlık puanı trendi ve sistem olaylarını tek sayfada toplayan, yazdırılabilir/
+                PDF'e çevrilebilir bir HTML rapor oluşturur (tarayıcının "Yazdır → PDF olarak kaydet"i ile).
+            </p>
+            <div style="margin-top:14px;">
+                <a href="/History/Report?days=7" target="_blank" rel="noopener" class="btn-primary-hwmon">📄 HTML Rapor Oluştur</a>
+            </div>
+        </div>
+
+        <div class="panel" id="history-summary-panel">
+            <h2 class="panel-title">Kayıt Bilgileri</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Uygulama çalışırken her dakika, o dakikanın ortalama değerleri diske kaydedilir; bu sayede
+                uygulamayı kapatıp açsanız (hatta günler sonra) bile geçmiş kaybolmaz. Kayıtlar en fazla
+                30 gün saklanır, daha eskisi otomatik silinir.
+            </p>
+
+            @if (Model.Status.SampleCount == 0)
+            {
+                <p class="stat-sub">Henüz hiç kayıt yok — ilk satır, uygulama açıldıktan yaklaşık bir dakika sonra oluşur.</p>
+            }
+            else
+            {
+                <div class="order-item">
+                    <span>Kayıt sayısı</span>
+                    <span class="stat-sub" style="margin:0;">@Model.Status.SampleCount dakikalık örnek</span>
+                </div>
+                <div class="order-item">
+                    <span>Aralık</span>
+                    <span class="stat-sub" style="margin:0;">
+                        @Model.Status.OldestSampleUtc?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") —
+                        @Model.Status.NewestSampleUtc?.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                    </span>
+                </div>
+                <div class="order-item">
+                    <span>Veritabanı boyutu</span>
+                    <span class="stat-sub" style="margin:0;">@((Model.Status.DatabaseSizeBytes / 1024d / 1024d).ToString("F2")) MB</span>
+                </div>
+                <div class="order-item" style="margin-top:14px;">
+                    <span>Eski kayıtları temizle</span>
+                    <span style="display:flex;gap:8px;align-items:center;">
+                        <select id="history-cleanup-days" class="cleanup-days-select">
+                            <option value="1">En eski 1 gün</option>
+                            <option value="2">En eski 2 gün</option>
+                            <option value="5">En eski 5 gün</option>
+                            <option value="10">En eski 10 gün</option>
+                            <option value="15">En eski 15 gün</option>
+                            <option value="30">En eski 30 gün</option>
+                        </select>
+                        <button type="button" id="history-cleanup-btn" class="btn-primary-hwmon" style="width:auto;padding:0 12px;">Sil</button>
+                    </span>
+                </div>
+                @Html.AntiForgeryToken()
+            }
+        </div>
+
+        <div class="panel" id="history-rows-panel">
+            <h2 class="panel-title">Kayıtları Görüntüle</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Bir tarih aralığı seçip Göster'e basın; o aralıktaki dakikalık kayıtlar aşağıda listelenir.
+                Çok geniş bir aralıkta yalnızca ilk @Model.MaxDisplayRows satır gösterilir — daha
+                fazlası için aynı aralığı Dışa Aktar'a basıp indirin. Varsayılan olarak son 15 dakika
+                seçilidir.
+            </p>
+            <form id="history-filter-form" class="thresholds-form" style="margin-bottom:16px;">
+                <label class="threshold-field">Başlangıç
+                    <input type="datetime-local" id="history-filter-from" style="width:200px;" value="@Model.DefaultFromLocal.ToString("yyyy-MM-ddTHH:mm")" required>
+                </label>
+                <label class="threshold-field">Bitiş
+                    <input type="datetime-local" id="history-filter-to" style="width:200px;" value="@Model.DefaultToLocal.ToString("yyyy-MM-ddTHH:mm")" required>
+                </label>
+                <button type="submit" class="btn-primary-hwmon" style="align-self:flex-end;">Göster</button>
+                <label class="threshold-field" style="width:auto;">Biçim
+                    <select id="history-export-format">
+                        <option value="csv">CSV (Excel)</option>
+                        <option value="json">JSON</option>
+                    </select>
+                </label>
+                <button type="button" id="history-export-btn" class="btn-primary-hwmon" style="align-self:flex-end;">Dışa Aktar</button>
+            </form>
+            <p id="history-rows-note" class="stat-sub" style="display:none;"></p>
+            <div class="table-scroll">
+                <table class="data-table history-table">
+                    <thead>
+                        <tr>
+                            <th>Zaman</th><th>CPU %</th><th>CPU MHz</th><th>CPU W</th><th>CPU °C</th>
+                            <th>GPU %</th><th>GPU MHz</th><th>GPU °C</th><th>GPU W</th>
+                            <th>RAM %</th><th>FPS</th><th>İnd. MB/s</th><th>Yük. MB/s</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-rows-body">
+                        <tr><td colspan="13" class="stat-sub">Bir aralık seçip Göster'e basın.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel" id="history-health-trend-panel">
+            <h2 class="panel-title">Sistem Sağlığı Trendi</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Her günün İşlemci/Ekran Kartı/Bellek ortalamalarına, Ayarlar'daki güncel eşiklerinize göre
+                0-100 arası bir puan verir (100 = sorunsuz). Kalıcı geçmiş disk sıcaklığı tutmadığı için
+                puan yalnızca bu üçüne dayanır, Panel'deki canlı puandan biraz farklı olabilir.
+            </p>
+            <label class="threshold-field" style="width:auto;margin-bottom:14px;">Aralık
+                <select id="health-trend-days">
+                    <option value="7">Son 7 gün</option>
+                    <option value="14" selected>Son 14 gün</option>
+                    <option value="30">Son 30 gün</option>
+                </select>
+            </label>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Tarih</th><th>Puan</th><th>Örnek</th></tr></thead>
+                    <tbody id="health-trend-body"><tr><td colspan="3" class="stat-sub">Yükleniyor…</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel" id="history-heatmap-panel">
+            <h2 class="panel-title">Isı Haritası</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Kalıcı geçmişteki sıcaklık verisini gün × saat bazında gösterir — ör. akşamları neden daha
+                sıcak çalıştığını görmek için. İlk günlerde veri az olduğundan desen zayıf görünebilir,
+                zamanla anlamlı hâle gelir.
+            </p>
+            <div style="display:flex;gap:16px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
+                <label class="threshold-field" style="width:auto;">Aralık
+                    <select id="heatmap-days">
+                        <option value="7">Son 7 gün</option>
+                        <option value="14" selected>Son 14 gün</option>
+                        <option value="30">Son 30 gün</option>
+                    </select>
+                </label>
+                <label class="threshold-field" style="width:auto;">Metrik
+                    <select id="heatmap-metric">
+                        <option value="cpu" selected>İşlemci Sıcaklığı</option>
+                        <option value="gpu">Ekran Kartı Sıcaklığı</option>
+                    </select>
+                </label>
+            </div>
+            <div class="table-scroll">
+                <table class="data-table heatmap-table" id="heatmap-table"></table>
+            </div>
+            <div id="heatmap-legend" class="heatmap-legend"></div>
+        </div>
+
+        <div class="panel" id="process-history-summary-panel">
+            <h2 class="panel-title">Kayıt Bilgileri</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                "Kaynak Kullanımı" listesinde üst sıralarda görünen her process için dakikalık CPU/RAM
+                kaydı tutulur. Kayıtlar en fazla 30 gün saklanır, daha eskisi otomatik silinir.
+            </p>
+
+            @if (Model.ProcessSamplesStatus.SampleCount == 0)
+            {
+                <p class="stat-sub">Henüz hiç kayıt yok.</p>
+            }
+            else
+            {
+                <div class="order-item">
+                    <span>Kayıt sayısı</span>
+                    <span class="stat-sub" style="margin:0;">@Model.ProcessSamplesStatus.SampleCount dakikalık örnek</span>
+                </div>
+                <div class="order-item">
+                    <span>Aralık</span>
+                    <span class="stat-sub" style="margin:0;">
+                        @Model.ProcessSamplesStatus.OldestSampleUtc?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") —
+                        @Model.ProcessSamplesStatus.NewestSampleUtc?.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                    </span>
+                </div>
+                <div class="order-item">
+                    <span>Veritabanı boyutu</span>
+                    <span class="stat-sub" style="margin:0;">@((Model.ProcessSamplesStatus.DatabaseSizeBytes / 1024d / 1024d).ToString("F2")) MB</span>
+                </div>
+                <div class="order-item" style="margin-top:14px;">
+                    <span>Eski kayıtları temizle</span>
+                    <span style="display:flex;gap:8px;align-items:center;">
+                        <select id="process-history-cleanup-days" class="cleanup-days-select">
+                            <option value="1">En eski 1 gün</option>
+                            <option value="2">En eski 2 gün</option>
+                            <option value="5">En eski 5 gün</option>
+                            <option value="10">En eski 10 gün</option>
+                            <option value="15">En eski 15 gün</option>
+                            <option value="30">En eski 30 gün</option>
+                        </select>
+                        <button type="button" id="process-history-cleanup-btn" class="btn-primary-hwmon" style="width:auto;padding:0 12px;">Sil</button>
+                    </span>
+                </div>
+                @Html.AntiForgeryToken()
+            }
+        </div>
+
+        <div class="panel" id="history-process-panel">
+            <h2 class="panel-title">Process Geçmişi</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Bir process, "Kaynak Kullanımı" listesinde üst sıralarda göründüğü her dakika için ayrıca
+                kaydedilir. Bir process seçip zaman içindeki CPU/RAM eğilimini görün (ör. bir sürecin
+                zamanla belleği artırıp artırmadığı).
+            </p>
+            <div style="display:flex;gap:16px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
+                <label class="threshold-field" style="width:auto;">Process
+                    <select id="process-history-name"><option value="">Yükleniyor…</option></select>
+                </label>
+                <label class="threshold-field" style="width:auto;">Aralık
+                    <select id="process-history-days">
+                        <option value="1">Son 1 gün</option>
+                        <option value="7" selected>Son 7 gün</option>
+                        <option value="30">Son 30 gün</option>
+                    </select>
+                </label>
+            </div>
+            <p id="process-history-note" class="stat-sub" style="display:none;"></p>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Zaman</th><th>Ort. CPU %</th><th>Ort. RAM MB</th></tr></thead>
+                    <tbody id="process-history-body"><tr><td colspan="3" class="stat-sub">Bir process seçin.</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel" id="history-events-panel">
+            <h2 class="panel-title">Sistem Olayı Zaman Çizelgesi</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Windows Olay Günlüğü'nden okunan başlatma/kapatma/uyku/uyanma/güncelleme olayları — ör.
+                bir sıcaklık artışının o gün bir güncelleme sonrası mı başladığını görmek için. Bu olaylar
+                kendi veritabanımıza kaydedilmez, Windows'un kendi günlüğünden anlık okunur.
+            </p>
+            <label class="threshold-field" style="width:auto;margin-bottom:14px;">Aralık
+                <select id="system-events-days">
+                    <option value="1" selected>Son 1 gün</option>
+                    <option value="7">Son 7 gün</option>
+                    <option value="30">Son 30 gün</option>
+                </select>
+            </label>
+            <div class="notify-metrics" id="system-events-type-filter" style="margin-bottom:14px;">
+                <label class="notify-metric-field">
+                    <input type="checkbox" class="system-events-type-check" value="Başlatma" checked> 🟢 Başlatma
+                </label>
+                <label class="notify-metric-field">
+                    <input type="checkbox" class="system-events-type-check" value="Kapatma" checked> 🔴 Kapatma
+                </label>
+                <label class="notify-metric-field">
+                    <input type="checkbox" class="system-events-type-check" value="Uykuya Geçiş" checked> 💤 Uykuya Geçiş
+                </label>
+                <label class="notify-metric-field">
+                    <input type="checkbox" class="system-events-type-check" value="Uyanma" checked> ☀ Uyanma
+                </label>
+                <label class="notify-metric-field">
+                    <input type="checkbox" class="system-events-type-check" value="Güncelleme Yüklendi" checked> 🔄 Güncelleme
+                </label>
+                <label class="notify-metric-field">
+                    <input type="checkbox" class="system-events-type-check" value="Kullanıcı İsteğiyle Kapatma/Yeniden Başlatma" checked> ⏻ Kullanıcı İsteğiyle Kapatma/Yeniden Başlatma
+                </label>
+            </div>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Zaman</th><th>Tür</th><th>Açıklama</th></tr></thead>
+                    <tbody id="system-events-body"><tr><td colspan="3" class="stat-sub">Yükleniyor…</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel" id="game-history-summary-panel">
+            <h2 class="panel-title">Kayıt Bilgileri</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Bir oyun en az 30 saniye ön planda kare sunarsa oturumu otomatik kaydedilir. Kayıtlar
+                en fazla 30 gün saklanır, daha eskisi otomatik silinir.
+            </p>
+
+            @if (Model.GameSessionsStatus.SampleCount == 0)
+            {
+                <p class="stat-sub">Henüz hiç oyun oturumu kaydedilmedi.</p>
+            }
+            else
+            {
+                <div class="order-item">
+                    <span>Oturum sayısı</span>
+                    <span class="stat-sub" style="margin:0;">@Model.GameSessionsStatus.SampleCount oturum</span>
+                </div>
+                <div class="order-item">
+                    <span>Aralık</span>
+                    <span class="stat-sub" style="margin:0;">
+                        @Model.GameSessionsStatus.OldestSampleUtc?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") —
+                        @Model.GameSessionsStatus.NewestSampleUtc?.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                    </span>
+                </div>
+                <div class="order-item">
+                    <span>Veritabanı boyutu</span>
+                    <span class="stat-sub" style="margin:0;">@((Model.GameSessionsStatus.DatabaseSizeBytes / 1024d / 1024d).ToString("F2")) MB</span>
+                </div>
+                <div class="order-item" style="margin-top:14px;">
+                    <span>Eski kayıtları temizle</span>
+                    <span style="display:flex;gap:8px;align-items:center;">
+                        <select id="game-history-summary-cleanup-days" class="cleanup-days-select">
+                            <option value="1">En eski 1 gün</option>
+                            <option value="2">En eski 2 gün</option>
+                            <option value="5">En eski 5 gün</option>
+                            <option value="10">En eski 10 gün</option>
+                            <option value="15">En eski 15 gün</option>
+                            <option value="30">En eski 30 gün</option>
+                        </select>
+                        <button type="button" id="game-history-summary-cleanup-btn" class="btn-primary-hwmon" style="width:auto;padding:0 12px;">Sil</button>
+                    </span>
+                </div>
+                @Html.AntiForgeryToken()
+            }
+        </div>
+
+        <div class="panel" id="game-history">
+            <h2 class="panel-title">Oyun Geçmişi</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Bir oyun en az 30 saniye ön planda kare sunarsa oturumu otomatik kaydedilir. Kesintisiz
+                uzun oturumlar en fazla 15 dakikalık parçalara bölünerek kaydedilir. Buradan bir oyunun
+                geçmiş oturumlarındaki ortalama FPS/sıcaklık trendini görebilirsiniz.
+            </p>
+            <label class="threshold-field" style="width:auto;margin-bottom:14px;">Oyun
+                <select id="game-history-select" style="min-width:240px;"></select>
+            </label>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Tarih</th><th>Süre</th><th>Ort. FPS</th><th>Ort. CPU °C</th><th>Ort. GPU °C</th></tr></thead>
+                    <tbody id="game-history-body">
+                        <tr><td colspan="5" class="stat-sub">Henüz kayıtlı oyun oturumu yok.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel" id="history-login-summary-panel">
+            <h2 class="panel-title">Giriş Denemesi Özeti</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Yerel Ağa Açma etkinken PIN giriş sayfasına yapılan tüm denemeler kalıcı olarak kaydedilir;
+                bu sayede uygulamayı kapatıp açsanız bile geçmiş kaybolmaz. Kayıtlar en fazla 30 gün
+                saklanır, daha eskisi otomatik silinir.
+            </p>
+
+            @if (Model.LoginAttemptsStatus.SampleCount == 0)
+            {
+                <p class="stat-sub">Henüz hiç giriş denemesi kaydedilmedi.</p>
+            }
+            else
+            {
+                <div class="order-item">
+                    <span>Kayıt sayısı</span>
+                    <span class="stat-sub" style="margin:0;">@Model.LoginAttemptsStatus.SampleCount deneme</span>
+                </div>
+                <div class="order-item">
+                    <span>Aralık</span>
+                    <span class="stat-sub" style="margin:0;">
+                        @Model.LoginAttemptsStatus.OldestSampleUtc?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") —
+                        @Model.LoginAttemptsStatus.NewestSampleUtc?.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                    </span>
+                </div>
+                <div class="order-item">
+                    <span>Veritabanı boyutu</span>
+                    <span class="stat-sub" style="margin:0;">@((Model.LoginAttemptsStatus.DatabaseSizeBytes / 1024d / 1024d).ToString("F2")) MB</span>
+                </div>
+                <div class="order-item" style="margin-top:14px;">
+                    <span>Eski kayıtları temizle</span>
+                    <span style="display:flex;gap:8px;align-items:center;">
+                        <select id="login-attempts-cleanup-days" class="cleanup-days-select">
+                            <option value="1">En eski 1 gün</option>
+                            <option value="2">En eski 2 gün</option>
+                            <option value="5">En eski 5 gün</option>
+                            <option value="10">En eski 10 gün</option>
+                            <option value="15">En eski 15 gün</option>
+                            <option value="30">En eski 30 gün</option>
+                        </select>
+                        <button type="button" id="login-attempts-cleanup-btn" class="btn-primary-hwmon" style="width:auto;padding:0 12px;">Sil</button>
+                    </span>
+                </div>
+                @Html.AntiForgeryToken()
+            }
+        </div>
+
+        <div class="panel" id="history-login-attempts-panel">
+            <h2 class="panel-title">Giriş Denemeleri</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Yerel Ağa Açma etkinken PIN giriş sayfasına (loopback dışından, yani bu bilgisayarın
+                kendisi hariç) yapılan denemelerin kalıcı kaydı — girilen PIN'in kendisi hiçbir zaman
+                saklanmaz, yalnızca IP, zaman ve sonuç (başarılı/başarısız/kilide yol açtı). Diğer
+                kalıcı geçmiş verileriyle aynı 30 günlük saklama süresine tabidir.
+            </p>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Zaman</th><th>IP Adresi</th><th>Sonuç</th></tr></thead>
+                    <tbody id="login-attempts-body"><tr><td colspan="3" class="stat-sub">Yükleniyor…</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/history.js" asp-append-version="true"></script>
+    <script src="~/js/heatmap.js" asp-append-version="true"></script>
+    <script src="~/js/login-attempts.js" asp-append-version="true"></script>
+    <script src="~/js/game-history.js" asp-append-version="true"></script>
+}

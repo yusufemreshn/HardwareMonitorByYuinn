@@ -1,0 +1,216 @@
+@model HardwareMonitorByYuinn.Web.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Panel";
+}
+
+<div class="health-summary" id="health-summary" style="display:none;"></div>
+
+<div class="stat-grid">
+    <button type="button" class="stat-card" data-card-key="cpu" style="--accent: var(--accent-cpu)" data-toggle-series="cpu" aria-pressed="true">
+        <div class="stat-card-header"><span class="stat-dot"></span> İşlemci (CPU)</div>
+        <div class="stat-value-row" id="cpu-main-row">
+            <span id="cpu-temp">-- °C</span><span id="cpu-usage">-- %</span>
+        </div>
+        <div class="stat-sub-row" id="cpu-sub-row">
+            <span id="cpu-power">-- W</span><span id="cpu-clock">-- MHz</span>
+        </div>
+    </button>
+    <button type="button" class="stat-card" data-card-key="gpu" style="--accent: var(--accent-gpu)" data-toggle-series="gpu" aria-pressed="true">
+        <div class="stat-card-header"><span class="stat-dot"></span> Ekran Kartı (GPU)</div>
+        <div class="stat-value-row" id="gpu-main-row">
+            <span id="gpu-temp">-- °C</span><span id="gpu-usage">-- %</span>
+        </div>
+        <div class="stat-sub-row" id="gpu-sub-row">
+            <span id="gpu-power">-- W</span><span id="gpu-clock">-- MHz</span>
+        </div>
+    </button>
+    <button type="button" class="stat-card" data-card-key="vram" style="--accent: var(--accent-gpu)" data-toggle-series="vram" aria-pressed="true">
+        <div class="stat-card-header"><span class="stat-dot"></span> Video Belleği (VRAM)</div>
+        <div class="stat-value" id="vram-usage">-- %</div>
+        <div class="stat-sub" id="vram-detail">-- / -- MB</div>
+    </button>
+    <button type="button" class="stat-card" data-card-key="ram" style="--accent: var(--accent-ram)" data-toggle-series="ram" aria-pressed="true">
+        <div class="stat-card-header"><span class="stat-dot"></span> Bellek (RAM)</div>
+        <div class="stat-value" id="ram-usage">-- %</div>
+        <div class="stat-sub" id="ram-detail">-- / -- GB</div>
+    </button>
+    <button type="button" class="stat-card" data-card-key="fps" style="--accent: var(--accent-fps)" data-toggle-series="fps" aria-pressed="true">
+        <div class="stat-card-header"><span class="stat-dot"></span> Kare Hızı (FPS)</div>
+        <div class="fps-value-row">
+            <div class="stat-value" id="fps-value">--</div>
+            <div class="fps-lows-stack" id="fps-lows">
+                <span id="fps-low1">1% Low --</span>
+                <span id="fps-low01">0.1% Low --</span>
+                <span id="fps-frametime">Kare Süresi --</span>
+            </div>
+        </div>
+        <div class="stat-sub" id="fps-source">Ölçülemiyor</div>
+    </button>
+    <div class="stat-card is-static" id="storage-card" data-card-key="storage" style="--accent: var(--accent-storage)">
+        <div class="stat-card-header"><span class="stat-dot"></span> Depolama (Disk)</div>
+        <div id="storage-body">
+            <div class="stat-value">--</div>
+            <div class="stat-sub">Veri bekleniyor&hellip;</div>
+        </div>
+    </div>
+    <div class="stat-card is-static" id="network-card" data-card-key="network" style="--accent: var(--accent-network)">
+        <div class="stat-card-header"><span class="stat-dot"></span> Ağ</div>
+        <div class="stat-value" id="network-download">--</div>
+        <div class="stat-sub-row" id="network-upload-row">
+            <span id="network-upload">↑ --</span>
+        </div>
+        <div class="stat-sub" id="network-adapter">--</div>
+        <div class="stat-sub" id="network-session-total">Bu oturum: --</div>
+    </div>
+    <div class="stat-card is-static" id="processes-card" data-card-key="processes" style="--accent: var(--accent-process)">
+        <div class="stat-card-header">
+            <span class="stat-dot"></span>
+            <span>Kaynak Kullanımı</span>
+        </div>
+        <div class="process-row process-header-row">
+            <span class="process-name"></span>
+            <span class="process-metrics">
+                <button type="button" class="process-sort-toggle" data-sort-metric="cpu">CPU</button>
+                <button type="button" class="process-sort-toggle" data-sort-metric="gpu">GPU</button>
+                <button type="button" class="process-sort-toggle" data-sort-metric="ram">RAM</button>
+            </span>
+        </div>
+        <div id="processes-body">
+            <div class="stat-sub">Veri bekleniyor&hellip;</div>
+        </div>
+    </div>
+    <div class="stat-card is-static" id="system-card" data-card-key="system" style="--accent: var(--accent-system)">
+        <div class="stat-card-header"><span class="stat-dot"></span> Sistem Özeti</div>
+        <div class="stat-sub">@Model.SystemInfo.CpuName</div>
+        @if (Model.SystemInfo.GpuNames.Count > 0)
+        {
+            <div class="stat-sub" id="system-gpu-names-row">@string.Join(" · ", Model.SystemInfo.GpuNames)</div>
+        }
+        <div class="stat-sub" id="system-os-row">@Model.SystemInfo.OsDescription</div>
+        <div class="stat-sub-row" id="system-ram-row">
+            <span>Bellek: @Model.SystemInfo.TotalRamGb.ToString("F1") GB</span>
+        </div>
+        @if (Model.SystemInfo.PhysicalDisks.Count > 0)
+        {
+            <div class="stat-sub-row" id="system-storage-row">
+                <span>Depolama: @string.Join(" · ", Model.SystemInfo.PhysicalDisks.Select(d => $"{d.TotalGb:F0} GB {d.MediaType}"))</span>
+            </div>
+        }
+        <div class="stat-sub-row" id="system-uptime-row">
+            <span>Açık kalma süresi: <span id="system-uptime" data-boot-at="@DateTime.UtcNow.Subtract(Model.SystemInfo.Uptime).ToString("o")">--</span></span>
+        </div>
+        <div class="stat-sub-row" id="energy-cost-row" style="display:none;">
+            <span id="energy-cost-display"></span>
+        </div>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="chart-legend">
+        <button type="button" class="legend-item" data-toggle-series="cpu">
+            <span class="legend-swatch" style="background: var(--accent-cpu)"></span>İşlemci
+        </button>
+        <button type="button" class="legend-item" data-toggle-series="gpu">
+            <span class="legend-swatch" style="background: var(--accent-gpu)"></span>Ekran Kartı
+        </button>
+        <button type="button" class="legend-item is-muted" data-toggle-series="vram">
+            <span class="legend-swatch legend-swatch-dashed" style="background-color: var(--accent-gpu)"></span>VRAM
+        </button>
+        <button type="button" class="legend-item" data-toggle-series="ram">
+            <span class="legend-swatch" style="background: var(--accent-ram)"></span>Bellek
+        </button>
+        <button type="button" class="legend-item" data-toggle-series="fps">
+            <span class="legend-swatch" style="background: var(--accent-fps)"></span>FPS
+        </button>
+        <button type="button" class="legend-item is-muted" data-toggle-series="download">
+            <span class="legend-swatch" style="background: var(--accent-network)"></span>İndirme
+        </button>
+        <button type="button" class="legend-item is-muted" data-toggle-series="upload">
+            <span class="legend-swatch legend-swatch-dashed" style="background-color: var(--accent-network)"></span>Yükleme
+        </button>
+        <button type="button" class="legend-item is-muted" data-toggle-series="frametime">
+            <span class="legend-swatch legend-swatch-dashed" style="background-color: var(--accent-fps)"></span>Kare Süresi
+        </button>
+        <button type="button" class="legend-item is-muted" data-toggle-series="fpsLow1">
+            <span class="legend-swatch legend-swatch-dashed" style="background-color: var(--accent-fps)"></span>1% Low
+        </button>
+        <button type="button" class="legend-item is-muted" data-toggle-series="fpsLow01">
+            <span class="legend-swatch legend-swatch-dashed" style="background-color: var(--accent-fps)"></span>0.1% Low
+        </button>
+        <span style="flex:1"></span>
+        <div class="chart-range-toggle" id="chart-range-toggle" role="group" aria-label="Grafik zaman aralığı">
+            <button type="button" data-range-ms="60000">1 dk</button>
+            <button type="button" data-range-ms="300000" class="is-active">5 dk</button>
+            <button type="button" data-range-ms="900000">15 dk</button>
+            <button type="button" data-range-ms="3600000">1 sa</button>
+        </div>
+        <div class="chart-legend-actions">
+            <button type="button" id="ambient-enter" class="legend-item">⛶ Ambiyans Modu</button>
+            <button type="button" id="snapshot-share" class="legend-item">📸 Anlık Görüntü</button>
+            <a href="/Settings#snapshot-settings" class="legend-item" title="Anlık görüntüde neyin görüneceğini seçin">⚙ Anlık Görüntü Ayarları</a>
+            <a href="/Settings#chart-types-panel" class="legend-item" title="Bu grafikte her serinin çizgi/alan/bar olarak nasıl çizileceğini seçin">⚙ Grafik Ayarları</a>
+        </div>
+    </div>
+    <div class="chart-wrap">
+        <canvas id="usage-chart"></canvas>
+        <div id="chart-hint" class="chart-hint">Fare tekerleğiyle yakınlaştır/uzaklaştır · çift tıkla → canlıya dön</div>
+    </div>
+</div>
+
+<div id="ambient-overlay" class="ambient-overlay" hidden>
+    <button type="button" id="ambient-exit" class="ambient-exit" aria-label="Ambiyans modundan çık">✕</button>
+    <div class="ambient-clock" id="ambient-clock">--:--:--</div>
+    <div class="ambient-date" id="ambient-date">--</div>
+    <div class="ambient-grid">
+        <div class="ambient-stat" id="ambient-stat-cpu" style="--accent: var(--accent-cpu)">
+            <div class="ambient-label">İşlemci</div>
+            <div class="ambient-value" id="ambient-cpu">--</div>
+            <div class="ambient-sub" id="ambient-cpu-sub">--</div>
+        </div>
+        <div class="ambient-stat" id="ambient-stat-gpu" style="--accent: var(--accent-gpu)">
+            <div class="ambient-label">Ekran Kartı</div>
+            <div class="ambient-value" id="ambient-gpu">--</div>
+            <div class="ambient-sub" id="ambient-gpu-sub">--</div>
+        </div>
+        <div class="ambient-stat" id="ambient-stat-ram" style="--accent: var(--accent-ram)">
+            <div class="ambient-label">Bellek</div>
+            <div class="ambient-value" id="ambient-ram">--</div>
+            <div class="ambient-sub" id="ambient-ram-sub">--</div>
+        </div>
+        <div class="ambient-stat" id="ambient-stat-fps" style="--accent: var(--accent-fps)">
+            <div class="ambient-label">Kare Hızı</div>
+            <div class="ambient-value" id="ambient-fps">--</div>
+            <div class="ambient-sub" id="ambient-fps-sub">--</div>
+        </div>
+        <div class="ambient-stat" id="ambient-stat-storage" style="--accent: var(--accent-storage)">
+            <div class="ambient-label">Depolama</div>
+            <div class="ambient-value" id="ambient-storage">--</div>
+            <div class="ambient-sub" id="ambient-storage-sub">--</div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        window.__dashboardInitialHistory = @Html.Raw(Json.Serialize(new
+        {
+            cpu = Model.CpuHistory,
+            gpu = Model.GpuHistory,
+            vram = Model.VramHistory,
+            ram = Model.RamHistory,
+            fps = Model.FpsHistory,
+            frametime = Model.FrameTimeHistory,
+            fpsLow1 = Model.Fps1PercentLowHistory,
+            fpsLow01 = Model.Fps01PercentLowHistory,
+            download = Model.NetworkDownloadHistory,
+            upload = Model.NetworkUploadHistory
+        }));
+        window.__systemInfo = @Html.Raw(Json.Serialize(new
+        {
+            machineName = Model.SystemInfo.MachineName,
+            cpuName = Model.SystemInfo.CpuName,
+            gpuNames = Model.SystemInfo.GpuNames
+        }));
+    </script>
+    <script src="~/js/dashboard.js" asp-append-version="true"></script>
+}

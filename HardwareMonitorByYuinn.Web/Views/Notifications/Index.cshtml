@@ -1,0 +1,28 @@
+@{
+    ViewData["Title"] = "Bildirimler";
+}
+
+<div class="panel">
+    <h2 class="panel-title">Bildirim Geçmişi</h2>
+    <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+        Ayarlar sayfasında belirlediğiniz eşiklerden hangisinin ne zaman aşıldığını gösterir. Bir eşik
+        aşıldığında, siz normale dönüp tekrar aşılmadıkça yalnızca bir kez kaydedilir. Bu geçmiş
+        yalnızca bu tarayıcıda saklanır.
+    </p>
+
+    <div class="notification-summary" id="notification-summary"></div>
+</div>
+
+<div class="panel">
+    <div class="stat-card-header" style="--accent: var(--accent-danger);">
+        <span class="stat-dot"></span>
+        <span>Tüm Kayıtlar</span>
+        <span style="flex:1"></span>
+        <button type="button" id="notification-history-clear" class="legend-item">Geçmişi Temizle</button>
+    </div>
+    <div id="notification-history-list"></div>
+</div>
+
+@section Scripts {
+    <script src="~/js/notifications.js" asp-append-version="true"></script>
+}

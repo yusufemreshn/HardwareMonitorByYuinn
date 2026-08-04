@@ -1,0 +1,2137 @@
+:root {
+  --bg: #0b0f14;
+  --bg-elevated: #111823;
+  --card-bg: #141c28;
+  --border: #232e3d;
+  --text: #e7edf6;
+  --text-muted: #8ea0b8;
+  --accent-cpu: #ff9f45;
+  --accent-gpu: #35d0ba;
+  --accent-ram: #6ea8fe;
+  --accent-fps: #c792ea;
+  --accent-storage: #f2c14e;
+  --accent-network: #4ade80;
+  --accent-process: #f472b6;
+  --accent-system: #38bdf8;
+  --accent-danger: #ff6b6b;
+  --accent-caution: #f5b942;
+  /* Genel Sağlık Özeti'nin "iyi" durumu için ayrı bir yeşil — Ağ kartının (--accent-network)
+     rengiyle aynıydı, kullanıcı özellikle bu yeşilin daha koyu olmasını istedi; Ağ kartını
+     etkilememesi için ayrı bir değişkene taşındı. */
+  --accent-success: #22c55e;
+  --grid-line: rgba(255, 255, 255, 0.08);
+  --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  --radius: 14px;
+  --app-font-size: 16px;
+  --app-font-family: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;
+  --card-bg-glass: rgba(20, 28, 40, 0.55);
+  color-scheme: dark;
+
+  /* Form kutuları (metin girişi, seçici, buton) için tek ortak köşe yuvarlaklığı ve boşluk
+     ölçeği — daha önce aynı türden kutular (.hwmon-field/.cleanup-days-select/.threshold-field
+     input) birbirinden bağımsız, hafif farklı değerlerle (8px/9px/10px köşe, 8-10px dolgu)
+     kopyalanmıştı; biri değişince diğerleri sessizce farklılaşıyordu (bkz. CHANGELOG 2026-08-04). */
+  --control-radius: 10px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 14px;
+  --space-4: 22px;
+}
+
+[data-theme="light"] {
+  --bg: #eef1f6;
+  --bg-elevated: #ffffff;
+  --card-bg: #ffffff;
+  --border: #e1e6ee;
+  --text: #16202c;
+  --text-muted: #5b6b81;
+  --accent-cpu: #c8641a;
+  --accent-gpu: #0f9c8a;
+  --accent-ram: #3767d6;
+  --accent-fps: #7c3fad;
+  --accent-storage: #b8860b;
+  --accent-network: #15803d;
+  --accent-process: #be185d;
+  --accent-system: #0284c7;
+  --accent-danger: #d64545;
+  --accent-caution: #b8860b;
+  --accent-success: #15803d;
+  --card-bg-glass: rgba(255, 255, 255, 0.55);
+  --grid-line: rgba(15, 23, 42, 0.08);
+  --shadow: 0 12px 30px rgba(16, 24, 40, 0.08);
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Bootstrap Reboot kaldırıldı; tarayıcı varsayılanlarından bize gereken azı burada. */
+h1,
+h2,
+h3,
+h4 {
+  margin-top: 0;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+/* Sekme panelleri — Bootstrap'in .fade/.show mantığı yerine. */
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.is-active {
+  display: block;
+  animation: hwmon-fade-in .18s ease;
+}
+
+@keyframes hwmon-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-pane.is-active {
+    animation: none;
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  font-size: var(--app-font-size);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--app-font-family);
+  transition: background-color .2s ease, color .2s ease;
+}
+
+a {
+  color: inherit;
+}
+
+.app-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 22px 20px 60px;
+}
+
+/* Üst gezinme çubuğu (marka + sekmeler + çalışma süresi/ikonlar) kasıtlı olarak Ayarlar → Yazı
+   Tipi tercihinden (--app-font-size / --app-font-family) bağımsız, sabit px/font-family kullanır.
+   Aksi halde büyük boyut veya serif/mono aile seçiminde sekmeler genişleyip çubuğu iki satıra
+   bölüyor, saat/bildirim/tema ikonları aşağı kayıyordu. */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 26px;
+  flex-wrap: nowrap;
+  font-family: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;
+}
+
+.brand {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.brand-dot {
+  color: #a78bfa;
+  font-size: 16px;
+}
+
+.main-nav {
+  display: flex;
+  flex-wrap: nowrap;
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: center;
+  gap: 4px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  padding: 4px;
+  overflow-x: auto;
+  border-radius: 12px;
+}
+
+.main-nav a {
+  padding: 9px 15px;
+  border-radius: 9px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.main-nav a.active {
+  background: var(--bg-elevated);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.main-nav a:hover {
+  color: var(--text);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.app-uptime {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.app-uptime-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-muted);
+}
+
+.app-uptime-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.theme-toggle {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  border-radius: 999px;
+  width: 39px;
+  height: 39px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 17px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent-gpu);
+}
+
+/* Bildirim izni "denied" olduğunda tıklamanın bir işe yaramadığını açıkça belirten kısa ömürlü balon. */
+.notify-denied-hint {
+  position: fixed;
+  z-index: 50;
+  max-width: 280px;
+  padding: 10px 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--accent-danger);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  color: var(--text);
+  font-size: .8rem;
+  line-height: 1.4;
+  animation: hwmon-fade-in .18s ease;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+/* Panel görünüm modu — Ayarlar → Görünüm'den seçilir. "Grid" (varsayılan) öznitelik eklemez,
+   mevcut çok sütunlu kart düzenidir. "Liste" kartları tek sütunda alt alta dizer. */
+html[data-panel-view="list"] .stat-grid {
+  grid-template-columns: 1fr;
+}
+
+/* Liste modunda kartlar tam genişlik olduğu için "justify-content: space-between" kullanan
+   satırlarda (Kare Hızı kartındaki 1%/0.1% low + kare süresi yığını, Kaynak Kullanımı'ndaki
+   CPU/GPU/RAM sütunları) ikinci öğe kartın en ucuna yapışıp ana değerden/isimden çok uzak
+   kalıyordu. Satırın kendisine bir üst genişlik sınırı koyarak (yalnızca liste modunda, grid
+   modu bu kuraldan etkilenmez) ikinci öğeyi ana değere yakın tutarız; satır varsayılan olarak
+   sola yaslı kaldığı için kartın geri kalanı boş kalır, bu istenen görünümdür.
+   Kullanıcı geri bildirimi: ilk denemede (320px/460px) mesafe hâlâ çok fazlaydı — gerçek
+   render ölçümüne göre (fps-value ~67px + lows ~126px, process-metrics 136px sabit) bu
+   değerler mesafeyi en az yarıya indirecek şekilde belirgin biçimde küçültüldü.
+   Not: process-metrics sütunları (CPU/GPU % taşma düzeltmesi) 136px'ten 152px'e çıkınca
+   bu satırın max-width'i de aynı farkla (+16px) büyütüldü, aksi hâlde boşluk yeniden açılırdı. */
+html[data-panel-view="list"] .fps-value-row {
+  max-width: 230px;
+}
+
+html[data-panel-view="list"] .process-row {
+  max-width: 276px;
+}
+
+/* Cam efekti (glassmorphism) — Ayarlar → Görünüm'den açılıp kapatılır. Kartlar/paneller/üst menü/
+   sol menüler yarı saydam olup arkalarındaki (sabit renkli) sayfa arka planını bulanıklaştırır;
+   Safari için -webkit- öneki gerekiyor. .main-nav = üst gezinme çubuğu (Panel/Detaylar/Ayarlar/
+   Geçmiş...); .panel her sayfadaki (Ayarlar, Geçmiş dahil) tüm kart/kutuları kapsıyor;
+   .settings-sidebar = Ayarlar/Geçmiş/Karşılaştırma'nın paylaştığı sol alt-menü kutusu. */
+.glass-effect .stat-card,
+.glass-effect .panel,
+.glass-effect .health-summary,
+.glass-effect .main-nav,
+.glass-effect .settings-sidebar {
+  background: var(--card-bg-glass) !important;
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+}
+
+/* Kart yoğunluğu — Ayarlar → Kart Sıralaması'ndan seçilir. Yalnızca dolgu/font boyutunu
+   (görsel sıkılığı) değiştirir; hangi detayların (güç/frekans, VRAM/Bellek alt satırı, FPS
+   low'ları vb.) görüneceği artık burada DEĞİL, window.HwmonDetailVisibility (site.js) tarafından
+   her elemana ayrı ayrı uygulanan inline display ile kontrol edilir — yoğunluk seviyeleri o
+   sistemde birer hazır şablon (PRESETS) olarak kullanılır. "Normal" (varsayılan) hiçbir kural
+   eklemez, mevcut görünümle birebir aynıdır. */
+html[data-density="compact"] .stat-card {
+  padding: 10px 14px;
+}
+
+html[data-density="compact"] .stat-value {
+  font-size: 1.6rem;
+}
+
+html[data-density="detailed"] .stat-card {
+  padding: 26px 28px;
+}
+
+html[data-density="detailed"] .stat-sub,
+html[data-density="detailed"] .stat-sub-row {
+  margin-top: 8px;
+  font-size: 1rem;
+}
+
+.stat-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  color: inherit;
+  transition: transform .15s ease, opacity .15s ease, box-shadow .15s ease;
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--accent);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+}
+
+.stat-card.is-static {
+  cursor: default;
+}
+
+.stat-card.is-static:hover {
+  transform: none;
+}
+
+/* İki kademeli eşik: "Dikkat" (sarı, is-caution) ara değeri geçince, "Kritik" (kırmızı, is-warning)
+   asıl eşiği geçince gösterilir. is-warning her zaman is-caution'dan görsel olarak baskın olsun diye
+   ikisi birden varsa (kritik zaten dikkat aralığını da kapsar) aşağıdaki sıralama önemli: is-warning
+   kuralları sonra gelip is-caution'ı ezer. */
+.stat-card.is-caution {
+  box-shadow: 0 0 0 1px var(--accent-caution), 0 0 20px -6px var(--accent-caution);
+}
+
+.stat-card.is-caution::before,
+.stat-card.is-caution .stat-dot {
+  background: var(--accent-caution) !important;
+}
+
+.stat-card.is-caution .stat-value,
+.stat-card.is-caution .stat-value-row {
+  color: var(--accent-caution);
+}
+
+/* Eşik aşıldığında (ör. yüksek sıcaklık) kartı fark edilir şekilde kırmızıya çeviren durum. */
+.stat-card.is-warning {
+  box-shadow: 0 0 0 1px var(--accent-danger), 0 0 20px -6px var(--accent-danger);
+}
+
+.stat-card.is-warning::before,
+.stat-card.is-warning .stat-dot {
+  background: var(--accent-danger) !important;
+}
+
+.stat-card.is-warning .stat-value,
+.stat-card.is-warning .stat-value-row {
+  color: var(--accent-danger);
+}
+
+/* Panel'in en üstünde, sayfa yüklenince mevcut eşiklere/SMART durumuna göre canlı güncellenen özet. */
+.health-summary {
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  box-shadow: 0 0 0 1px var(--accent-success);
+}
+
+.health-summary.is-warning {
+  box-shadow: 0 0 0 1px var(--accent-danger);
+}
+
+.health-summary-icon {
+  font-size: 1.1rem;
+  color: var(--accent-success);
+  flex-shrink: 0;
+}
+
+.health-summary.is-warning .health-summary-icon {
+  color: var(--accent-danger);
+}
+
+.health-summary-score {
+  flex-shrink: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: .85rem;
+}
+
+.health-summary-score.is-good { color: var(--accent-success); background: color-mix(in srgb, var(--accent-success) 15%, transparent); }
+.health-summary-score.is-caution { color: var(--accent-caution); background: color-mix(in srgb, var(--accent-caution) 15%, transparent); }
+.health-summary-score.is-bad { color: var(--accent-danger); background: color-mix(in srgb, var(--accent-danger) 15%, transparent); }
+
+.health-summary-text {
+  flex: 1;
+  font-size: .9rem;
+  color: var(--text);
+}
+
+.health-summary.is-warning .health-summary-text {
+  color: var(--accent-danger);
+}
+
+.health-summary-close {
+  width: auto;
+  padding: 0 8px;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.health-summary-close:hover {
+  color: var(--text);
+}
+
+/* Birden fazla disk olduğunda ikinci ve sonraki satırları ayırır. */
+.storage-row + .storage-row {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+
+.process-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px;
+  font-size: .85rem;
+}
+
+.process-row + .process-row {
+  margin-top: 8px;
+}
+
+.process-header-row {
+  color: var(--text-muted);
+  font-size: .68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.process-row .process-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.process-row .process-metrics {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  display: grid;
+  grid-template-columns: 46px 46px 52px;
+  gap: 4px;
+}
+
+.process-row .process-metrics > span {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.process-sort-toggle {
+  text-align: right;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+
+.process-sort-toggle:hover {
+  color: var(--text);
+}
+
+.process-sort-toggle.is-active {
+  color: var(--text);
+}
+
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: var(--text-muted);
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.stat-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+/* Kaynak Kullanımı kartındaki sıralama ölçütü seçici (CPU/GPU/RAM); başlığın en sağına yaslanır. */
+.stat-card-header select {
+  margin-left: auto;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 6px;
+  color: var(--text);
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  cursor: pointer;
+}
+
+.stat-card-header select:focus-visible {
+  outline: 2px solid var(--accent-gpu);
+  outline-offset: 1px;
+}
+
+.stat-value {
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-sub {
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-size: .9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* İşlemci/Ekran Kartı kartlarında iki değeri (ör. sıcaklık + kullanım) yan yana, büyük ve kalın
+   gösterir. Sıralaması Ayarlar sayfasından değiştirilebilir (bkz. HwmonCardOrder, site.js).
+   flex-wrap KASITLI OLARAK nowrap: değerler asla alt alta düşmemeli (kullanıcı isteği). Büyük
+   yazı tipi/serif gibi kombinasyonlarda kart genişliğine sığmayabilir; bu durumda site.js'teki
+   HwmonFitStatRows, satır tek satıra sığana kadar font-size'ı adım adım küçültür. overflow:hidden,
+   JS henüz çalışmadan önceki ilk boyamada dışarı taşmayı görünmez kılan bir güvence. */
+.stat-value-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* flex-wrap:nowrap yalnızca span'ların KENDİ ARALARINDA alt satıra düşmesini engeller; bu olmadan
+   dar bir kartta tek bir span'ın içindeki "53.0 °C" da kendi içinde ("53.0" / "°C") satır
+   kırabilir. Her span tek parça kalmalı ki JS'teki HwmonFitStatRows'un scrollWidth ölçümü
+   (kırılma yerine gerçek taşma) doğru çalışsın. */
+.stat-value-row span {
+  white-space: nowrap;
+}
+
+.stat-value-row span:not(:last-child)::after {
+  content: "·";
+  margin: 0 10px;
+  color: var(--border);
+}
+
+/* Frekans, sıcaklık ve güç tek satırda; sığmadığında alt satıra sarar. */
+.stat-sub-row {
+  margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  color: var(--text-muted);
+  font-size: .9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-sub-row span:not(:last-child)::after {
+  content: "·";
+  margin: 0 8px;
+  color: var(--border);
+}
+
+/* Kare Hızı kartında büyük FPS değeri ile sağdaki 1%/0.1% low yığını aynı satırda hizalanır. */
+.fps-value-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* 1%/0.1% low değerleri, FPS değerinin en sağında alt alta (dikey) durur, ikisi de kalın. */
+.fps-lows-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  font-weight: 700;
+  font-size: .92rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  outline: 2px solid transparent;
+  outline-offset: 4px;
+  transition: outline-color .3s ease;
+}
+
+/* Başka bir sayfadan "#bölüm-id" bağlantısıyla gelindiğinde ilgili paneli kısa süreliğine vurgular. */
+.panel.settings-highlight {
+  outline-color: var(--accent-network);
+}
+
+.panel-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+
+/* Ayarlar sayfası — sol tarafta kategori/alt bölüm listesi, sağda seçili bölümün içeriği. */
+.settings-shell {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.settings-sidebar {
+  width: 230px;
+  flex-shrink: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px;
+  position: sticky;
+  top: 20px;
+}
+
+.settings-search {
+  margin: 4px 4px 10px;
+}
+
+.settings-search input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: .85rem;
+  padding: 8px 10px;
+}
+
+.settings-search input:focus {
+  outline: none;
+  border-color: var(--accent-gpu);
+}
+
+/* Arama kutusuna yazılınca eşleşmeyen öğeler gizlenir, eşleşenleri içeren kategori/grup ise
+   normal aç/kapa durumundan (is-open) bağımsız olarak zorla açılır — arama bittiğinde (kutu
+   boşalınca) bu sınıflar kaldırılır, önceki is-open durumuna dokunulmadığı için sayfa arama
+   öncesindeki hâline sorunsuzca döner. */
+.settings-search-hidden {
+  display: none !important;
+}
+
+.settings-category.settings-search-open .settings-subnav,
+.settings-subnav-group.settings-search-open .settings-subnav-nested {
+  display: block !important;
+}
+
+.settings-category + .settings-category {
+  margin-top: 2px;
+}
+
+.settings-category-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-weight: 700;
+  font-size: .92rem;
+  font-family: inherit;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.settings-category-toggle:hover {
+  background: var(--bg-elevated);
+}
+
+.settings-category-toggle .chevron {
+  color: var(--text-muted);
+  transition: transform .15s ease;
+}
+
+.settings-category.is-open .settings-category-toggle .chevron {
+  transform: rotate(90deg);
+}
+
+/* Tek alt öğesi olan kategoriler (settings-category-single, bkz. site.js HwmonSectionNav) hiç
+   açılıp kapanmaz — kategori butonu doğrudan o tek panele gider. Açılacak bir şey olmadığı için
+   ok işareti kafa karıştırmasın diye gizlenir; aktifken diğer alt menü öğeleriyle aynı vurgu
+   (is-active) uygulanır. */
+.settings-category-single .settings-category-toggle .chevron {
+  display: none;
+}
+
+.settings-category-toggle.is-active {
+  background: var(--bg-elevated);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.settings-subnav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: none;
+}
+
+.settings-category.is-open .settings-subnav {
+  display: block;
+}
+
+.settings-subnav button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: .86rem;
+  padding: 8px 10px 8px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.settings-subnav button:hover {
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+
+.settings-subnav button.is-active {
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.settings-subnav-group-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-family: inherit;
+  font-size: .86rem;
+  padding: 8px 10px 8px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.settings-subnav-group-toggle:hover {
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+
+.settings-subnav-group-toggle .chevron {
+  color: var(--text-muted);
+  font-size: .8rem;
+  transition: transform .15s ease;
+}
+
+.settings-subnav-group.is-open .settings-subnav-group-toggle .chevron {
+  transform: rotate(90deg);
+}
+
+.settings-subnav-nested {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: none;
+}
+
+.settings-subnav-group.is-open .settings-subnav-nested {
+  display: block;
+}
+
+.settings-subnav-nested button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: .82rem;
+  padding: 7px 10px 7px 36px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.settings-subnav-nested button:hover {
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+
+.settings-subnav-nested button.is-active {
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.settings-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-content .panel[hidden] {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .settings-shell {
+    flex-direction: column;
+  }
+
+  .settings-sidebar {
+    width: 100%;
+    position: static;
+  }
+}
+
+/* Sol menü daralması — Ayarlar/Geçmiş/Karşılaştırma sayfalarının paylaştığı .settings-sidebar.
+   İki bağımsız, farklı davranışlı tetikleyici var:
+     1) .history-rows-active — yalnızca Geçmiş sayfasında "Kayıtları Görüntüle" paneli açıkken
+        history.js tarafından eklenir/kaldırılır (bkz. site.js HwmonSectionNav.init'in
+        autoCollapseTargetId parametresi). Mouse üzerinde değilken daralır, üzerine gelince
+        (ya da klavyeyle odaklanınca) tam genişliğe döner. Diğer sayfalarda/sekmelerde bu sınıf
+        hiç eklenmez, sidebar her zaman 230px kalır.
+     2) .is-collapsed — sidebar'ın en üstündeki hamburger (☰) butonuna tıklayınca kullanıcı elle
+        ekler (bkz. site.js). Hover'dan TAMAMEN bağımsız kilitli bir daralmadır — üzerine mouse
+        gelse bile açılmaz, yalnızca hamburger'a tekrar basılınca ya da sidebar'daki başka bir
+        butona (kategori/alt sekme) tıklanınca kalkar.
+   .settings-content zaten flex:1 + min-width:0 olduğundan boşalan alanı otomatik dolduruyor, ayrı
+   bir yeniden boyutlandırma JS'i gerekmiyor. Yalnızca masaüstü genişliğinde etkin — 800px'in
+   altında dokunmatik cihazlarda :hover kavramı olmadığından sidebar daralı takılı kalırdı, bu
+   yüzden mobil breakpoint'le çakışmasın diye kendi aralığına (min-width: 801px) hapsedildi. */
+@media (min-width: 801px) {
+  .settings-sidebar {
+    transition: width .18s ease;
+  }
+
+  .settings-sidebar.history-rows-active:not(:hover):not(:focus-within) {
+    width: 84px;
+    overflow: hidden;
+  }
+
+  .settings-sidebar.is-collapsed {
+    width: 84px;
+    overflow: hidden;
+  }
+
+  .settings-category-toggle,
+  .settings-subnav button,
+  .settings-subnav-group-toggle,
+  .settings-subnav-nested button {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .settings-category-toggle .chevron,
+  .settings-subnav-group-toggle .chevron {
+    flex-shrink: 0;
+  }
+
+  /* history-rows-active panelindeyken hamburger bilerek işlevsiz (bkz. site.js) — bunu görsel
+     olarak da belirtir. */
+  .settings-sidebar.history-rows-active .sidebar-toggle {
+    opacity: .35;
+    cursor: not-allowed;
+  }
+}
+
+.sidebar-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0 0 8px 4px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.sidebar-toggle span {
+  display: block;
+  width: 16px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--text-muted);
+}
+
+.sidebar-toggle:hover {
+  border-color: var(--accent-gpu);
+}
+
+.sidebar-toggle:hover span {
+  background: var(--text);
+}
+
+.chart-legend {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+/* Ambiyans Modu/Anlık Görüntü/Anlık Görüntü Ayarları — satır sığmayınca hep birlikte alt satıra
+   düşsünler diye (biri üstte kalıp diğerleri altta kalmasın) tek bir flex öğesi olarak gruplanır. */
+.chart-legend-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Grafik zaman aralığı toggle'ı (1dk/5dk/15dk/1sa) — mevcut fare tekerleğiyle yakınlaştırmaya ek
+   olarak, daha keşfedilebilir/kesin bir alternatif. */
+.chart-range-toggle {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.chart-range-toggle button {
+  background: none;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font: inherit;
+  font-size: .8rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.chart-range-toggle button:hover {
+  color: var(--text);
+}
+
+.chart-range-toggle button.is-active {
+  background: var(--card-bg);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text);
+  font-size: .88rem;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-family: inherit;
+  text-decoration: none;
+}
+
+.legend-item:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border);
+}
+
+.legend-item.is-muted {
+  opacity: .4;
+  text-decoration: line-through;
+}
+
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+  flex: none;
+}
+
+/* Yükleme serisi grafikte kesikli çizgiyle çizilir; aynı rengi payla­ştığı indirme serisinden
+   ayırt edilebilsin diye lejant örneğine ince bir çizgi deseni eklenir. */
+.legend-swatch-dashed {
+  background-image: repeating-linear-gradient(90deg, transparent 0 3px, rgba(0, 0, 0, .4) 3px 5px);
+}
+
+.chart-wrap {
+  position: relative;
+  height: 420px;
+}
+
+/*
+ * Canvas mutlak konumlandırılır ve boyutunu tamamen kabından alır. Aksi hâlde
+ * çizim sırasında atadığımız width/height nitelikleri elemanın yerleşim boyutunu
+ * büyütür, bu da bir sonraki karede daha büyük bir ölçü okunmasına yol açar ve
+ * grafik her karede biraz daha taşar.
+ */
+.chart-wrap canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Sayfa yenilenene kadar en fazla 3 kez, fareyle üzerine gelindiğinde 2 sn görünüp yavaşça
+   kaybolan kullanım ipucu (bkz. dashboard.js initChartHint). Gösterirken hızlı, kaybolurken
+   yavaş bir opacity geçişi kullanılır — bu yüzden transition burada değil, JS'de ayarlanır. */
+.chart-hint {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 5;
+  white-space: nowrap;
+}
+
+.chart-hint.is-visible {
+  opacity: 1;
+}
+
+.nav-tabs-hwmon {
+  display: flex;
+  gap: 4px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-tabs-hwmon button {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  padding: 10px 16px;
+  font-weight: 600;
+  font-size: .9rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.nav-tabs-hwmon button.active {
+  color: var(--text);
+  border-bottom-color: var(--accent-gpu);
+}
+
+.tile-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.tile {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  min-width: 150px;
+  flex: 1;
+}
+
+.tile-label {
+  font-size: .74rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.tile-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.tile-source {
+  margin-top: 4px;
+  font-size: .7rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.notice {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent-cpu);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+.notice-icon {
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.notice-title {
+  font-weight: 700;
+  font-size: .92rem;
+  margin: 0 0 6px;
+}
+
+.notice-body {
+  margin: 0;
+  font-size: .84rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.notice-body code {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 1px 5px;
+  font-size: .8rem;
+  color: var(--text);
+}
+
+/* Hakkında sayfası, panel dashboard'un tam genişliğini (1180px) değil, okunabilir bir sütun
+   genişliğini kullanır — aksi hâlde uzun paragraflar panelin yalnızca yarısını doldurup geri
+   kalanını boş bırakıyor, sayfanın yarısı eksikmiş gibi bir izlenim veriyordu (kullanıcı bulgusu). */
+.about-page {
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.about-lead {
+  margin: 0;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.about-note {
+  margin: 14px 0 0;
+  font-size: .85rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+.about-note code,
+.about-lead code {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 1px 5px;
+  font-size: .82em;
+  color: var(--text);
+}
+
+/* Hangi ölçümün kendi kodumuzdan, hangisinin dış kütüphaneden geldiği bir bakışta ayrılsın. */
+.source-own {
+  color: var(--accent-gpu);
+  font-weight: 600;
+}
+
+.source-third {
+  color: var(--accent-cpu);
+  font-weight: 600;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .87rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.data-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: .76rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.data-table tbody tr:hover {
+  background: var(--bg-elevated);
+}
+
+/* Hakkında sayfasındaki hücreler sayı değil cümle taşır; tek satıra zorlanırsa tablo taşardı.
+   Bu kural .data-table'dan SONRA gelmek zorunda — ikisi de tek sınıf seçici olduğundan özgüllükleri
+   eşit, kazanan sırada sonra gelendir (eskiden bu kural yukarıdaydı ve hiç etkisi olmuyordu, panel
+   geniş olduğu için fark edilmiyordu). */
+.about-table td {
+  white-space: normal;
+  line-height: 1.5;
+  /* "LibreHardwareMonitorLib" gibi boşluksuz uzun bileşen adları normalde hiç kırılmaz ve tabloyu
+     okunabilir sütun genişliğinin çok ötesine zorlayıp gereksiz bir yatay kaydırma çubuğu doğurur
+     — kelimenin ortasından kırılmasına izin vermek bunu önler. */
+  overflow-wrap: break-word;
+}
+
+/* Geçmiş sayfasındaki dakika dakika kayıt tablosu; okunması daha kolay olsun diye tüm hücreler ortalanır. */
+.history-table th,
+.history-table td {
+  text-align: center;
+}
+
+/* Isı haritası tablosu — hücreler JS'te satır içi renklendirildiği için burada yalnızca boyut/aralık. */
+.heatmap-table th,
+.heatmap-table td {
+  padding: 3px 5px;
+  font-size: .78rem;
+}
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.heatmap-legend-strip {
+  display: inline-flex;
+  height: 12px;
+  width: 200px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.heatmap-legend-strip span {
+  flex: 1;
+}
+
+/* Hazır Temalar — her biri 8 aksan rengi + arka plan önizlemesi olan tıklanabilir kartlar. */
+.preset-theme-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: nowrap;
+  margin-bottom: 22px;
+}
+
+.preset-theme-heading {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.preset-theme-search {
+  flex-shrink: 0;
+  margin-bottom: 6px;
+}
+
+.preset-theme-search {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: .85rem;
+  font-family: inherit;
+  width: 200px;
+  max-width: 100%;
+}
+
+.preset-theme-search:focus-visible {
+  outline: 2px solid var(--accent-gpu);
+  outline-offset: 1px;
+}
+
+.preset-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.preset-theme-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text);
+  width: 100%;
+  text-align: left;
+}
+
+.preset-theme-card:hover {
+  border-color: var(--accent-gpu);
+}
+
+/* Şu an uygulanan tema — grid'de hangi preset'in aktif olduğunu görsel olarak işaretler. */
+.preset-theme-card.is-active {
+  border-color: var(--accent-gpu);
+  box-shadow: 0 0 0 1px var(--accent-gpu);
+}
+
+.preset-theme-active-badge {
+  display: none;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: .7rem;
+  font-weight: 600;
+  color: var(--accent-gpu);
+  background: var(--bg);
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-gpu);
+}
+
+.preset-theme-card.is-active .preset-theme-active-badge {
+  display: inline-block;
+}
+
+.preset-theme-swatches {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  width: 100%;
+}
+
+.preset-theme-swatches span {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  display: block;
+}
+
+.preset-theme-bg-preview {
+  width: 100%;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  display: block;
+}
+
+.preset-theme-label {
+  font-size: .85rem;
+  font-weight: 600;
+}
+
+/* Panel Düzeni — gerçek sürükle-bırak ile kart sıralama listesi. */
+.panel-layout-item {
+  cursor: grab;
+}
+
+.panel-layout-item.is-dragging {
+  opacity: .4;
+}
+
+.panel-layout-item.is-drop-target {
+  border-color: var(--accent-gpu);
+}
+
+.panel-layout-handle {
+  color: var(--text-muted);
+  margin-right: 8px;
+  cursor: grab;
+}
+
+/* Sürükle-bırak listesinin sağındaki boş alanı değerlendiren küçük, canlı güncellenen önizleme —
+   Panel'in kendisine geçmeden, sıralama/görünürlük her değiştiğinde (kaydetmeden ÖNCE bile) burada
+   anında yansır. Gerçek .stat-card renkleriyle (--accent-*) birebir aynı vurgu renklerini kullanır. */
+.panel-layout-columns {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.panel-layout-column-main {
+  flex: 1 1 280px;
+  min-width: 280px;
+}
+
+.panel-layout-column-preview {
+  flex: 1 1 260px;
+  min-width: 220px;
+}
+
+/* Panel Düzeni'nde sol taraf uzun bir sürükle-bırak listesi olduğu için önizleme bilerek biraz
+   aşağı kaydırılmış (kullanıcı isteği) — ama Panel Görünümü'nde sol taraf tek satırlık bir "Düzen"
+   etiketi olduğundan aynı kaydırma "Düzen" ile "Önizleme" başlıklarının hizasını bozuyordu. Bu yüzden
+   kaydırma yalnızca Panel Düzeni örneğine (üst panel id'sine) özel, ortak sınıfa değil. */
+#panel-layout .panel-layout-column-preview {
+  margin-top: 26px;
+}
+
+.panel-layout-preview-label {
+  display: block;
+  font-size: .76rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.panel-layout-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 8px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  min-height: 96px;
+}
+
+/* "Panel Görünümü" → Liste seçilince önizleme de gerçek Panel gibi tek sütuna döner
+   (bkz. site.css'teki html[data-panel-view="list"] .stat-grid ile aynı mantık). */
+.panel-layout-preview.panel-layout-preview-list {
+  grid-template-columns: 1fr;
+}
+
+.panel-layout-preview-list .panel-layout-preview-card {
+  flex-direction: row;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.panel-layout-preview-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.panel-layout-preview-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.panel-layout-preview-card span {
+  font-size: .68rem;
+  line-height: 1.2;
+  color: var(--text-muted);
+}
+
+.panel-layout-preview-empty {
+  grid-column: 1 / -1;
+  color: var(--text-muted);
+  font-size: .82rem;
+  text-align: center;
+  align-self: center;
+}
+
+/* Cam Efekti önizlemesi — arkasında bulanıklaşacak bir şey olmazsa blur görünmez, bu yüzden
+   renkli bir gradyan arka plan üzerine gerçek .stat-card sınıfıyla küçük bir demo kart konur;
+   .glass-effect anahtarı <html>'e uygulandığı an (site.js) bu kart da otomatik tepki verir. */
+.glass-demo-backdrop {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  min-height: 96px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(135deg, var(--accent-cpu), var(--accent-gpu), var(--accent-ram));
+}
+
+.glass-demo-card {
+  width: 120px;
+  pointer-events: none;
+}
+
+/* Grafik Tipi önizlemesi — her seri için küçük bir SVG şekil (site.js/settings.js tarafından
+   çizgi/alan/bar seçimine göre çizilir). */
+.chart-type-preview-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.chart-type-preview-svg {
+  width: 100%;
+  height: 40px;
+}
+
+.progress-track {
+  background: var(--bg-elevated);
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent-gpu);
+}
+
+.btn-primary-hwmon {
+  background: var(--accent-gpu);
+  color: #06251f;
+  border: none;
+  padding: 10px var(--space-4);
+  border-radius: var(--control-radius);
+  font-weight: 700;
+  font-size: .92rem;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.btn-primary-hwmon:hover {
+  filter: brightness(1.08);
+}
+
+/* Koyu temaya uygun ortak form kutusu görünümü — metin girişi (.hwmon-field), "eski kayıtları
+   temizle" seçici (.cleanup-days-select) ve eşik/ayar formlarındaki girişler/seçiciler
+   (.threshold-field input/select, aşağıda) hepsi BURADAN tek noktadan tanımlanır. Daha önce dördü
+   de birbirinden bağımsız, hafif farklı değerlerle kopyalanmıştı (8px/9px/10px köşe, farklı dolgu)
+   — biri değişince diğerleri sessizce farklılaşıyordu, hatta biri (.threshold-field input)
+   checkbox'ları da yanlışlıkla kapsayıp görünmez 110px'lik kutulara çeviriyordu (bkz. CHANGELOG
+   2026-08-04). */
+.hwmon-field,
+.cleanup-days-select,
+.threshold-field input:not([type="checkbox"]),
+.threshold-field select {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--control-radius);
+  padding: 9px var(--space-3);
+  color: var(--text);
+  font-size: .93rem;
+  font-family: inherit;
+}
+
+.hwmon-field:hover,
+.hwmon-field:focus,
+.cleanup-days-select:hover,
+.threshold-field input:not([type="checkbox"]):hover,
+.threshold-field select:hover {
+  border-color: var(--accent-gpu);
+}
+
+.hwmon-field:focus-visible,
+.cleanup-days-select:focus-visible,
+.threshold-field input:not([type="checkbox"]):focus-visible,
+.threshold-field select:focus-visible {
+  outline: 2px solid var(--accent-gpu);
+  outline-offset: 1px;
+}
+
+select.hwmon-field,
+.cleanup-days-select,
+.threshold-field select {
+  cursor: pointer;
+}
+
+/* Metin + kutu şeklindeki büyük özellik açma/kapama anahtarları (Otomatik Ambiyans, Yerel Ağa
+   Açma, Windows'ta Otomatik Başlat, Enerji Maliyeti vb.) — her biri kendi HTML'inde ayrı ayrı
+   inline stille (farklı boşluk, farklı kutu boyutu) kopyalanmıştı; ortak sınıf olarak burada
+   toplandı. Kutu boyutu/rengi .notify-metric-field'daki (küçük bildirim onay kutuları) ile aynı,
+   tutarlı bir görünüm için. */
+.hwmon-toggle-field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+
+.hwmon-toggle-field input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  margin: 0;
+  accent-color: var(--accent-gpu);
+  cursor: pointer;
+}
+
+input[type="file"] {
+  color: var(--text);
+  font-size: .88rem;
+}
+
+.thresholds-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+}
+
+.threshold-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: .85rem;
+  color: var(--text-muted);
+}
+
+/* Görünüm (bg/border/radius/padding/font) artık yukarıdaki ortak kuralda (bkz. .hwmon-field);
+   burada yalnızca bu bağlama özgü genişlik kalıyor. */
+.threshold-field input:not([type="checkbox"]) {
+  width: 110px;
+}
+
+.threshold-metric-row {
+  display: flex;
+  gap: 8px;
+}
+
+.threshold-tier-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.threshold-tier-input {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: .78rem;
+  color: var(--text-muted);
+}
+
+/* Not: bu ikisi ".threshold-field input:not([type=checkbox])"den daha spesifik olmalı, aksi
+   hâlde o kuraldaki width:110px kazanır ve Dikkat/Kritik eşik kutuları/metrik satırları hep
+   110px genişlikte kalır (öyle bir üretim hatası vardı — genişlikler hiç uygulanmıyordu). */
+.threshold-field .threshold-tier-input input {
+  width: 90px;
+}
+
+.threshold-field .threshold-metric-row input {
+  width: 80px;
+}
+
+/* Bellek/Disk için tek seçenekli, değiştirilemeyen metrik göstergesi — gerçek bir dropdown gibi
+   görünmemesi için ok işareti kaldırılıyor (İşlemci/Ekran Kartı'ndaki seçilebilir olanlarda kalır). */
+.threshold-metric-fixed {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: default;
+}
+
+.notify-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.notify-metric-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .95rem;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.notify-metric-field input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  accent-color: var(--accent-gpu);
+  cursor: pointer;
+}
+
+.colors-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+}
+
+.color-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: .85rem;
+  color: var(--text-muted);
+}
+
+.color-field input[type="color"] {
+  width: 64px;
+  height: 36px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  cursor: pointer;
+}
+
+.color-field input[type="color"]:focus-visible {
+  outline: 2px solid var(--accent-gpu);
+  outline-offset: 1px;
+}
+
+.order-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 40px;
+}
+
+.order-group h4 {
+  margin: 0 0 10px;
+  font-size: .85rem;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.order-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 220px;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: .9rem;
+}
+
+.order-item-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.notification-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Bildirim geçmişi listesindeki tek bir kayıt: renkli nokta + başlık/detay + tarih. */
+.notification-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.notification-entry + .notification-entry {
+  border-top: 1px solid var(--border);
+}
+
+.notification-entry-dot {
+  margin-top: 5px;
+}
+
+.notification-entry-title {
+  font-weight: 700;
+  font-size: .9rem;
+}
+
+.notification-entry-time {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-size: .8rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.order-item-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.order-item-actions button {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card-bg);
+  color: var(--text);
+  cursor: pointer;
+  font-size: .75rem;
+  line-height: 1;
+}
+
+.order-item-actions button:hover:not(:disabled) {
+  border-color: var(--accent-gpu);
+}
+
+.order-item-actions button:disabled {
+  opacity: .3;
+  cursor: default;
+}
+
+/* Anlık görüntü önizlemesi — 📸 butonuna basınca oluşan PNG'yi indirmeden önce ortada gösterir. */
+.snapshot-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, .6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.snapshot-modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: min(1200px, 92vw);
+}
+
+.snapshot-modal-image {
+  max-width: 100%;
+  max-height: 74vh;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.snapshot-modal-close {
+  position: absolute;
+  top: -44px;
+  right: -8px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.snapshot-modal-close svg {
+  display: block;
+}
+
+.snapshot-modal-close:hover {
+  background: var(--card-bg);
+}
+
+.snapshot-modal-download {
+  padding: 10px 22px;
+  border-radius: var(--radius);
+  background: #8b5cf6;
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+}
+
+.snapshot-modal-download:hover {
+  filter: brightness(1.05);
+}
+
+/* Ambiyans modu — Panel üstündeki her şeyi kaplayan, saat ve büyük canlı değerler gösteren ekran. */
+.ambient-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.ambient-overlay[hidden] {
+  display: none;
+}
+
+.ambient-exit {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.ambient-exit:hover {
+  background: var(--bg-elevated);
+}
+
+.ambient-clock {
+  font-size: 5.5rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 2px;
+  color: var(--text);
+}
+
+.ambient-date {
+  color: var(--text-muted);
+  font-size: 1.15rem;
+  text-transform: capitalize;
+  margin-bottom: 34px;
+}
+
+.ambient-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(170px, 1fr));
+  gap: 24px;
+  width: min(860px, 92vw);
+}
+
+.ambient-stat {
+  text-align: center;
+  padding: 22px 18px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.ambient-stat::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--accent);
+}
+
+.ambient-label {
+  color: var(--text-muted);
+  font-size: .82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin-bottom: 10px;
+}
+
+.ambient-value {
+  font-size: 2.7rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.ambient-sub {
+  color: var(--text-muted);
+  margin-top: 8px;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 780px) {
+  .ambient-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ambient-clock {
+    font-size: 3.4rem;
+  }
+}
+
+.stat-card:focus-visible,
+.legend-item:focus-visible,
+.nav-tabs-hwmon button:focus-visible,
+.theme-toggle:focus-visible,
+.main-nav a:focus-visible,
+.btn-primary-hwmon:focus-visible {
+  outline: 2px solid var(--accent-gpu);
+  outline-offset: 2px;
+}
+
+@media (max-width: 560px) {
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .main-nav {
+    justify-content: space-between;
+  }
+
+  .main-nav a {
+    flex: 1;
+    text-align: center;
+    padding: 8px 6px;
+  }
+
+  .stat-value {
+    font-size: 1.7rem;
+  }
+
+  .stat-value-row {
+    font-size: 1.3rem;
+  }
+}

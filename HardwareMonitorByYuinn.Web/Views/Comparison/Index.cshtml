@@ -1,0 +1,101 @@
+@{
+    ViewData["Title"] = "Karşılaştırma";
+}
+
+<div class="settings-shell">
+    <nav class="settings-sidebar" id="comparison-sidebar">
+        <button type="button" class="sidebar-toggle" aria-label="Menüyü daralt/genişlet" aria-pressed="false">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="settings-category" data-category="session">
+            <button type="button" class="settings-category-toggle">
+                Oturum Karşılaştırma <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li><button type="button" data-target="comparison-export-panel">Verileri Kaydet</button></li>
+                <li><button type="button" data-target="comparison-panel">Karşılaştırma</button></li>
+            </ul>
+        </div>
+        <div class="settings-category" data-category="range">
+            <button type="button" class="settings-category-toggle">
+                Zaman Aralığı Karşılaştırma <span class="chevron">›</span>
+            </button>
+            <ul class="settings-subnav">
+                <li><button type="button" data-target="comparison-range-panel">İki Zaman Aralığını Karşılaştır</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="settings-content" id="comparison-content">
+        <div class="panel" id="comparison-export-panel">
+            <h2 class="panel-title">Verileri Kaydet</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;">
+                Bu oturumun tüm ortalama verilerini (1, 2, 5, 10, 15 dakikalık ve genel ortalamalar) bir metin
+                dosyasına kaydedip bilgisayarınıza indirebilirsiniz. Programı tekrar açtığınızda bu dosyayı
+                aşağıdan yükleyerek eski verilerle karşılaştırma yapabilirsiniz.
+            </p>
+            <form method="post" asp-controller="Comparison" asp-action="Export">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-primary-hwmon">Verileri Kaydet</button>
+            </form>
+        </div>
+
+        <div class="panel" id="comparison-panel">
+            <h2 class="panel-title">Karşılaştırma</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;">Daha önce kaydettiğiniz bir .txt raporunu seçin; bu oturumla karşılaştırması aşağıdaki tabloda görünür.</p>
+            <input type="file" id="load-file-input" accept=".txt" hidden />
+            <button type="button" id="load-file-trigger" class="btn-primary-hwmon">📁 Dosya Seç</button>
+            <div id="load-file-info" style="margin-top:8px;margin-bottom:14px;color:var(--text-muted);font-size:.85rem;"></div>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metrik</th>
+                            <th id="current-session-label">Bu Oturum</th>
+                            <th id="loaded-session-label">Yüklenen Kayıt</th>
+                            <th>Fark</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comparison-body">
+                        <tr><td colspan="4" style="color:var(--text-muted);">Şu anki oturum verileri yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel" id="comparison-range-panel">
+            <h2 class="panel-title">İki Zaman Aralığını Karşılaştır</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                İki tarih aralığı seçip Kalıcı Geçmiş'teki ortalamalarını yan yana karşılaştırın — ör.
+                bir sürücü güncellemesinden önceki hafta ile sonraki haftayı.
+            </p>
+            <div class="thresholds-form" style="margin-bottom:14px;">
+                <label class="threshold-field">Aralık A — Başlangıç
+                    <input type="datetime-local" id="range-a-from" style="width:200px;">
+                </label>
+                <label class="threshold-field">Aralık A — Bitiş
+                    <input type="datetime-local" id="range-a-to" style="width:200px;">
+                </label>
+            </div>
+            <div class="thresholds-form" style="margin-bottom:14px;">
+                <label class="threshold-field">Aralık B — Başlangıç
+                    <input type="datetime-local" id="range-b-from" style="width:200px;">
+                </label>
+                <label class="threshold-field">Aralık B — Bitiş
+                    <input type="datetime-local" id="range-b-to" style="width:200px;">
+                </label>
+            </div>
+            <button type="button" id="range-compare-btn" class="btn-primary-hwmon" style="margin-bottom:14px;">Karşılaştır</button>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Metrik</th><th id="range-a-label">Aralık A</th><th id="range-b-label">Aralık B</th><th>Fark</th></tr></thead>
+                    <tbody id="range-compare-body"><tr><td colspan="4" class="stat-sub">İki aralık seçip Karşılaştır'a basın.</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/comparison.js" asp-append-version="true"></script>
+}

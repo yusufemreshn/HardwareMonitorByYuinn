@@ -1,0 +1,53 @@
+@{
+    ViewData["Title"] = "PawnIO Kurulumu";
+}
+
+<div class="about-page">
+<div class="panel">
+    <h2 class="panel-title">PawnIO nedir, neden gerekli?</h2>
+    <p class="about-lead">
+        İşlemcinin gerçek güç tüketimini (watt), çip içi sıcaklığını (Tctl/Tdie) ve donanımsal
+        çekirdek frekanslarını okumak, işletim sisteminin normalde izin vermediği düşük seviyeli bir
+        erişim gerektirir. Bu erişimi <strong>PawnIO</strong> adlı imzalı, açık kaynaklı bir çekirdek
+        sürücüsü sağlar. Sürücü kurulu değilse uygulama çökmez ya da hata vermez — yalnızca bu üç
+        değeri okuyamaz, bunun yerine frekansı Windows performans sayaçlarından, sıcaklığı ise ACPI
+        termal bölgesinden türetir (gerçek ama daha yaklaşık değerler). Güç tüketimi için sürücüsüz
+        bir alternatif olmadığından o alan <code>--</code> gösterilir.
+    </p>
+</div>
+
+<div class="panel">
+    <h2 class="panel-title">Kurulum adımları</h2>
+    <ol class="about-note" style="margin:0;padding-left:20px;line-height:1.9;">
+        <li>
+            <a href="https://pawnio.eu/" target="_blank" rel="noopener noreferrer">pawnio.eu</a> adresine
+            gidin ve "Download Now" ile kurulumu indirin.
+        </li>
+        <li>İndirilen kurulumu çalıştırın (yönetici onayı isteyecektir). Kurulum sihirbazı bir sürüm
+            seçimi sorarsa "Unrestricted" seçeneğini işaretleyin.</li>
+        <li>Kurulum bittikten sonra HardwareMonitorByYuinn'ü <strong>tamamen kapatıp</strong> (görev çubuğundan
+            değil, uygulamanın kendisinden) tekrar açın — sürücü yalnızca uygulama başlarken bir kez
+            kontrol edilir, açıkken kurulursa fark edilmez.</li>
+        <li><strong>Detaylar → İşlemci</strong> sekmesine bakın: bu sayfanın en üstündeki uyarı kutusu
+            kaybolduysa ve güç tüketimi artık <code>--</code> yerine gerçek bir watt değeri
+            gösteriyorsa kurulum başarılı demektir.</li>
+    </ol>
+</div>
+
+<div class="panel">
+    <h2 class="panel-title">Sorun giderme</h2>
+    <p class="about-note" style="margin:0 0 10px;">
+        Kurulumdan sonra uyarı hâlâ görünüyorsa şunları kontrol edin:
+    </p>
+    <ul class="about-note" style="margin:0;padding-left:20px;line-height:1.9;">
+        <li>Uygulamayı gerçekten tamamen kapatıp yeniden açtığınızdan emin olun (yeniden başlatma,
+            <strong>Ayarlar → Ağ ve Erişim → Yerel Ağa Açma</strong> panelindeki "Şimdi Yeniden
+            Başlat" butonuyla da yapılabilir).</li>
+        <li>Bazı anti-cheat/güvenlik yazılımları (ör. FACEIT Anti-Cheat) çekirdek sürücü kurulumlarını
+            engelleyebilir; böyle bir yazılım kuruluysa geçici olarak kaldırıp tekrar deneyin.</li>
+        <li>Bazı anakartlarda/işlemcilerde LibreHardwareMonitor kütüphanesi güç sensörünü PawnIO kurulu
+            olsa bile farklı bir isimle yayınlayabilir — bu durumda uyarı kurulumdan bağımsız bir
+            uyumluluk sınırlamasıdır.</li>
+    </ul>
+</div>
+</div>

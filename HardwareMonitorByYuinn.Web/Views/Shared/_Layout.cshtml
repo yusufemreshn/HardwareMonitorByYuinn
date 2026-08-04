@@ -1,0 +1,87 @@
+@inject HardwareMonitorByYuinn.Business.AppSession AppSession
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+        (function () {
+            var saved = localStorage.getItem("hwmon-theme");
+            document.documentElement.setAttribute("data-theme", saved === "light" ? "light" : "dark");
+        })();
+    </script>
+    @if (ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" && ViewContext.RouteData.Values["action"]?.ToString() == "Index")
+    {
+        <script>
+            // Açılışta gösterilecek sekme (Ayarlar → Görünüm) — yalnızca uygulamaya "dıştan" (exe/kısayol,
+            // adres çubuğuna yazma, yeni sekme) girildiğinde uygulanır. Controller/action her zaman
+            // Dashboard/Index olduğu için (üst menüdeki "Panel" linki de "/"e gider) bunu tek başına ayırt
+            // edemeyiz. İlk denemede document.referrer'a bakılmıştı ama uygulama güvenlik amacıyla her
+            // yanıta `Referrer-Policy: no-referrer` gönderiyor (Program.cs) — bu yüzden referrer HER ZAMAN
+            // boş, o yaklaşım hiç işe yaramadı (canlı testte fark edildi). Bunun yerine sessionStorage
+            // kullanılıyor: bu SEKMEDE uygulama daha önce hiç yüklenmediyse "dıştan girildi" sayılır ve
+            // yönlendirme uygulanır; aynı sekmede sonraki her navigasyonda (ör. üst menüden "Panel"e
+            // tıklama) sessionStorage'daki bayrak zaten set olduğundan yönlendirme YAPILMAZ — aksi halde
+            // Panel dışı bir açılış sekmesi seçiliyken "Panel"e tıklamak hiçbir zaman Panel'i göstermezdi
+            // (kullanıcı tarafından bulunan, canlı doğrulanmış hata). sessionStorage sekme kapatılınca
+            // silindiği için uygulama yeniden açıldığında yönlendirme yine doğru şekilde uygulanır.
+            // <head> içinde CSS/body render edilmeden ÖNCE çalışır ki flash of wrong content olmasın.
+            (function () {
+                try {
+                    if (sessionStorage.getItem("hwmon-app-entered")) return;
+                    sessionStorage.setItem("hwmon-app-entered", "1");
+                    var raw = localStorage.getItem("hwmon-startup-tab");
+                    var map = {
+                        details: "/Details", comparison: "/Comparison", history: "/History",
+                        settings: "/Settings", notifications: "/Notifications", about: "/About"
+                    };
+                    if (raw && map[raw]) location.replace(map[raw]);
+                } catch (e) { /* localStorage/sessionStorage yoksa (gizli sekme vb.) sessizce Panel'de kalınır */ }
+            })();
+        </script>
+    }
+    <title>@ViewData["Title"] - HardwareMonitorByYuinn</title>
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="app-shell">
+        <header class="app-header">
+            <div class="brand"><span class="brand-dot">●</span> HardwareMonitorByYuinn</div>
+            <nav class="main-nav">
+                <a asp-controller="Dashboard" asp-action="Index"
+                   class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")">Panel</a>
+                <a asp-controller="Details" asp-action="Index"
+                   class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Details" ? "active" : "")">Detaylar</a>
+                <a asp-controller="Comparison" asp-action="Index"
+                   class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Comparison" ? "active" : "")">Karşılaştırma</a>
+                <a asp-controller="History" asp-action="Index"
+                   class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "History" ? "active" : "")">Geçmiş</a>
+                <a asp-controller="Settings" asp-action="Index"
+                   class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Settings" ? "active" : "")">Ayarlar</a>
+                <a asp-controller="Notifications" asp-action="Index"
+                   class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Notifications" ? "active" : "")">Bildirimler</a>
+                <a asp-controller="About" asp-action="Index"
+                   class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "About" ? "active" : "")">Hakkında</a>
+            </nav>
+            <div class="header-actions">
+                <div class="app-uptime" title="Programın açık kalma süresi" data-started-at="@AppSession.StartedAtUtc.ToString("o")">
+                    <span class="app-uptime-label">Çalışma Süresi</span>
+                    <span class="app-uptime-value" id="app-uptime-value">--:--:--</span>
+                </div>
+                <button id="notify-toggle" class="theme-toggle" type="button" aria-label="Eşik bildirimlerini aç/kapat" aria-pressed="false">🔕</button>
+                <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Tema değiştir">🌙</button>
+            </div>
+        </header>
+        <main>
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/hwmon-chart.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/threshold-notifier.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

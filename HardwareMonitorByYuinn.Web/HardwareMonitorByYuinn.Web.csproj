@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\HardwareMonitorByYuinn.Business\HardwareMonitorByYuinn.Business.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="HardwareMonitorByYuinn.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- MPL-2.0, LibreHardwareMonitorLib'in lisansının dağıtımla birlikte verilmesini şart koşar;
+         bu yüzden lisans dosyası çıktı klasörüne kopyalanır ve uygulama içinden okunabilir. -->
+    <Content Include="..\LICENSES.txt" Link="LICENSES.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- HardwareMonitorByYuinn.Web.exe'nin simgesi (kullanıcının verdiği CPU/anakart görselinden
+         16-256px arası 6 boyutlu .ico olarak üretildi). Bu ayar SDK'nın apphost/singlefile
+         oluşturma adımında otomatik işlendiği için hem `dotnet build` hem `dotnet publish`
+         çıktısındaki exe'ye gömülür — ayrı bir adım gerekmez, her publish'te geçerlidir. -->
+    <ApplicationIcon>app.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <!-- Yalnızca `dotnet publish`i etkiler (`dotnet build`/IDE ile geliştirmeyi etkilemez — bu
+       özellikler SDK'nın Publish hedefinde işlenir). Eskiden self-contained publish ~420 dosya/
+       birkaç klasöre (amd64/arm64/x86 + tek tek yönetilen DLL'ler) yayılıyordu; tek dosyaya
+       gömme (native kütüphaneler dahil) bunu tek bir .exe + wwwroot/ + birkaç küçük yapılandırma
+       dosyasına indiriyor. 2026-08-01'de gerçek self-contained win-x64 publish ile denenip
+       çalıştığı doğrulandı (bkz. CHANGELOG). -->
+  <PropertyGroup Condition="'$(PublishSingleFile)' == '' ">
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+
+  <!-- `dotnet build` bu projede wwwroot'u bin çıktısına OTOMATİK kopyalamıyor (ContentRootPath
+       Program.cs'de bilerek AppContext.BaseDirectory'ye sabitlendiği için normal ASP.NET Core
+       static-web-assets kaynak-geçişi devreye girmiyor). Bu, JS/CSS değişikliklerinin build
+       sonrası hatasızca ama sessizce eski kalmasına yol açan tekrarlayan bir tuzaktı (2026-07-31,
+       "devam 43" — bkz. CHANGELOG.md). Bu hedef her build sonrası wwwroot'u çıktı klasörüne
+       senkronize eder; yalnızca değişen/yeni dosyalar kopyalanır (SkipUnchangedFiles), bu yüzden
+       normal build süresini gözle görülür şekilde uzatmaz. -->
+  <Target Name="SyncWwwrootToOutput" AfterTargets="Build">
+    <ItemGroup>
+      <_WwwrootFiles Include="wwwroot\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_WwwrootFiles)"
+          DestinationFolder="$(OutDir)wwwroot\%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

@@ -1,0 +1,13 @@
+@model HardwareMonitorByYuinn.Web.Models.MetricRowViewModel
+@{
+    string Format(double? value) => value.HasValue ? $"{value.Value.ToString("F" + Model.Digits)} {Model.Unit}" : "--";
+}
+<tr>
+    <td>@Model.MetricName</td>
+    <td>@Format(Model.Averages.Last1Min)</td>
+    <td>@Format(Model.Averages.Last2Min)</td>
+    <td>@Format(Model.Averages.Last5Min)</td>
+    <td>@Format(Model.Averages.Last10Min)</td>
+    <td>@Format(Model.Averages.Last15Min)</td>
+    <td>@Format(Model.Averages.Lifetime)</td>
+</tr>

@@ -1,0 +1,361 @@
+@using HardwareMonitorByYuinn.Web.Models
+@using HardwareMonitorByYuinn.Entity.Averages
+@model DetailsViewModel
+@{
+    ViewData["Title"] = "Detaylar";
+    var cpu = Model.Latest?.Cpu;
+    var gpu = Model.Latest?.Gpu;
+    var ram = Model.Latest?.Ram;
+    var fps = Model.Latest?.Fps;
+    string F(double? v, string unit, int digits = 1) => v.HasValue ? $"{v.Value.ToString("F" + digits)} {unit}" : "--";
+    MetricAverages ToMb(MetricAverages a) => new()
+    {
+        Last1Min = a.Last1Min / 1048576.0,
+        Last2Min = a.Last2Min / 1048576.0,
+        Last5Min = a.Last5Min / 1048576.0,
+        Last10Min = a.Last10Min / 1048576.0,
+        Last15Min = a.Last15Min / 1048576.0,
+        Lifetime = a.Lifetime / 1048576.0
+    };
+}
+
+<ul class="nav-tabs-hwmon" role="tablist">
+    <li role="presentation">
+        <button class="active" data-tab-target="#tab-general" type="button" role="tab" aria-selected="true" tabindex="0">Genel</button>
+    </li>
+    <li role="presentation">
+        <button data-tab-target="#tab-cpu" type="button" role="tab" aria-selected="false" tabindex="-1">İşlemci</button>
+    </li>
+    <li role="presentation">
+        <button data-tab-target="#tab-gpu" type="button" role="tab" aria-selected="false" tabindex="-1">Ekran Kartı</button>
+    </li>
+    <li role="presentation">
+        <button data-tab-target="#tab-ram" type="button" role="tab" aria-selected="false" tabindex="-1">Bellek</button>
+    </li>
+    <li role="presentation">
+        <button data-tab-target="#tab-fps" type="button" role="tab" aria-selected="false" tabindex="-1">Kare Hızı</button>
+    </li>
+    <li role="presentation">
+        <button data-tab-target="#tab-system" type="button" role="tab" aria-selected="false" tabindex="-1">Depolama &amp; Sistem</button>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane is-active" id="tab-general" role="tabpanel">
+        <div class="panel">
+            <h3 class="panel-title">Genel Ortalamalar</h3>
+            <p class="notice-body" style="margin:0 0 12px;">
+                İşlemci, ekran kartı, bellek, kare hızı ve ağ hızının genel ortalamaları; çekirdek
+                bazlı dökümü <strong>İşlemci</strong> sekmesinde bulabilirsiniz.
+            </p>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Metrik</th><th>1 dk</th><th>2 dk</th><th>5 dk</th><th>10 dk</th><th>15 dk</th><th>Toplam</th></tr></thead>
+                    <tbody id="general-averages-body">
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("İşlemci Kullanımı", Model.Averages.Cpu.UsagePercent, "%"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("İşlemci Frekansı", Model.Averages.Cpu.ClockMhz, "MHz", 0))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("İşlemci Güç Tüketimi", Model.Averages.Cpu.PowerWatts, "W"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("İşlemci Sıcaklığı", Model.Averages.Cpu.TemperatureC, "°C"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Ekran Kartı Kullanımı", Model.Averages.Gpu.UsagePercent, "%"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Ekran Kartı Frekansı", Model.Averages.Gpu.CoreClockMhz, "MHz", 0))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Ekran Kartı Sıcaklığı", Model.Averages.Gpu.CoreTemperatureC, "°C"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Ekran Kartı Güç Tüketimi", Model.Averages.Gpu.PowerWatts, "W"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Bellek Kullanımı", Model.Averages.Ram.UsagePercent, "%"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Kare Hızı", Model.Averages.Fps.FramesPerSecond, "FPS"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Ağ İndirme Hızı", ToMb(Model.Averages.Network.DownloadBytesPerSec), "MB/s"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Ağ Yükleme Hızı", ToMb(Model.Averages.Network.UploadBytesPerSec), "MB/s"))
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane" id="tab-cpu" role="tabpanel">
+        @if (!Model.SystemInfo.LowLevelSensorsAvailable)
+        {
+            <div class="notice" role="note">
+                <span class="notice-icon" aria-hidden="true">ⓘ</span>
+                <div>
+                    <p class="notice-title">İşlemcinin çip içi sensörleri okunamıyor</p>
+                    <p class="notice-body">
+                        İşlemcinin güç tüketimi, gerçek çip sıcaklığı (Tctl/Tdie) ve donanımsal frekans değerleri
+                        yalnızca <strong>PawnIO</strong> adlı imzalı çekirdek sürücüsü kuruluysa okunabilir; bu sürücü
+                        şu anda sisteminizde kurulu değil. Uygulama bu yüzden frekansı Windows performans sayaçlarından,
+                        sıcaklığı ise ACPI termal bölgesinden türetiyor — bunlar gerçek ama yaklaşık değerlerdir.
+                        <strong>Güç tüketimi</strong> için sürücüsüz bir kaynak bulunmadığından bu alan <code>--</code> gösterilir.
+                        Tam sensör erişimi isterseniz PawnIO'yu kurup uygulamayı yeniden başlatmanız yeterlidir —
+                        <a asp-controller="About" asp-action="PawnIo">nasıl kurulur</a>.
+                    </p>
+                </div>
+            </div>
+        }
+        <div class="panel">
+            <h2 class="panel-title">@Model.SystemInfo.CpuName</h2>
+            <div class="tile-row">
+                <div class="tile"><div class="tile-label">Kullanım</div><div class="tile-value" id="cpu-live-usage">@F(cpu?.TotalLoadPercent, "%")</div></div>
+                <div class="tile">
+                    <div class="tile-label">Frekans</div>
+                    <div class="tile-value" id="cpu-live-clock">@F(cpu?.PackageClockMhz, "MHz", 0)</div>
+                    <div class="tile-source" id="cpu-clock-source">@cpu?.ClockSource</div>
+                </div>
+                <div class="tile"><div class="tile-label">Güç Tüketimi</div><div class="tile-value" id="cpu-live-power">@F(cpu?.PackagePowerWatts, "W")</div></div>
+                <div class="tile">
+                    <div class="tile-label">Sıcaklık</div>
+                    <div class="tile-value" id="cpu-live-temp">@F(cpu?.PackageTemperatureC, "°C")</div>
+                    <div class="tile-source" id="cpu-temp-source">@cpu?.TemperatureSource</div>
+                </div>
+            </div>
+
+            <h3 class="panel-title">Çekirdekler</h3>
+            <p class="notice-body" style="margin:0 0 12px;">
+                Satırlar fiziksel çekirdekleri gösterir. Frekans ve güç çekirdek başına ölçülür;
+                kullanım ise o çekirdekte çalışan iş parçacıklarının ortalamasıdır.
+            </p>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Çekirdek</th><th>Frekans</th><th>Kullanım</th><th>Güç</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var core in Model.Averages.Cpu.Cores.OrderBy(c => c.CoreIndex))
+                        {
+                            var liveCore = cpu?.Cores.FirstOrDefault(c => c.CoreIndex == core.CoreIndex);
+                            <tr>
+                                <td>Çekirdek @core.CoreIndex</td>
+                                <td id="cpu-core-@(core.CoreIndex)-clock">@F(liveCore?.ClockMhz, "MHz", 0)</td>
+                                <td id="cpu-core-@(core.CoreIndex)-load">@F(liveCore?.LoadPercent, "%")</td>
+                                <td id="cpu-core-@(core.CoreIndex)-power">@F(liveCore?.PowerWatts, "W")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3 class="panel-title">Ortalamalar</h3>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Metrik</th><th>1 dk</th><th>2 dk</th><th>5 dk</th><th>10 dk</th><th>15 dk</th><th>Toplam</th></tr></thead>
+                    <tbody id="cpu-aggregate-averages-body">
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Kullanım", Model.Averages.Cpu.UsagePercent, "%"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Frekans", Model.Averages.Cpu.ClockMhz, "MHz", 0))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Güç Tüketimi", Model.Averages.Cpu.PowerWatts, "W"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Sıcaklık", Model.Averages.Cpu.TemperatureC, "°C"))
+                    </tbody>
+                </table>
+            </div>
+            <h4 class="panel-title" style="margin-top:16px;font-size:.9rem;color:var(--text-muted);">Çekirdek Bazlı Ortalamalar</h4>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Metrik</th><th>1 dk</th><th>2 dk</th><th>5 dk</th><th>10 dk</th><th>15 dk</th><th>Toplam</th></tr></thead>
+                    <tbody id="cpu-core-averages-body">
+                        @foreach (var core in Model.Averages.Cpu.Cores.OrderBy(c => c.CoreIndex))
+                        {
+                            @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel($"Çekirdek {core.CoreIndex} - Frekans", core.ClockMhz, "MHz", 0))
+                            @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel($"Çekirdek {core.CoreIndex} - Kullanım", core.LoadPercent, "%"))
+                            @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel($"Çekirdek {core.CoreIndex} - Güç", core.PowerWatts, "W"))
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane" id="tab-gpu" role="tabpanel">
+        <div class="panel">
+            <h2 class="panel-title">@(gpu?.Name ?? Model.SystemInfo.GpuNames.FirstOrDefault() ?? "Ekran Kartı bulunamadı")</h2>
+            <div class="tile-row">
+                <div class="tile"><div class="tile-label">Sürücü Sürümü</div><div class="tile-value">@((gpu?.Name ?? Model.SystemInfo.GpuNames.FirstOrDefault()) is string activeGpuName && Model.SystemInfo.GpuDriverVersions.TryGetValue(activeGpuName, out string? activeGpuDriver) ? activeGpuDriver : "Bilinmiyor")</div></div>
+                <div class="tile"><div class="tile-label">Kullanım</div><div class="tile-value" id="gpu-live-usage">@F(gpu?.LoadPercent, "%")</div></div>
+                <div class="tile"><div class="tile-label">Çekirdek Frekansı</div><div class="tile-value" id="gpu-live-core-clock">@F(gpu?.CoreClockMhz, "MHz", 0)</div></div>
+                <div class="tile"><div class="tile-label">Bellek Frekansı</div><div class="tile-value" id="gpu-live-mem-clock">@F(gpu?.MemoryClockMhz, "MHz", 0)</div></div>
+                <div class="tile"><div class="tile-label">Normal Sıcaklık</div><div class="tile-value" id="gpu-live-core-temp">@F(gpu?.CoreTemperatureC, "°C")</div></div>
+                <div class="tile"><div class="tile-label">Hotspot Sıcaklık</div><div class="tile-value" id="gpu-live-hotspot">@F(gpu?.HotSpotTemperatureC, "°C")</div></div>
+                <div class="tile"><div class="tile-label">Güç Tüketimi</div><div class="tile-value" id="gpu-live-power">@F(gpu?.PowerWatts, "W")</div></div>
+                <div class="tile">
+                    <div class="tile-label">Video Belleği</div>
+                    <div class="tile-value" id="gpu-live-vram">@F(gpu?.MemoryUsedMb, "MB", 0)</div>
+                    <div class="tile-source" id="gpu-live-vram-total">@(gpu?.MemoryTotalMb is { } total ? $"toplam {total:0} MB" : "")</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3 class="panel-title">Ortalamalar</h3>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Metrik</th><th>1 dk</th><th>2 dk</th><th>5 dk</th><th>10 dk</th><th>15 dk</th><th>Toplam</th></tr></thead>
+                    <tbody id="gpu-averages-body">
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Kullanım", Model.Averages.Gpu.UsagePercent, "%"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Çekirdek Frekansı", Model.Averages.Gpu.CoreClockMhz, "MHz", 0))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Normal Sıcaklık", Model.Averages.Gpu.CoreTemperatureC, "°C"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Hotspot Sıcaklık", Model.Averages.Gpu.HotSpotTemperatureC, "°C"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Güç Tüketimi", Model.Averages.Gpu.PowerWatts, "W"))
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane" id="tab-ram" role="tabpanel">
+        <div class="panel">
+            <h2 class="panel-title">Bellek (RAM)</h2>
+            <div class="tile-row">
+                <div class="tile"><div class="tile-label">Kullanım</div><div class="tile-value" id="ram-live-usage">@F(ram?.UsedPercent, "%")</div></div>
+                <div class="tile"><div class="tile-label">Frekans</div><div class="tile-value" id="ram-live-clock">@F(ram?.ClockMhz, "MHz", 0)</div></div>
+                <div class="tile"><div class="tile-label">Toplam</div><div class="tile-value">@F(ram?.TotalGb, "GB")</div></div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3 class="panel-title">Ortalamalar</h3>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Metrik</th><th>1 dk</th><th>2 dk</th><th>5 dk</th><th>10 dk</th><th>15 dk</th><th>Toplam</th></tr></thead>
+                    <tbody id="ram-averages-body">
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Kullanım", Model.Averages.Ram.UsagePercent, "%"))
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane" id="tab-fps" role="tabpanel">
+        <div class="panel">
+            <h2 class="panel-title">Kare Hızı (FPS)</h2>
+            <div class="tile-row">
+                <div class="tile">
+                    <div class="tile-label">Anlık</div>
+                    <div class="tile-value" id="fps-live-value">@(fps?.FramesPerSecond is { } v ? v.ToString("F1") : "--")</div>
+                    <div class="tile-source" id="fps-live-source">@(fps?.SourceProcessName ?? "Ölçülemiyor")</div>
+                </div>
+                <div class="tile">
+                    <div class="tile-label">Kare Süresi</div>
+                    <div class="tile-value" id="fps-live-frametime">@F(fps?.FrameTimeMs, "ms")</div>
+                </div>
+                <div class="tile">
+                    <div class="tile-label">1% Low</div>
+                    <div class="tile-value" id="fps-live-low1">@F(fps?.Low1PercentFps, "FPS", 0)</div>
+                </div>
+                <div class="tile">
+                    <div class="tile-label">0.1% Low</div>
+                    <div class="tile-value" id="fps-live-low01">@F(fps?.LowPoint1PercentFps, "FPS", 0)</div>
+                </div>
+            </div>
+            <p class="notice-body" style="margin:0;">
+                Kare hızı, Windows'un kendi olay izleme altyapısı (ETW) üzerinden, o an <strong>ön planda
+                çalışan uygulamanın</strong> ekrana sunduğu karelerden ölçülür &mdash; ekran kartı üreticisinden
+                bağımsızdır (AMD/NVIDIA/Intel fark etmez). Yalnızca <strong>DirectX 9/11/12</strong> kullanan
+                uygulamaları kapsar; Vulkan/OpenGL tabanlı oyunlar bu ölçüme dahil olmaz. Ön plandaki
+                uygulama kare sunmuyorsa (masaüstündeyken, pencere küçültülmüşken) alan <code>--</code>
+                gösterir. Ortalamalar da yalnızca değer okunabilen saniyeleri kapsar, bu yüzden oyun
+                kapatıldığında geçmiş ortalamalar sıfıra doğru çekilmez.
+                <strong>1% Low</strong> ve <strong>0.1% Low</strong>, son ~10 saniyedeki en yavaş
+                karelerin ortalamasından hesaplanır ve takılmaları ortalama FPS'ten çok daha net
+                gösterir; en az 30 kare birikmeden (oyun yeni açıldığında birkaç saniye) <code>--</code>
+                gösterir.
+            </p>
+        </div>
+
+        <div class="panel">
+            <h3 class="panel-title">Ortalamalar</h3>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Metrik</th><th>1 dk</th><th>2 dk</th><th>5 dk</th><th>10 dk</th><th>15 dk</th><th>Toplam</th></tr></thead>
+                    <tbody id="fps-averages-body">
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("Kare Hızı", Model.Averages.Fps.FramesPerSecond, "FPS"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("%1 Low", Model.Averages.Fps.Low1Percent, "FPS"))
+                        @await Html.PartialAsync("_MetricAveragesRow", new MetricRowViewModel("%0.1 Low", Model.Averages.Fps.LowPoint1Percent, "FPS"))
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane" id="tab-system" role="tabpanel">
+        <div class="panel">
+            <h3 class="panel-title">Genel Sistem Bilgisi</h3>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <tbody>
+                        <tr><td>Bilgisayar Adı</td><td>@Model.SystemInfo.MachineName</td></tr>
+                        <tr><td>İşletim Sistemi</td><td>@Model.SystemInfo.OsDescription</td></tr>
+                        <tr><td>İşlemci</td><td>@Model.SystemInfo.CpuName</td></tr>
+                        <tr><td>Ekran Kartları</td><td>@string.Join(", ", Model.SystemInfo.GpuNames.Select(n => Model.SystemInfo.GpuDriverVersions.TryGetValue(n, out string? drv) ? $"{n} (Sürücü: {drv})" : n))</td></tr>
+                        <tr><td>Toplam RAM</td><td>@Model.SystemInfo.TotalRamGb.ToString("F1") GB</td></tr>
+                        <tr><td>Sistem Açık Kalma Süresi</td><td>@Model.SystemInfo.Uptime.ToString(@"dd\.hh\:mm\:ss")</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3 class="panel-title">Depolama</h3>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Sürücü</th><th>Dosya Sistemi</th><th>Kullanılan</th><th>Toplam</th><th>Doluluk</th></tr></thead>
+                    <tbody>
+                        @foreach (var drive in Model.SystemInfo.Drives)
+                        {
+                            var totalGb = drive.TotalBytes / 1024d / 1024d / 1024d;
+                            var usedGb = drive.UsedBytes / 1024d / 1024d / 1024d;
+                            var percent = drive.TotalBytes > 0 ? drive.UsedBytes * 100.0 / drive.TotalBytes : 0;
+                            <tr>
+                                <td>@drive.Name @(string.IsNullOrEmpty(drive.VolumeLabel) ? "" : $"({drive.VolumeLabel})")</td>
+                                <td>@drive.DriveFormat</td>
+                                <td>@usedGb.ToString("F0") GB</td>
+                                <td>@totalGb.ToString("F0") GB</td>
+                                <td style="min-width:140px;">
+                                    <div class="progress-track"><div class="progress-fill" style="width:@(percent.ToString("F0"))%"></div></div>
+                                    <span style="font-size:.78rem;color:var(--text-muted);">@percent.ToString("F0")%</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        @{ var storages = Model.Latest?.Storages ?? []; }
+        @if (storages.Any(s => s.SmartStatus is not null))
+        {
+            <div class="panel">
+                <h3 class="panel-title">SMART Disk Sağlığı</h3>
+                <p style="color:var(--text-muted);font-size:.85rem;margin:0 0 14px;">
+                    Yalnızca sürücünün SMART verisi okunabilen diskler burada listelenir. "Ömür" sürücü
+                    üreticisinin kendi tahminidir (100 = yeni, 0 = ömrünü tamamlamış); tüm modeller bu
+                    değeri raporlamaz.
+                </p>
+                <div class="table-scroll">
+                    <table class="data-table">
+                        <thead><tr><th>Disk</th><th>Durum</th><th>Ömür</th><th>Güç Açılma Süresi</th><th>Toplam Okuma</th><th>Toplam Yazma</th></tr></thead>
+                        <tbody>
+                            @foreach (var s in storages.Where(s => s.SmartStatus is not null))
+                            {
+                                string statusClass = s.SmartStatus switch
+                                {
+                                    "Kötü" => "source-third",
+                                    "Dikkat" => "source-third",
+                                    _ => "source-own"
+                                };
+                                <tr>
+                                    <td>@s.Name</td>
+                                    <td class="@statusClass">@s.SmartStatus</td>
+                                    <td>@(s.SmartLifePercent.HasValue ? $"%{s.SmartLifePercent}" : "--")</td>
+                                    <td>@(s.PowerOnHours.HasValue ? $"{s.PowerOnHours:N0} saat" : "--")</td>
+                                    <td>@(s.HostReadsGb.HasValue ? $"{s.HostReadsGb:N0} GB" : "--")</td>
+                                    <td>@(s.HostWritesGb.HasValue ? $"{s.HostWritesGb:N0} GB" : "--")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/details.js" asp-append-version="true"></script>
+}

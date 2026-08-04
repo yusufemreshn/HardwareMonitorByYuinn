@@ -1,0 +1,39 @@
+## Derleme çıktıları
+[Bb]in/
+[Oo]bj/
+
+## Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Yayın / arşiv çıktıları (dotnet publish ile yeniden üretilir)
+publish/
+sürümler/
+
+## Public repo'ya dahil edilmeyecek dosya/klasörler
+iconolacakfotograf.png
+docs/
+CHANGELOG.md
+HardwareMonitorByYuinn.Tests/
+
+## Test sonuçları
+[Tt]est[Rr]esult*/
+*.trx
+coverage*.xml
+coverage*.info
+
+## Loglar
+logs/
+*.log
+
+## Kullanıcıya özel yerel dosyalar
+.claude/
+*.lock
+
+## İşletim sistemi
+Thumbs.db
+desktop.ini
+.DS_Store

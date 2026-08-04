@@ -1,0 +1,216 @@
+@{
+    ViewData["Title"] = "Hakkında";
+}
+
+<div class="about-page">
+<div class="panel">
+    <h2 class="panel-title">HardwareMonitorByYuinn</h2>
+    <p class="about-lead">
+        Bu bilgisayarın işlemci, ekran kartı ve bellek kullanımını gerçek zamanlı gösteren yerel bir
+        izleme uygulamasıdır. Varsayılan olarak yalnızca <code>127.0.0.1:5250</code> adresinde çalışır,
+        yani yalnızca bu bilgisayardan erişilebilir ve hiçbir şekilde internete bağlanmaz. Tüm ölçümler
+        doğrudan bu bilgisayarın donanımından okunur. <strong>Ayarlar → Ağ ve Erişim → Yerel Ağa
+        Açma</strong>'yı kendiniz etkinleştirirseniz, aynı yerel ağdaki (ev ya da ofis Wi-Fi'niz gibi)
+        diğer cihazlar da bir PIN girerek bu bilgisayardaki veriye erişebilir. Bu trafik şifrelenmez
+        (HTTPS değil, düz HTTP); bu yüzden yalnızca güvendiğiniz bir ağda açmanız önerilir.
+    </p>
+</div>
+
+<div class="panel">
+    <h2 class="panel-title">Klavye Kısayolları</h2>
+    <div class="table-scroll">
+        <table class="data-table about-table">
+            <thead>
+                <tr>
+                    <th>Kısayol</th>
+                    <th>Etki</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><code>1</code></td><td>Panel</td></tr>
+                <tr><td><code>2</code></td><td>Detaylar</td></tr>
+                <tr><td><code>3</code></td><td>Karşılaştırma</td></tr>
+                <tr><td><code>4</code></td><td>Geçmiş</td></tr>
+                <tr><td><code>5</code></td><td>Ayarlar</td></tr>
+                <tr><td><code>6</code></td><td>Bildirimler</td></tr>
+                <tr><td><code>7</code></td><td>Hakkında</td></tr>
+                <tr><td><code>Ctrl</code> + <code>Shift</code> + <code>S</code></td><td>Anlık Görüntü al (yalnızca Panel sayfasında)</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <p class="about-note">
+        Bir metin kutusuna veya seçim listesine yazı yazarken rakam tuşları devre dışı kalır,
+        böylece bir eşik değeri girerken sayfa değişmez.
+    </p>
+</div>
+
+<div class="panel">
+    <h2 class="panel-title">Ölçümler nereden geliyor?</h2>
+    <div class="table-scroll">
+        <table class="data-table about-table">
+            <thead>
+                <tr>
+                    <th>Değer</th>
+                    <th>Kaynak</th>
+                    <th>Bileşen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>İşlemci kullanımı ve frekansı</td>
+                    <td>Windows performans sayaçları (WMI)</td>
+                    <td class="source-own">Kendi kodumuz</td>
+                </tr>
+                <tr>
+                    <td>İşlemci sıcaklığı</td>
+                    <td>ACPI termal bölgeleri, çip sensörü</td>
+                    <td class="source-own">Kendi kodumuz</td>
+                </tr>
+                <tr>
+                    <td>Bellek kullanımı ve frekansı</td>
+                    <td>Windows bellek sayaçları (WMI)</td>
+                    <td class="source-own">Kendi kodumuz</td>
+                </tr>
+                <tr>
+                    <td>Ekran kartı kullanımı ve bellek tüketimi</td>
+                    <td>Windows GPU performans sayaçları (WMI)</td>
+                    <td class="source-own">Kendi kodumuz</td>
+                </tr>
+                <tr>
+                    <td>Ekran kartı sıcaklığı ve bellek frekansı</td>
+                    <td>D3DKMT çekirdek modu grafik arayüzü</td>
+                    <td class="source-own">Kendi kodumuz</td>
+                </tr>
+                <tr>
+                    <td>Kare hızı (FPS)</td>
+                    <td>Windows olay izleme (ETW): DirectX 9/11/12 present olayları</td>
+                    <td class="source-own">Kendi kodumuz</td>
+                </tr>
+                <tr>
+                    <td>Grafikler, ortalamalar, karşılaştırma, arayüz</td>
+                    <td>&mdash;</td>
+                    <td class="source-own">Kendi kodumuz</td>
+                </tr>
+                <tr>
+                    <td>İşlemci güç tüketimi (paket ve çekirdek başına)</td>
+                    <td>MSR/SMU kayıtları (<strong>PawnIO</strong> sürücüsü gerekir)</td>
+                    <td class="source-third">LibreHardwareMonitorLib</td>
+                </tr>
+                <tr>
+                    <td>Ekran kartı çekirdek frekansı, güç tüketimi, hotspot sıcaklığı</td>
+                    <td>Üreticiye özel sürücü arayüzleri (NVAPI / ADL)</td>
+                    <td class="source-third">LibreHardwareMonitorLib</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p class="about-note">
+        Kare hızı, Windows'un olay izleme (ETW) altyapısından ön plandaki uygulamanın ekrana
+        sunduğu karelerin sayılmasıyla ölçülür. Bu yöntem ekran kartı üreticisinden bağımsızdır,
+        ama yalnızca DirectX 9/11/12 kullanan uygulamaları kapsar (Vulkan/OpenGL hariç). Çekirdek
+        frekansı, güç tüketimi ve hotspot sıcaklığı satırlarındaki değerler ise yalnızca üreticiye
+        özel sürücü arayüzleri üzerinden okunabilir. Bunları kendimiz de yazabilirdik, ama her ekran
+        kartı modelinde doğru çalıştığını doğrulayamayacağımız için bu işi, yıllardır tüm kartlarda
+        sınanmış olan LibreHardwareMonitorLib'e bıraktık. İşlemci güç tüketimi ise Windows'un ayırdığı
+        çekirdek modu (ring-0) sınırı yüzünden yalnızca <strong>PawnIO</strong> sürücüsü kuruluysa
+        okunabilir; kurulu değilse bu alan arayüzde <code>--</code> gösterir.
+        <a asp-controller="About" asp-action="PawnIo">PawnIO nasıl kurulur?</a>
+    </p>
+</div>
+
+<div class="panel">
+    <h2 class="panel-title">Üçüncü taraf bileşenler</h2>
+    <div class="table-scroll">
+        <table class="data-table about-table">
+            <thead>
+                <tr>
+                    <th>Bileşen</th>
+                    <th>Lisans</th>
+                    <th>Kullanım amacı</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>LibreHardwareMonitorLib 0.9.6</td>
+                    <td>Mozilla Public License 2.0</td>
+                    <td>Üreticiye özel ekran kartı değerleri</td>
+                </tr>
+                <tr>
+                    <td>DiskInfoToolkit 1.1.2</td>
+                    <td>Mozilla Public License 2.0</td>
+                    <td>SMART disk sağlığı verisi</td>
+                </tr>
+                <tr>
+                    <td>BlackSharp.Core 1.0.7</td>
+                    <td>Mozilla Public License 2.0</td>
+                    <td>DiskInfoToolkit'in bağımlılığı</td>
+                </tr>
+                <tr>
+                    <td>RAMSPDToolkit-NDD 1.4.2</td>
+                    <td>Mozilla Public License 2.0</td>
+                    <td>LibreHardwareMonitorLib'in bağımlılığı (RAM SPD bilgisi)</td>
+                </tr>
+                <tr>
+                    <td>.NET 10 / ASP.NET Core</td>
+                    <td>MIT License</td>
+                    <td>Uygulama çatısı ve web sunucusu</td>
+                </tr>
+                <tr>
+                    <td>ASP.NET Core SignalR (JavaScript istemcisi)</td>
+                    <td>MIT License</td>
+                    <td>Tarayıcıya saniyelik canlı veri aktarımı</td>
+                </tr>
+                <tr>
+                    <td>Microsoft.Data.Sqlite / System.Management / System.CodeDom / System.IO.Ports / System.Diagnostics.EventLog / Microsoft.Diagnostics.NETCore.Client</td>
+                    <td>MIT License</td>
+                    <td>SQLite erişimi, WMI, uzaktan tanılama altyapısı</td>
+                </tr>
+                <tr>
+                    <td>Microsoft.Diagnostics.Tracing.TraceEvent</td>
+                    <td>MIT License</td>
+                    <td>Kare hızı için Windows olay izleme (ETW) verisini okur</td>
+                </tr>
+                <tr>
+                    <td>msdia140.dll (TraceEvent paketi içinde)</td>
+                    <td>Microsoft DIA SDK dağıtım şartları</td>
+                    <td>TraceEvent'in iç bileşeni; MIT kapsamında değildir</td>
+                </tr>
+                <tr>
+                    <td>Mono.Posix.NETStandard / System.IO.FileSystem.AccessControl</td>
+                    <td>MIT License</td>
+                    <td>LibreHardwareMonitorLib'in geçişli bağımlılıkları</td>
+                </tr>
+                <tr>
+                    <td>SQLitePCLRaw</td>
+                    <td>Apache License 2.0</td>
+                    <td>Tüm kalıcı geçmişin SQLite erişim katmanı</td>
+                </tr>
+                <tr>
+                    <td>HidSharp 2.6.4</td>
+                    <td>Apache License 2.0</td>
+                    <td>LibreHardwareMonitorLib'in bağımlılığı (HID cihaz erişimi)</td>
+                </tr>
+                <tr>
+                    <td>SQLite (e_sqlite3.dll)</td>
+                    <td>Kamu malı (Public Domain)</td>
+                    <td>Kalıcı geçmişin fiziksel veritabanı motoru</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p class="about-note">
+        LibreHardwareMonitorLib ve DiskInfoToolkit'i değiştirmeden, derlenmiş hâlleriyle kullanıyoruz.
+        MPL-2.0 gereği kaynak kodlarına yukarıdaki proje adreslerinden ulaşabilirsiniz. Lisans
+        metinlerinin tamamı uygulamanın yanındaki
+        <code>LICENSES.txt</code> dosyasında yer alır. <strong>msdia140.dll</strong> istisnadır:
+        MIT kapsamındaki TraceEvent paketinin bir iç bileşeni olsa da kendisi Microsoft'un DIA SDK
+        dağıtım şartlarına tabidir, değiştirilmeden ve yalnızca paketin izin verdiği şekilde
+        dağıtılır.
+    </p>
+    <p>
+        <a class="btn-primary-hwmon" asp-controller="About" asp-action="Licenses" target="_blank" rel="noopener">
+            Lisans metinlerini aç
+        </a>
+    </p>
+</div>
+</div>
