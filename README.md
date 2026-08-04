@@ -49,6 +49,15 @@ Proje `Business` / `DataAccess` / `Entity` / `Web` katmanlarına ayrılmıştır
 
 ## Çalıştırma
 
+### Hazır derleme (kurulum yapmadan)
+
+Kaynak koddan derlemek istemiyorsan [Releases](https://github.com/yusufemreshn/HardwareMonitorByYuinn/releases)
+sayfasından en güncel `HardwareMonitorByYuinn-win-x64.zip` dosyasını indir, bir klasöre
+çıkart ve `HardwareMonitorByYuinn.Web.exe`'yi çalıştır. Self-contained bir derlemedir,
+ayrıca .NET kurulumu gerekmez.
+
+### Kaynak koddan
+
 ```
 git clone https://github.com/yusufemreshn/HardwareMonitorByYuinn.git
 cd HardwareMonitorByYuinn
