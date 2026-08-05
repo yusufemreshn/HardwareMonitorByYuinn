@@ -3,6 +3,20 @@
     ViewData["Title"] = "Panel";
 }
 
+@if (!Model.SystemInfo.LowLevelSensorsAvailable)
+{
+    <div class="notice" role="note">
+        <span class="notice-icon" aria-hidden="true">ⓘ</span>
+        <div>
+            <p class="notice-title">PawnIO sürücüsü kurulu değil</p>
+            <p class="notice-body">
+                İşlemcinin güç tüketimi ve çip içi sıcaklığı yalnızca <strong>PawnIO</strong> sürücüsü
+                kuruluyken okunabilir. Şu anda sürücü kurulu değil; ikisi de <code>--</code> gösterilir.
+                <a asp-controller="About" asp-action="PawnIo">nasıl kurulur</a>.
+            </p>
+        </div>
+    </div>
+}
 <div class="health-summary" id="health-summary" style="display:none;"></div>
 
 <div class="stat-grid">

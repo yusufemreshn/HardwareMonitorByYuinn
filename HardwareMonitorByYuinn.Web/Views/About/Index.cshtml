@@ -62,9 +62,9 @@
                     <td class="source-own">Kendi kodumuz</td>
                 </tr>
                 <tr>
-                    <td>İşlemci sıcaklığı</td>
-                    <td>ACPI termal bölgeleri, çip sensörü</td>
-                    <td class="source-own">Kendi kodumuz</td>
+                    <td>İşlemci sıcaklığı (Tctl/Tdie)</td>
+                    <td>MSR/SMU kayıtları (<strong>PawnIO</strong> sürücüsü gerekir)</td>
+                    <td class="source-third">LibreHardwareMonitorLib</td>
                 </tr>
                 <tr>
                     <td>Bellek kullanımı ve frekansı</td>
@@ -87,6 +87,16 @@
                     <td class="source-own">Kendi kodumuz</td>
                 </tr>
                 <tr>
+                    <td>Disk toplam kapasite ve türü (SSD/HDD)</td>
+                    <td>Windows depolama sayaçları (WMI)</td>
+                    <td class="source-own">Kendi kodumuz</td>
+                </tr>
+                <tr>
+                    <td>SMART Ömür yüzdesi ve Güç Açılma Süresi &mdash; yedek kaynak</td>
+                    <td>Windows Depolama Güvenilirlik Sayacı (WMI)</td>
+                    <td class="source-own">Kendi kodumuz</td>
+                </tr>
+                <tr>
                     <td>Grafikler, ortalamalar, karşılaştırma, arayüz</td>
                     <td>&mdash;</td>
                     <td class="source-own">Kendi kodumuz</td>
@@ -100,6 +110,16 @@
                     <td>Ekran kartı çekirdek frekansı, güç tüketimi, hotspot sıcaklığı</td>
                     <td>Üreticiye özel sürücü arayüzleri (NVAPI / ADL)</td>
                     <td class="source-third">LibreHardwareMonitorLib</td>
+                </tr>
+                <tr>
+                    <td>Disk kullanım yüzdesi, sıcaklığı, okuma/yazma hızı</td>
+                    <td>Donanım sensörleri</td>
+                    <td class="source-third">LibreHardwareMonitorLib</td>
+                </tr>
+                <tr>
+                    <td>SMART Durum, Ömür (birincil), Güç Açılma Süresi (birincil), Toplam Okuma/Yazma</td>
+                    <td>Ham SMART/NVMe log verisi</td>
+                    <td class="source-third">DiskInfoToolkit</td>
                 </tr>
             </tbody>
         </table>
@@ -115,6 +135,14 @@
         çekirdek modu (ring-0) sınırı yüzünden yalnızca <strong>PawnIO</strong> sürücüsü kuruluysa
         okunabilir; kurulu değilse bu alan arayüzde <code>--</code> gösterir.
         <a asp-controller="About" asp-action="PawnIo">PawnIO nasıl kurulur?</a>
+    </p>
+    <p class="about-note">
+        SMART Ömür yüzdesi ve Güç Açılma Süresi önce DiskInfoToolkit'ten (sürücünün ham SMART/NVMe
+        log verisi) okunmaya çalışılır; bazı denetleyicilerde bu okuma başarısız ya da geçersiz
+        (ör. %100'ü aşan bir Ömür) olabildiğinde Windows'un kendi Depolama Güvenilirlik Sayacı'na
+        (bağımsız bir WMI kaynağı) düşülür. Toplam Okuma/Toplam Yazma için bağımsız bir kaynak
+        yoktur (bu, yalnızca sürücünün kendi SMART/NVMe log'unda tutulan bir sayaçtır); ikisi de
+        okunamazsa arayüzde <code>--</code> gösterilir.
     </p>
 </div>
 
@@ -161,7 +189,7 @@
                     <td>Tarayıcıya saniyelik canlı veri aktarımı</td>
                 </tr>
                 <tr>
-                    <td>Microsoft.Data.Sqlite / System.Management / System.CodeDom / System.IO.Ports / System.Diagnostics.EventLog / Microsoft.Diagnostics.NETCore.Client</td>
+                    <td>Microsoft.Data.Sqlite / System.Management / System.CodeDom / System.IO.Ports / System.Diagnostics.EventLog / Microsoft.Diagnostics.NETCore.Client / System.Reflection.TypeExtensions</td>
                     <td>MIT License</td>
                     <td>SQLite erişimi, WMI, uzaktan tanılama altyapısı</td>
                 </tr>

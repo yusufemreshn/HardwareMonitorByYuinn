@@ -31,6 +31,7 @@ public sealed class LibreHardwareReader : IHardwareReader
     private readonly ProcessMetricsProvider _processMetrics = new();
     private readonly PhysicalDiskInfoProvider _physicalDiskInfo;
     private readonly DiskSmartInfoProvider _diskSmartInfo;
+    private readonly StorageReliabilityCounterProvider _storageReliability;
     private volatile bool _lowLevelSensorsAvailable;
     private bool _lowLevelDiagnosticsLogged;
     private readonly HashSet<string> _loggedGpuSensorDumps = [];
@@ -45,6 +46,7 @@ public sealed class LibreHardwareReader : IHardwareReader
         _etwFps = new EtwFpsProvider(logger);
         _physicalDiskInfo = new PhysicalDiskInfoProvider(logger);
         _diskSmartInfo = new DiskSmartInfoProvider(logger);
+        _storageReliability = new StorageReliabilityCounterProvider(logger);
         _computer = new Computer
         {
             IsCpuEnabled = true,
@@ -95,6 +97,7 @@ public sealed class LibreHardwareReader : IHardwareReader
             (IReadOnlyDictionary<string, GpuReading> ownGpuReadings, IReadOnlyDictionary<int, double> gpuPercentByPid) = _gpuMetrics.Read();
             IReadOnlyList<PhysicalDiskInfo> physicalDisks = _physicalDiskInfo.Read();
             IReadOnlyList<DiskSmartInfo> diskSmartInfo = _diskSmartInfo.Read();
+            IReadOnlyList<StorageReliabilityInfo> storageReliability = _storageReliability.Read();
 
             foreach (IHardware hw in _computer.Hardware)
             {
@@ -153,7 +156,7 @@ public sealed class LibreHardwareReader : IHardwareReader
                                 ram = PreferReadingWithData(ram, ReadRam(hw), r => r.UsedPercent);
                             break;
                         case HardwareType.Storage:
-                            storages.Add(ReadStorage(hw, physicalDisks, diskSmartInfo));
+                            storages.Add(ReadStorage(hw, physicalDisks, diskSmartInfo, storageReliability));
                             break;
                     }
                 }
@@ -274,7 +277,6 @@ public sealed class LibreHardwareReader : IHardwareReader
     private const string ClockSourceHardware = "Donanım sensörü";
     private const string ClockSourcePerfCounter = "Windows performans sayacı";
     private const string TemperatureSourceDie = "İşlemci çip sensörü (Tctl/Tdie)";
-    private const string TemperatureSourceAcpi = "ACPI termal bölgesi (yaklaşık)";
 
     private CpuSnapshot ReadCpu(IHardware hw)
     {
@@ -395,12 +397,6 @@ public sealed class LibreHardwareReader : IHardwareReader
         double? packageClock = resolvedCoreClocks.Count > 0 ? resolvedCoreClocks.Values.Max() : packageClockSensor;
 
         string? temperatureSource = packageTemp.HasValue ? TemperatureSourceDie : null;
-        if (packageTemp is null)
-        {
-            packageTemp = _wmiCpuMetrics.ReadAcpiTemperatureC();
-            if (packageTemp.HasValue)
-                temperatureSource = TemperatureSourceAcpi;
-        }
 
         IReadOnlyDictionary<int, double> resolvedCoreLoads =
             SensorLookup.FoldThreadsIntoCores(coreLoads, physicalCoreCount);
@@ -512,7 +508,8 @@ public sealed class LibreHardwareReader : IHardwareReader
     private static StorageSnapshot ReadStorage(
         IHardware hw,
         IReadOnlyList<PhysicalDiskInfo> physicalDisks,
-        IReadOnlyList<DiskSmartInfo> diskSmartInfo)
+        IReadOnlyList<DiskSmartInfo> diskSmartInfo,
+        IReadOnlyList<StorageReliabilityInfo> storageReliability)
     {
         double? usedPercent = hw.FindValue(SensorType.Load, n => n.Contains("Used Space", StringComparison.OrdinalIgnoreCase));
         double? temperature = hw.FindValue(SensorType.Temperature, n => n.Contains("Temperature", StringComparison.OrdinalIgnoreCase)).NullIfZero();
@@ -536,7 +533,15 @@ public sealed class LibreHardwareReader : IHardwareReader
             ?? (physicalDisks.Count == 1 ? physicalDisks[0] : null);
         DiskSmartInfo? smart = DiskSmartInfoProvider.Match(diskSmartInfo, effectiveName)
             ?? (diskSmartInfo.Count == 1 ? diskSmartInfo[0] : null);
+        StorageReliabilityInfo? reliability = StorageReliabilityCounterProvider.Match(storageReliability, effectiveName)
+            ?? (storageReliability.Count == 1 ? storageReliability[0] : null);
 
+        // Ömür ve Güç Açılma Süresi için birincil kaynak DiskInfoToolkit'in ham SMART/NVMe log
+        // okumasıdır (daha ayrıntılı); bazı denetleyicilerde bu okuma başarısız/geçersiz olabildiği
+        // için (bkz. DiskSmartInfoProvider'daki 0-100 doğrulaması) o durumda Windows'un kendi Depolama
+        // Güvenilirlik Sayacı'na (StorageReliabilityCounterProvider, tamamen bağımsız bir WMI yolu)
+        // düşülür. Toplam Okuma/Yazma için bağımsız bir Windows kaynağı yok (bu veri yalnızca
+        // sürücünün kendi SMART/NVMe log'unda tutulur), o alan hâlâ yalnızca DiskInfoToolkit'e bağlı.
         return new StorageSnapshot
         {
             Name = effectiveName,
@@ -546,8 +551,8 @@ public sealed class LibreHardwareReader : IHardwareReader
             WriteRateBytesPerSec = writeRate,
             TotalGb = physicalDisk?.TotalGb,
             SmartStatus = smart?.Status,
-            SmartLifePercent = smart?.LifePercent,
-            PowerOnHours = smart?.PowerOnHours,
+            SmartLifePercent = smart?.LifePercent ?? reliability?.LifePercent,
+            PowerOnHours = smart?.PowerOnHours ?? reliability?.PowerOnHours,
             HostReadsGb = smart?.HostReadsGb,
             HostWritesGb = smart?.HostWritesGb
         };

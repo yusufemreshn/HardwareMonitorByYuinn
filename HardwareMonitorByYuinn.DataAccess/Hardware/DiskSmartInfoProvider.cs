@@ -73,13 +73,37 @@ internal sealed class DiskSmartInfoProvider(ILogger logger)
                         ? smart.DetectedPowerOnHours
                         : smart.MeasuredPowerOnHours > 0 ? smart.MeasuredPowerOnHours : null;
 
+                    int? lifePercent = smart.Life;
+                    double? hostReadsGb = smart.HostReads.HasValue ? (double)smart.HostReads.Value : null;
+                    double? hostWritesGb = smart.HostWrites.HasValue ? (double)smart.HostWrites.Value : null;
+
+                    // Bazı NVMe denetleyicilerinde (gözlemlenen örnek: Micron OEM sürücüler) genişletilmiş
+                    // SMART/Health Info Log sayfası okunamadığında DiskInfoToolkit hata fırlatmak yerine
+                    // sözleşmeyi (Ömür: 0-100 arası, bkz. StorageSnapshot.SmartLifePercent) ihlal eden bir
+                    // değer üretebiliyor (ör. %101) — muhtemelen okunamayan ham baytın (0xFF dolgu) işaretli
+                    // sayı olarak yorumlanmasından kaynaklanıyor. Bu durumda aynı log sayfasından gelen diğer
+                    // alanlar (Toplam Okuma/Yazma, Güç Açılma Süresi) da güvenilmez sayılır ve hepsi null'a
+                    // çekilir; arayüzde yanlış "%101 ömür / 0 GB okuma-yazma" (işletim sistemi çalışan bir
+                    // diskte fiziksel olarak imkânsız) yerine "--" gösterilir. Temel Durum (İyi/Dikkat/Kötü)
+                    // farklı, daha güvenilir bir komuttan geldiği için buna dahil edilmez.
+                    if (lifePercent is < 0 or > 100)
+                    {
+                        _logger.LogWarning(
+                            "{Disk} için SMART Ömür değeri geçerli aralık dışında (%{Life}) — genişletilmiş SMART alanları güvenilmez sayılıp yok sayılıyor",
+                            storage.Model, lifePercent);
+                        lifePercent = null;
+                        powerOnHours = null;
+                        hostReadsGb = null;
+                        hostWritesGb = null;
+                    }
+
                     results.Add(new DiskSmartInfo(
                         storage.Model ?? storage.DeviceID ?? "Disk",
                         status,
-                        smart.Life,
+                        lifePercent,
                         powerOnHours,
-                        smart.HostReads.HasValue ? (double)smart.HostReads.Value : null,
-                        smart.HostWrites.HasValue ? (double)smart.HostWrites.Value : null));
+                        hostReadsGb,
+                        hostWritesGb));
                 }
             }
             catch (Exception ex)

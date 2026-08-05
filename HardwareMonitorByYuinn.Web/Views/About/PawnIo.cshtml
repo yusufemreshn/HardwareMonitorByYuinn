@@ -10,9 +10,10 @@
         çekirdek frekanslarını okumak, işletim sisteminin normalde izin vermediği düşük seviyeli bir
         erişim gerektirir. Bu erişimi <strong>PawnIO</strong> adlı imzalı, açık kaynaklı bir çekirdek
         sürücüsü sağlar. Sürücü kurulu değilse uygulama çökmez ya da hata vermez — yalnızca bu üç
-        değeri okuyamaz, bunun yerine frekansı Windows performans sayaçlarından, sıcaklığı ise ACPI
-        termal bölgesinden türetir (gerçek ama daha yaklaşık değerler). Güç tüketimi için sürücüsüz
-        bir alternatif olmadığından o alan <code>--</code> gösterilir.
+        değeri okuyamaz, bunun yerine frekansı Windows performans sayaçlarından türetir (gerçek ama
+        daha yaklaşık bir değer). Güç tüketimi ve sıcaklık için sürücüsüz güvenilir bir alternatif yok
+        (ACPI termal bölgesi denenmişti ama gerçek çip sıcaklığından onlarca derece sapabildiği için
+        kaldırıldı), bu yüzden ikisi de <code>--</code> gösterilir.
     </p>
 </div>
 

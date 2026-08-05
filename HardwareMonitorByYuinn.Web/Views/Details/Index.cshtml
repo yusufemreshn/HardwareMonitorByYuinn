@@ -80,10 +80,12 @@
                     <p class="notice-body">
                         İşlemcinin güç tüketimi, gerçek çip sıcaklığı (Tctl/Tdie) ve donanımsal frekans değerleri
                         yalnızca <strong>PawnIO</strong> adlı imzalı çekirdek sürücüsü kuruluysa okunabilir; bu sürücü
-                        şu anda sisteminizde kurulu değil. Uygulama bu yüzden frekansı Windows performans sayaçlarından,
-                        sıcaklığı ise ACPI termal bölgesinden türetiyor — bunlar gerçek ama yaklaşık değerlerdir.
-                        <strong>Güç tüketimi</strong> için sürücüsüz bir kaynak bulunmadığından bu alan <code>--</code> gösterilir.
-                        Tam sensör erişimi isterseniz PawnIO'yu kurup uygulamayı yeniden başlatmanız yeterlidir —
+                        şu anda sisteminizde kurulu değil. Uygulama bu yüzden frekansı Windows performans
+                        sayaçlarından türetiyor (gerçek ama yaklaşık bir değer). <strong>Güç tüketimi</strong> ve
+                        <strong>sıcaklık</strong> için sürücüsüz güvenilir bir kaynak yok (ACPI termal bölgesi
+                        denenmişti ama gerçek çip sıcaklığından onlarca derece sapabildiği görüldüğü için
+                        kaldırıldı), bu yüzden ikisi de <code>--</code> gösterilir. Tam sensör erişimi isterseniz
+                        PawnIO'yu kurup uygulamayı yeniden başlatmanız yeterlidir —
                         <a asp-controller="About" asp-action="PawnIo">nasıl kurulur</a>.
                     </p>
                 </div>

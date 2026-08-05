@@ -166,7 +166,12 @@ a {
   flex-wrap: nowrap;
   flex: 1 1 auto;
   min-width: 0;
-  justify-content: center;
+  /* "safe center": sığdığında ortalar, taşıp overflow-x:auto devreye girdiğinde flex-start'a
+     düşer. Düz "center" kullanılırsa taşan içerik container'ın HER İKİ ucuna eşit dağılır ve
+     scrollLeft 0'ın altına inemediği için sol uçtaki öğe (Panel) hiçbir zaman scroll ile
+     görünür hale gelmez, sağ uçtaki öğe (Hakkında) de aynı simetrik kırpılmadan etkilenir —
+     kullanıcı raporu: dar pencerede en sola/sağa kaydırsa bile Panel/Hakkında tam görünmüyor. */
+  justify-content: safe center;
   gap: 4px;
   background: var(--card-bg);
   border: 1px solid var(--border);

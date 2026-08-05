@@ -477,7 +477,7 @@ Bileşenler : .NET 10 çalışma zamanı, ASP.NET Core, ASP.NET Core SignalR ve
              wwwroot/lib/signalr altındaki JavaScript istemcisi,
              Microsoft.Data.Sqlite, System.Management, System.CodeDom,
              System.IO.Ports, System.Diagnostics.EventLog,
-             Microsoft.Diagnostics.NETCore.Client
+             Microsoft.Diagnostics.NETCore.Client, System.Reflection.TypeExtensions
 Proje      : https://github.com/dotnet
 Lisans     : MIT License
 Kullanım   : Değiştirilmeden dağıtılır.
