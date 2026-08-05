@@ -7,29 +7,19 @@ namespace HardwareMonitorByYuinn.DataAccess.Hardware;
 /// LibreHardwareMonitor'un işlemci frekans/güç/sıcaklık sensörleri MSR ve SMU okumalarına dayanır;
 /// bunlar da yalnızca PawnIO çekirdek sürücüsü kuruluysa çalışır. Sürücü yoksa kütüphane bu
 /// sensörler için <c>null</c> değil <c>0</c> döndürür, yani veri yokluğu "sıfır değer" gibi görünür.
-/// Bu sağlayıcı, hiçbir sürücü gerektirmeyen WMI performans sayaçları ve ACPI termal bölgeleri
-/// üzerinden en azından frekans ve sıcaklık için gerçek değerler üretir.
+/// Bu sağlayıcı, hiçbir sürücü gerektirmeyen WMI performans sayaçları üzerinden en azından frekans
+/// için gerçek bir değer üretir. Sıcaklık için sürücüsüz güvenilir bir kaynak yok: ACPI termal
+/// bölgeleri denenmişti ama gerçek Tctl/Tdie'den onlarca derece sapabildiği canlı testte doğrulandı
+/// (bkz. CHANGELOG 2026-08-06) — bu yüzden kaldırıldı, sıcaklık de güç tüketimi gibi PawnIO'ya bağlı.
 /// </summary>
 internal sealed class WmiCpuMetricsProvider(ILogger logger)
 {
-    private static readonly TimeSpan TemperatureCacheDuration = TimeSpan.FromSeconds(2);
-
-    /// <summary>
-    /// ACPI sorgusu başarısızsa (çoğunlukla yönetici yetkisi olmadığı için) neden kalıcıdır.
-    /// Saniyede bir yeniden denemek hem boşuna iştir hem de log dosyasını şişirir.
-    /// </summary>
-    private static readonly TimeSpan TemperatureRetryAfterFailure = TimeSpan.FromMinutes(1);
-
     private readonly ILogger _logger = logger;
     private readonly object _gate = new();
     private double? _baseClockMhz;
     private bool _baseClockResolved;
-    private double? _cachedTemperatureC;
-    private DateTime _temperatureReadAtUtc = DateTime.MinValue;
     private int _physicalCoreCount;
     private bool _physicalCoreCountResolved;
-    private bool _lastTemperatureReadFailed;
-    private bool _temperatureFailureLogged;
     private bool _clockFailureLogged;
 
     /// <summary>Anlık işlemci frekansı: taban frekans × "% Processor Performance". Task Manager de aynı formülü kullanır.</summary>
@@ -87,69 +77,6 @@ internal sealed class WmiCpuMetricsProvider(ILogger logger)
             }
 
             return CpuClockReading.Empty;
-        }
-    }
-
-    /// <summary>
-    /// ACPI termal bölgelerinden en sıcak makul değeri döndürür. Bu, işlemci lehimindeki Tctl/Tdie
-    /// sensörü değildir; kart üzerindeki termal bölgedir, dolayısıyla yaklaşık bir değerdir.
-    /// </summary>
-    public double? ReadAcpiTemperatureC()
-    {
-        lock (_gate)
-        {
-            TimeSpan cacheDuration = _lastTemperatureReadFailed ? TemperatureRetryAfterFailure : TemperatureCacheDuration;
-            if (DateTime.UtcNow - _temperatureReadAtUtc < cacheDuration)
-                return _cachedTemperatureC;
-
-            _temperatureReadAtUtc = DateTime.UtcNow;
-            _cachedTemperatureC = QueryAcpiTemperatureC();
-            return _cachedTemperatureC;
-        }
-    }
-
-    private double? QueryAcpiTemperatureC()
-    {
-        try
-        {
-            var scope = new ManagementScope(@"\\.\root\WMI");
-            using var searcher = new ManagementObjectSearcher(
-                scope,
-                new ObjectQuery("SELECT CurrentTemperature FROM MSAcpi_ThermalZoneTemperature"));
-
-            double? hottest = null;
-            foreach (ManagementBaseObject item in searcher.Get())
-            {
-                if (item["CurrentTemperature"] is not { } raw)
-                    continue;
-
-                // Değer 1/10 Kelvin cinsindendir.
-                double celsius = Convert.ToDouble(raw) / 10d - 273.15;
-
-                // Bazı bölgeler 0 (tanımsız) ya da ortam sıcaklığı bildirir; sadece işlemci için makul aralığı alırız.
-                if (celsius is < 25 or > 110)
-                    continue;
-
-                if (hottest is null || celsius > hottest)
-                    hottest = celsius;
-            }
-
-            _lastTemperatureReadFailed = false;
-            return hottest;
-        }
-        catch (Exception ex)
-        {
-            _lastTemperatureReadFailed = true;
-
-            // Aynı hata saniyede bir tekrarlanıyor; yığın izlemesini yalnızca ilk seferde yazarız,
-            // aksi hâlde log dosyası dakikalar içinde megabaytlara ulaşır.
-            if (!_temperatureFailureLogged)
-            {
-                _temperatureFailureLogged = true;
-                _logger.LogWarning(ex, "ACPI termal bölge sıcaklığı okunamadı, bu kaynak seyrek aralıklarla yeniden denenecek");
-            }
-
-            return null;
         }
     }
 
