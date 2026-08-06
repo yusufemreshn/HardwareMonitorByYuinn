@@ -74,7 +74,9 @@ olarak tutulur; proje klasörünün kendisiyle bir ilgisi yoktur.
 
 ## Lisans
 
-Bu depodaki kaynak kod MIT lisansı altındadır (bkz. `LICENSE`). Uygulamayla birlikte
-dağıtılan üçüncü taraf kütüphaneler (LibreHardwareMonitorLib dahil, çoğunluğu
-Mozilla Public License 2.0) kendi lisans koşullarına tabidir; tam liste ve ayrıntılar
-için `LICENSES.txt` dosyasına bakın.
+Bu depodaki kaynak kod [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0)
+altındadır (bkz. `LICENSE`) — kişisel/ticari olmayan kullanım, inceleme ve katkı
+serbesttir, **ticari kullanım yasaktır**. Uygulamayla birlikte dağıtılan üçüncü
+taraf kütüphaneler (LibreHardwareMonitorLib dahil, çoğunluğu Mozilla Public
+License 2.0) kendi lisans koşullarına tabidir; tam liste ve ayrıntılar için
+`LICENSES.txt` dosyasına bakın.

@@ -78,7 +78,7 @@
                     cell.style.background = tempColor(temp);
                     cell.style.color = textColorFor(temp);
                     cell.textContent = temp.toFixed(0);
-                    cell.title = date + " " + (hour < 10 ? "0" : "") + hour + ":00 — " + temp.toFixed(1) + " °C";
+                    cell.title = date + " " + (hour < 10 ? "0" : "") + hour + ":00 · " + temp.toFixed(1) + " °C";
                 } else {
                     cell.style.background = "var(--bg-elevated)";
                     cell.title = "Veri yok";

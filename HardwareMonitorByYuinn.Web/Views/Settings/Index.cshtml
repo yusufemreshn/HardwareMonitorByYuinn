@@ -609,7 +609,7 @@
             <p style="color:var(--accent-caution);font-size:.85rem;margin:0 0 14px;">
                 ⚠ Otomatik eşleştirme yalnızca <strong>HardwareMonitorByYuinn açıkken en az bir kez tam ekran
                 oynadığınız</strong> oyunlar için çalışır. Bir oyunu daha hiç bu şekilde çalıştırmadıysanız
-                kısa adı yazmanız bir şey eşleştirmez — o oyunun tam işlem adını (Kare Hızı kartında/
+                kısa adı yazmanız bir şey eşleştirmez; o oyunun tam işlem adını (Kare Hızı kartında/
                 Detaylar sayfasında görünür) kendiniz yazmanız gerekir.
             </p>
 
@@ -734,7 +734,7 @@
                 başlattığınızda etkili olur.</strong>
             </p>
             <p style="color:var(--accent-danger);font-size:.85rem;margin:0 0 14px;">
-                ⚠ Bu bağlantı varsayılan olarak şifrelenmez (HTTPS değil, düz HTTP) — PIN ve oturum aynı
+                ⚠ Bu bağlantı varsayılan olarak şifrelenmez (HTTPS değil, düz HTTP); PIN ve oturum aynı
                 ağdaki başka biri tarafından teorik olarak dinlenebilir. Yalnızca güvendiğiniz bir ev/ofis
                 ağında açın, halka açık/paylaşımlı Wi-Fi'lerde açmayın. Aşağıdaki "HTTPS kullan" ile bunu
                 şifreleyebilir, ya da hiç uyarı almadan tamamen şifreli bağlanmak için
@@ -764,7 +764,7 @@
             <p id="ra-https-hint" style="color:var(--text-muted);font-size:.82rem;margin:10px 0 0;display:none;">
                 Kendinden imzalı bir sertifika kullanılır (gerçek bir sertifika otoritesi özel ağ
                 adresleri için sertifika vermez). Bağlanan her cihazda tarayıcı <strong>ilk seferde</strong>
-                "bağlantı güvenli değil" uyarısı gösterir — "Gelişmiş → yine de devam et"e bir kez
+                "bağlantı güvenli değil" uyarısı gösterir; "Gelişmiş → yine de devam et"e bir kez
                 basmanız yeterli, sonrasında genelde tekrar sormaz. Ev/ofis ağınız (yönlendiriciniz) IP
                 adresinizi değiştirirse sertifikayı
                 <button type="button" id="ra-regen-cert" class="legend-item" style="padding:0;border:none;background:none;color:inherit;text-decoration:underline;cursor:pointer;font-size:inherit;">yeniden oluşturabilirsiniz</button>
@@ -801,8 +801,8 @@
                 Bu sayfadaki ve Panel'deki tüm tercihleri (eşikler, temalar, panel düzeni, oyun
                 profilleri, bildirim ayarları vb.) tek bir JSON dosyasına kaydedip başka bir tarayıcıya
                 veya bu bilgisayarın yeniden kurulumundan sonra geri yükleyebilirsiniz. Bildirim geçmişi
-                dahil değildir. <strong>Ağ ve Erişim → Yerel Ağa Açma PIN ayarı da dahil değildir</strong>
-                — o, tarayıcıda değil sunucudaki ayrı bir dosyada tutulur, bu yüzden yeniden kurmanız
+                dahil değildir. <strong>Ağ ve Erişim → Yerel Ağa Açma PIN ayarı da dahil değildir</strong>;
+                o, tarayıcıda değil sunucudaki ayrı bir dosyada tutulur, bu yüzden yeniden kurmanız
                 gerekirse onu ayrıca yapılandırmanız gerekir.
             </p>
             <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
@@ -818,7 +818,7 @@
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
                 Açıksa, Windows'a her giriş yaptığınızda HardwareMonitorByYuinn otomatik başlar. Uygulama
                 yönetici yetkisi gerektirdiğinden (<code>app.manifest</code>), her açılışta yine de
-                bir UAC onayı isteyecektir — bu, Windows'un kendi güvenlik davranışıdır ve atlanamaz.
+                bir UAC onayı isteyecektir; bu, Windows'un kendi güvenlik davranışıdır ve atlanamaz.
             </p>
             <form id="startup-form">
                 @Html.AntiForgeryToken()
@@ -832,7 +832,7 @@
             </form>
             <div id="startup-path-info" style="color:var(--text-muted);font-size:.85rem;margin:12px 0;"></div>
             <div id="startup-mismatch-warning" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-bottom:10px;">
-                Kayıtlı başlangıç yolu artık geçerli değil (uygulama taşınmış olabilir) — düzeltmek için tekrar kaydedin.
+                Kayıtlı başlangıç yolu artık geçerli değil (uygulama taşınmış olabilir); düzeltmek için tekrar kaydedin.
             </div>
             <div id="startup-error" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-bottom:10px;"></div>
             <div style="display:flex;align-items:center;gap:12px;">

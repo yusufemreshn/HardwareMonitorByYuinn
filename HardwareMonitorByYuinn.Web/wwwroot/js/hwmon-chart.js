@@ -185,7 +185,7 @@ window.HwmonChart = (function () {
                 ctx.fillText("● CANLI", plot.x + plot.w - 4, plot.y + 4);
             } else {
                 ctx.fillStyle = cssVar("--text-muted");
-                ctx.fillText("⏸ Geçmiş — çift tıkla", plot.x + plot.w - 4, plot.y + 4);
+                ctx.fillText("⏸ Geçmiş (çift tıkla)", plot.x + plot.w - 4, plot.y + 4);
             }
         }
 
