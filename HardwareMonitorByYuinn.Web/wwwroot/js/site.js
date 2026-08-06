@@ -99,7 +99,7 @@ window.HwmonHub = (function () {
                 hideBanner();
             });
             connection.onclose(function () {
-                showBanner("Sunucuyla bağlantı kesildi. Veriler artık canlı güncellenmiyor — sayfayı yenileyin.");
+                showBanner("Sunucuyla bağlantı kesildi. Veriler artık canlı güncellenmiyor, sayfayı yenileyin.");
             });
         }
         return connection;
@@ -1481,7 +1481,7 @@ window.HwmonPanelPreviewRenderer = (function () {
         if (visible.length === 0) {
             var empty = document.createElement("p");
             empty.className = "panel-layout-preview-empty";
-            empty.textContent = "Tüm kartlar gizli — Panel boş görünecek.";
+            empty.textContent = "Tüm kartlar gizli, Panel boş görünecek.";
             container.appendChild(empty);
             return;
         }
@@ -2120,9 +2120,9 @@ window.HwmonNotifySettings = (function () {
         if (Notification.permission === "denied") {
             button.title = "Bildirimlere izin verilmedi (tarayıcı ayarlarından değiştirebilirsiniz)";
         } else if (active) {
-            button.title = "Eşik bildirimleri açık — kapatmak için tıklayın";
+            button.title = "Eşik bildirimleri açık, kapatmak için tıklayın";
         } else if (Notification.permission === "granted") {
-            button.title = "Bildirimler kapalı — açmak için tıklayın";
+            button.title = "Bildirimler kapalı, açmak için tıklayın";
         } else {
             button.title = "Eşik aşıldığında bildirim almak için tıklayın";
         }
@@ -2138,7 +2138,7 @@ window.HwmonNotifySettings = (function () {
         if (deniedHint) { clearTimeout(deniedHint.timer); deniedHint.el.remove(); }
         var el = document.createElement("div");
         el.className = "notify-denied-hint";
-        el.textContent = "Bildirimler bu site için engellenmiş — tarayıcının adres çubuğundaki kilit/site ayarları simgesinden izin vermeniz gerekiyor.";
+        el.textContent = "Bildirimler bu site için engellenmiş. Tarayıcının adres çubuğundaki kilit/site ayarları simgesinden izin vermeniz gerekiyor.";
         document.body.appendChild(el);
         var rect = button.getBoundingClientRect();
         el.style.top = (rect.bottom + 8) + "px";

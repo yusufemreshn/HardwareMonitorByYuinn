@@ -1312,7 +1312,7 @@
                 cleanup();
 
                 if (conflict) {
-                    showConflict('"' + comboLabel(combo) + '" zaten "' + conflict.label + '" eylemine atanmış — önce onu değiştirin.');
+                    showConflict('"' + comboLabel(combo) + '" zaten "' + conflict.label + '" eylemine atanmış, önce onu değiştirin.');
                     comboButton.textContent = originalText;
                     return;
                 }
@@ -2274,7 +2274,7 @@
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: "__RequestVerificationToken=" + encodeURIComponent(tokenInput.value)
                 }).then(function () {
-                    httpsHint.textContent = "Sertifika silindi — bir sonraki yeniden başlatmada güncel ağ adresleriyle yenisi üretilecek.";
+                    httpsHint.textContent = "Sertifika silindi. Bir sonraki yeniden başlatmada güncel ağ adresleriyle yenisi üretilecek.";
                 });
             });
         }
@@ -2311,7 +2311,7 @@
             }
 
             if (status.restartRequired) {
-                restartWarning.textContent = "Kaydedilen ayar henüz etkin değil — etkili olması için uygulamayı yeniden başlatın.";
+                restartWarning.textContent = "Kaydedilen ayar henüz etkin değil. Etkili olması için uygulamayı yeniden başlatın.";
                 restartWarning.style.display = "block";
                 if (restartButton) restartButton.style.display = "";
             } else {
@@ -2431,7 +2431,7 @@
                 }).then(function (r) {
                     if (!r.ok) throw new Error("Yeniden başlatma tetiklenemedi.");
                     if (restartNote) {
-                        restartNote.textContent = "Yeniden başlatılıyor — birkaç saniye içinde UAC penceresi açılacak, onaylayın. Sunucu geri gelince sayfa kendiliğinden yenilenecek.";
+                        restartNote.textContent = "Yeniden başlatılıyor. Birkaç saniye içinde UAC penceresi açılacak, onaylayın. Sunucu geri gelince sayfa kendiliğinden yenilenecek.";
                         restartNote.style.display = "inline";
                     }
                     waitForRestartAndReload();

@@ -9,8 +9,8 @@
         İşlemcinin gerçek güç tüketimini (watt), çip içi sıcaklığını (Tctl/Tdie) ve donanımsal
         çekirdek frekanslarını okumak, işletim sisteminin normalde izin vermediği düşük seviyeli bir
         erişim gerektirir. Bu erişimi <strong>PawnIO</strong> adlı imzalı, açık kaynaklı bir çekirdek
-        sürücüsü sağlar. Sürücü kurulu değilse uygulama çökmez ya da hata vermez — yalnızca bu üç
-        değeri okuyamaz, bunun yerine frekansı Windows performans sayaçlarından türetir (gerçek ama
+        sürücüsü sağlar. Sürücü kurulu değilse uygulama çökmez ya da hata vermez, yalnızca bu üç
+        değeri okuyamaz; bunun yerine frekansı Windows performans sayaçlarından türetir (gerçek ama
         daha yaklaşık bir değer). Güç tüketimi ve sıcaklık için sürücüsüz güvenilir bir alternatif yok
         (ACPI termal bölgesi denenmişti ama gerçek çip sıcaklığından onlarca derece sapabildiği için
         kaldırıldı), bu yüzden ikisi de <code>--</code> gösterilir.
@@ -27,7 +27,7 @@
         <li>İndirilen kurulumu çalıştırın (yönetici onayı isteyecektir). Kurulum sihirbazı bir sürüm
             seçimi sorarsa "Unrestricted" seçeneğini işaretleyin.</li>
         <li>Kurulum bittikten sonra HardwareMonitorByYuinn'ü <strong>tamamen kapatıp</strong> (görev çubuğundan
-            değil, uygulamanın kendisinden) tekrar açın — sürücü yalnızca uygulama başlarken bir kez
+            değil, uygulamanın kendisinden) tekrar açın. Sürücü yalnızca uygulama başlarken bir kez
             kontrol edilir, açıkken kurulursa fark edilmez.</li>
         <li><strong>Detaylar → İşlemci</strong> sekmesine bakın: bu sayfanın en üstündeki uyarı kutusu
             kaybolduysa ve güç tüketimi artık <code>--</code> yerine gerçek bir watt değeri
@@ -47,7 +47,7 @@
         <li>Bazı anti-cheat/güvenlik yazılımları (ör. FACEIT Anti-Cheat) çekirdek sürücü kurulumlarını
             engelleyebilir; böyle bir yazılım kuruluysa geçici olarak kaldırıp tekrar deneyin.</li>
         <li>Bazı anakartlarda/işlemcilerde LibreHardwareMonitor kütüphanesi güç sensörünü PawnIO kurulu
-            olsa bile farklı bir isimle yayınlayabilir — bu durumda uyarı kurulumdan bağımsız bir
+            olsa bile farklı bir isimle yayınlayabilir; bu durumda uyarı kurulumdan bağımsız bir
             uyumluluk sınırlamasıdır.</li>
     </ul>
 </div>

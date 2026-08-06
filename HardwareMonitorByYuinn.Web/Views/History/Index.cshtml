@@ -86,7 +86,7 @@
 
             @if (Model.Status.SampleCount == 0)
             {
-                <p class="stat-sub">Henüz hiç kayıt yok — ilk satır, uygulama açıldıktan yaklaşık bir dakika sonra oluşur.</p>
+                <p class="stat-sub">Henüz hiç kayıt yok. İlk satır, uygulama açıldıktan yaklaşık bir dakika sonra oluşur.</p>
             }
             else
             {
@@ -127,7 +127,7 @@
             <h2 class="panel-title">Kayıtları Görüntüle</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
                 Bir tarih aralığı seçip Göster'e basın; o aralıktaki dakikalık kayıtlar aşağıda listelenir.
-                Çok geniş bir aralıkta yalnızca ilk @Model.MaxDisplayRows satır gösterilir — daha
+                Çok geniş bir aralıkta yalnızca ilk @Model.MaxDisplayRows satır gösterilir; daha
                 fazlası için aynı aralığı Dışa Aktar'a basıp indirin. Varsayılan olarak son 15 dakika
                 seçilidir.
             </p>
@@ -189,8 +189,8 @@
         <div class="panel" id="history-heatmap-panel">
             <h2 class="panel-title">Isı Haritası</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Kalıcı geçmişteki sıcaklık verisini gün × saat bazında gösterir — ör. akşamları neden daha
-                sıcak çalıştığını görmek için. İlk günlerde veri az olduğundan desen zayıf görünebilir,
+                Kalıcı geçmişteki sıcaklık verisini gün × saat bazında gösterir. Örneğin akşamları neden daha
+                sıcak çalıştığını görmek için kullanışlıdır. İlk günlerde veri az olduğundan desen zayıf görünebilir,
                 zamanla anlamlı hâle gelir.
             </p>
             <div style="display:flex;gap:16px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
@@ -291,8 +291,8 @@
         <div class="panel" id="history-events-panel">
             <h2 class="panel-title">Sistem Olayı Zaman Çizelgesi</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Windows Olay Günlüğü'nden okunan başlatma/kapatma/uyku/uyanma/güncelleme olayları — ör.
-                bir sıcaklık artışının o gün bir güncelleme sonrası mı başladığını görmek için. Bu olaylar
+                Windows Olay Günlüğü'nden okunan başlatma/kapatma/uyku/uyanma/güncelleme olayları listelenir.
+                Örneğin bir sıcaklık artışının o gün bir güncelleme sonrası mı başladığını görmek için kullanışlıdır. Bu olaylar
                 kendi veritabanımıza kaydedilmez, Windows'un kendi günlüğünden anlık okunur.
             </p>
             <label class="threshold-field" style="width:auto;margin-bottom:14px;">Aralık
@@ -446,8 +446,8 @@
             <h2 class="panel-title">Giriş Denemeleri</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
                 Yerel Ağa Açma etkinken PIN giriş sayfasına (loopback dışından, yani bu bilgisayarın
-                kendisi hariç) yapılan denemelerin kalıcı kaydı — girilen PIN'in kendisi hiçbir zaman
-                saklanmaz, yalnızca IP, zaman ve sonuç (başarılı/başarısız/kilide yol açtı). Diğer
+                kendisi hariç) yapılan denemelerin kalıcı kaydıdır. Girilen PIN'in kendisi hiçbir zaman
+                saklanmaz, yalnızca IP, zaman ve sonuç (başarılı/başarısız/kilide yol açtı) tutulur. Diğer
                 kalıcı geçmiş verileriyle aynı 30 günlük saklama süresine tabidir.
             </p>
             <div class="table-scroll">
