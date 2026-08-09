@@ -26,6 +26,7 @@ bilgisi, HID cihaz erişimi) için kullanılır.
   4.  SQLitePCLRaw .................................. Apache License 2.0
   4a. HidSharp ..................................... Apache License 2.0
   5.  SQLite (yerel e_sqlite3 kütüphanesi) ......... Kamu Malı (Public Domain)
+  6.  Microsoft Edge WebView2 Runtime + Bootstrapper . Microsoft Software License Terms (MIT değil)
 
 
 ================================================================================
@@ -810,6 +811,38 @@ Kullanım : Değiştirilmeden dağıtılır; SQLitePCLRaw (bkz. bölüm 4) ve
            motorunu oluşturur. Kamu malı olduğu için herhangi bir lisans
            metni veya atıf yükümlülüğü yoktur; burada yalnızca şeffaflık
            amacıyla belirtilmiştir.
+
+
+================================================================================
+6. Microsoft Edge WebView2 Runtime + Bootstrapper
+================================================================================
+
+Bileşen  : Microsoft.Web.WebView2 (NuGet SDK, sürüm 1.0.4129.50) +
+           Runtime\MicrosoftEdgeWebView2Setup.exe (Evergreen Bootstrapper, ~1,6 MB)
+Proje    : https://developer.microsoft.com/microsoft-edge/webview2/
+Lisans   : Microsoft Software License Terms (MIT/Apache DEĞİLDİR — Microsoft'un kendi
+           özel/proprietary EULA'sı; SDK NuGet paketi de aynı lisans ailesindedir)
+Kullanım : Uygulamanın masaüstü penceresi bu bileşenle (Chromium tabanlı) çizilir.
+           Bootstrapper.exe, WebView2 Runtime'ın kendisi makinede kurulu değilse
+           (Windows 11'de ve Windows 10'un büyük çoğunluğunda zaten kuruludur) onu
+           Microsoft'un sunucularından indirip sessizce kurar. Runtime'ın kendisi
+           (~150MB+) uygulamayla birlikte DAĞITILMAZ, yalnızca bu küçük kurucu
+           dağıtılır; kurucu da doğrudan Microsoft'un resmi kalıcı indirme
+           bağlantısından (go.microsoft.com/fwlink/p/?LinkId=2124703) temin edilip
+           imzası (Microsoft Corporation, geçerli) doğrulanmış, değiştirilmemiştir.
+
+Ücretsiz dağıtılabilir, ticari/kişisel kullanım kısıtlaması yoktur. Tek dikkat
+edilmesi gereken şart: WebView2 Runtime'ın varsayılan olarak açık gelen Microsoft
+Defender SmartScreen bileşeni bazı teşhis verisini Microsoft'a gönderebilir; bu
+yüzden kullanıcıya bilgi verilmesi lisans gereğidir (bkz. uygulama içi Hakkında
+sayfası ve https://aka.ms/privacy). Uygulama yalnızca kendi 127.0.0.1:5250
+içeriğini yüklediği, kullanıcı tarafından yazılabilen bir adres çubuğu
+bulunmadığı için SmartScreen'in pratikte devreye girecek bir senaryosu yoktur.
+
+Tam lisans metni bu dosyaya dahil edilmemiştir (Microsoft'un EULA'sı sürümden
+sürüme güncellenebilir); güncel şartlar için
+https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution
+adresine bakınız.
 
 
 ================================================================================

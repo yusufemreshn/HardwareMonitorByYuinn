@@ -1126,11 +1126,23 @@ window.HwmonBackgroundColors = (function () {
         };
     }
 
+    // Masaüstü kabuğunda (WebView2) çalışırken pencerenin kendi zeminini/başlık çubuğunu sayfanın
+    // gerçek arka plan rengiyle eşitler (bkz. Desktop/ShellForm.cs → OnWebMessageReceived). Normal
+    // bir tarayıcıda (window.chrome.webview yok) sessizce hiçbir şey yapmaz.
+    function notifyNativeShell(bgHex) {
+        try {
+            if (window.chrome && window.chrome.webview) {
+                window.chrome.webview.postMessage({ type: "hwmon-bg", bg: bgHex, dark: currentTheme() === "dark" });
+            }
+        } catch (e) { /* WebView2 dışında çalışırken beklenen durum, yok say */ }
+    }
+
     function apply(colors) {
         var value = colors && colors[currentTheme()];
         if (!value) {
             document.documentElement.style.removeProperty("--bg");
             DERIVED_VARS.forEach(function (name) { document.documentElement.style.removeProperty(name); });
+            notifyNativeShell(DEFAULTS[currentTheme()]);
             return;
         }
         document.documentElement.style.setProperty("--bg", value);
@@ -1140,11 +1152,13 @@ window.HwmonBackgroundColors = (function () {
             document.documentElement.style.setProperty("--card-bg", shades.card);
             document.documentElement.style.setProperty("--border", shades.border);
         }
+        notifyNativeShell(value);
     }
 
     function clear() {
         document.documentElement.style.removeProperty("--bg");
         DERIVED_VARS.forEach(function (name) { document.documentElement.style.removeProperty(name); });
+        notifyNativeShell(DEFAULTS[currentTheme()]);
     }
 
     apply(load());

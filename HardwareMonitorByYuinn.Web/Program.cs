@@ -242,34 +242,26 @@ app.MapControllerRoute(
 
 app.MapHub<HardwareHub>("/hubs/hardware").RequireCors(LocalOnlyCorsPolicy);
 
-// Geliştirme sırasında (`dotnet run`/IDE) her başlatmada tarayıcı açılması rahatsız edici olur;
-// derlenmiş .exe'nin normal kullanımında (Production) Kestrel dinlemeye başladığı an tarayıcı açılır.
-// Uygulama Ayarlar → Yerel Ağa Açma'daki "Yeniden Başlat" ile kendini kapatıp yeniden başlattığında
-// bu adım atlanır (bkz. RemoteAccessController.Restart, --no-open-browser argümanını ekler):
-// yeniden başlatma zaten kullanıcının o an açık olan sekmesinden tetiklendiği için bir sekme
-// açık olduğu kesindir; SignalR bağlantısı (withAutomaticReconnect) sunucu geri gelince o sekmeyi
-// kendiliğinden toparlar, ayrıca bir sekme açmaya gerek yoktur.
-bool skipBrowserOpen = args.Contains("--no-open-browser");
-if (!app.Environment.IsDevelopment() && !skipBrowserOpen)
+// Geliştirme sırasında (`dotnet run`/IDE) masaüstü penceresi açılmaz, geliştirici tarayıcıdan elle
+// test eder (eskiden de otomatik sekme açılmıyordu, davranış aynı). Derlenmiş .exe'nin normal
+// kullanımında (Production) arayüz artık sistem tarayıcısında bir sekme yerine kendi WebView2
+// penceresinde açılır (bkz. Desktop/DesktopShellRunner.cs). Kestrel bu pencereyle AYNI süreçte
+// arka planda (RunAsync) çalışmaya devam eder; LAN'a açma özelliği hâlâ düz HTTP üzerinden,
+// başka cihazların tarayıcısından erişilebilir şekilde çalışır — yalnızca sahibinin birincil
+// arayüzü değişti. Pencere kapanınca (Application.Run'ın doğal davranışı) StopAsync ile host da
+// düzgünce kapanır; ayrı bir "tepsiye küçült" davranışı YOK (bilerek — kullanıcı isteğiyle sistem
+// tepsisi simgesi kapsam dışı bırakılmıştı, bkz. docs/ROADMAP.md "İkinci Dalga" kapsam dışı listesi).
+if (app.Environment.IsDevelopment())
 {
-    string startUrl = $"http://127.0.0.1:5250/";
-    app.Lifetime.ApplicationStarted.Register(() =>
-    {
-        try
-        {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(startUrl)
-            {
-                UseShellExecute = true
-            });
-        }
-        catch
-        {
-            // Kullanıcı elle tarayıcı açabilir; bu adım salt kolaylık, uygulamanın çalışmasını engellememeli.
-        }
-    });
+    app.Run();
 }
-
-app.Run();
+else
+{
+    Task runTask = app.RunAsync();
+    HardwareMonitorByYuinn.Web.Desktop.DesktopShellRunner.Run("http://127.0.0.1:5250/", app.Lifetime.ApplicationStopping);
+    await app.StopAsync();
+    await runTask;
+}
 
 static bool IsPrivateLanAddress(IPAddress address)
 {

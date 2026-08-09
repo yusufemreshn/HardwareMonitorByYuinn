@@ -250,15 +250,15 @@ public sealed class RemoteAccessController : Controller
         {
             try
             {
-                // --no-open-browser: bu yeniden başlatma zaten kullanıcının o an açık olan
-                // sekmesinden tetiklendi; yeni süreç bu yüzden tarayıcıda ekstra bir sekme açmaz
-                // (bkz. Program.cs) — var olan sekme SignalR'ın otomatik yeniden bağlanmasıyla
-                // kendiliğinden toparlanır.
+                // Masaüstü penceresi bu sürecin İÇİNDE çalıştığı için (bkz. Program.cs +
+                // Desktop/DesktopShellRunner.cs), tarayıcı-sekmesi modelinin aksine burada
+                // yeniden bağlanacak ayrı/kalıcı bir pencere yok — StopApplication() zaten eski
+                // pencereyi de kapatır (bkz. DesktopShellRunner'daki hostStopping kaydı). Yeni
+                // süreç normal başlar ve kendi penceresini açar.
                 Process.Start(new ProcessStartInfo(exePath)
                 {
                     UseShellExecute = true,
                     Verb = "runas",
-                    Arguments = "--no-open-browser",
                     WorkingDirectory = Path.GetDirectoryName(exePath) ?? AppContext.BaseDirectory
                 });
             }

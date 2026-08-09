@@ -2540,4 +2540,57 @@
             });
         });
     })();
+
+    // Pencere kapatma davranışı (sistem tepsisine küçült / uygulamayı kapat) — HKCU'da tutulur
+    // (bkz. Desktop/DesktopShellSettings.cs), gerçek karar ShellForm.OnFormClosing'de verilir.
+    (function initCloseBehaviorForm() {
+        var trayRadio = document.getElementById("close-behavior-tray");
+        var exitRadio = document.getElementById("close-behavior-exit");
+        var errorBox = document.getElementById("close-behavior-error");
+        var saveButton = document.getElementById("close-behavior-save");
+        var tokenInput = document.querySelector("#close-behavior-form input[name='__RequestVerificationToken']");
+        if (!trayRadio || !exitRadio || !saveButton || !tokenInput) return;
+
+        function showError(message) {
+            if (!errorBox) return;
+            errorBox.textContent = message;
+            errorBox.style.display = message ? "block" : "none";
+        }
+
+        function renderStatus(status) {
+            var exit = status.closeBehavior === "Exit";
+            exitRadio.checked = exit;
+            trayRadio.checked = !exit;
+        }
+
+        fetch("/DesktopShell/Status")
+            .then(function (r) { return r.json(); })
+            .then(renderStatus)
+            .catch(function () { /* durum okunamadıysa form varsayılan (tepsiye küçült) görünümde kalır */ });
+
+        saveButton.addEventListener("click", function () {
+            if (saveButton.disabled) return;
+            showError("");
+
+            var body = new URLSearchParams();
+            body.set("__RequestVerificationToken", tokenInput.value);
+            body.set("closeBehavior", exitRadio.checked ? "Exit" : "Tray");
+
+            saveButton.disabled = true;
+            fetch("/DesktopShell/Configure", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: body.toString()
+            }).then(function (r) {
+                if (!r.ok) return r.json().then(function (data) { throw new Error(data.error || "Kaydedilemedi."); });
+                return r.json();
+            }).then(function () {
+                flashSavedNote("close-behavior-saved-note");
+            }).catch(function (err) {
+                showError(err.message || "Kaydedilemedi.");
+            }).finally(function () {
+                saveButton.disabled = false;
+            });
+        });
+    })();
 })();

@@ -14,10 +14,31 @@
     <Content Include="..\LICENSES.txt" Link="LICENSES.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- WebView2 Runtime (Evergreen), Windows 11'de ve Windows 10'un büyük çoğunluğunda zaten kurulu
+         gelir. Yoksa Desktop/WebView2RuntimeInstaller.cs bu bootstrapper'ı sessizce çalıştırır. Dosya,
+         Microsoft'un resmi kalıcı indirme bağlantısından (go.microsoft.com/fwlink/p/?LinkId=2124703)
+         doğrudan indirilmiştir (WebView2 lisans şartı: "kodu doğrudan Microsoft'tan edinmelisiniz"),
+         imzası Microsoft Corporation olarak doğrulanmıştır. ~1.6MB, runtime'ın kendisini (~150MB+)
+         DEĞİL, yalnızca onu indirip kuran küçük bir kurucuyu içerir. -->
+    <Content Include="Runtime\MicrosoftEdgeWebView2Setup.exe" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4129.50" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UseWindowsForms>true</UseWindowsForms>
+    <!-- Web SDK varsayılan olarak Console alt sistemiyle derler; çift tıklayınca Windows bunun için
+         otomatik bir siyah konsol penceresi açar. WinExe, exe'yi Windows alt sistemine çevirip bu
+         pencereyi tamamen ortadan kaldırır. Tüm loglama zaten dosyaya gittiği için (bkz.
+         Logging/FileLogger*.cs) kaybolan bir şey yok; `dotnet run`/IDE ile geliştirmeyi etkilemez
+         (onlar kendi stdout pipe'larını kullanır, yeni bir konsol penceresi açmaz). -->
+    <OutputType>WinExe</OutputType>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <!-- HardwareMonitorByYuinn.Web.exe'nin simgesi (kullanıcının verdiği CPU/anakart görselinden
          16-256px arası 6 boyutlu .ico olarak üretildi). Bu ayar SDK'nın apphost/singlefile
@@ -50,6 +71,29 @@
     </ItemGroup>
     <Copy SourceFiles="@(_WwwrootFiles)"
           DestinationFolder="$(OutDir)wwwroot\%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+  <!-- Microsoft.Web.WebView2 paketi, yalnızca kullandığımız WinForms değil, WPF ve Core
+       API'lerinin de XML belge dosyalarını (~800KB, hiçbir çalışma zamanı işlevi yok) publish
+       çıktısına kopyalar. "Tek exe + wwwroot + birkaç küçük dosya" hedefiyle çelişen bu ölü
+       ağırlığı publish sonrası temizler. -->
+  <Target Name="RemoveWebView2XmlDocs" AfterTargets="Publish">
+    <ItemGroup>
+      <_WebView2XmlDocs Include="$(PublishDir)Microsoft.Web.WebView2.*.xml" />
+    </ItemGroup>
+    <Delete Files="@(_WebView2XmlDocs)" Condition="'@(_WebView2XmlDocs)' != ''" />
+  </Target>
+
+  <!-- PublishSingleFile=true açıkken yukarıdaki Runtime\MicrosoftEdgeWebView2Setup.exe Content
+       öğesi normal `dotnet build`'de $(OutDir)'a düzgün kopyalanır (doğrulandı), ama tek-dosya
+       publish paketleyicisi ".exe" uzantılı gevşek (loose) Content dosyalarını publish çıktısına
+       hiç kopyalamadan sessizce atlıyor (muhtemelen yalnızca tek bir .exe'nin bulunacağı varsayımı
+       yüzünden) — canlı publish testinde doğrulandı: dosya $(OutDir)'da var ama $(PublishDir)'da
+       yoktu. Bu yüzden publish çıktısına açıkça, ayrıca kopyalanır. -->
+  <Target Name="CopyWebView2BootstrapperToPublish" AfterTargets="Publish">
+    <Copy SourceFiles="Runtime\MicrosoftEdgeWebView2Setup.exe"
+          DestinationFolder="$(PublishDir)Runtime\"
           SkipUnchangedFiles="true" />
   </Target>
 

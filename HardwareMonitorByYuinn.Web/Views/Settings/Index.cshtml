@@ -102,6 +102,7 @@
             </button>
             <ul class="settings-subnav">
                 <li><button type="button" data-target="startup-panel">Otomatik Başlatma</button></li>
+                <li><button type="button" data-target="close-behavior-panel">Pencere Kapatma Davranışı</button></li>
             </ul>
         </div>
     </nav>
@@ -838,6 +839,31 @@
             <div style="display:flex;align-items:center;gap:12px;">
                 <button type="button" id="startup-save" class="btn-primary-hwmon">Kaydet</button>
                 <span id="startup-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+            </div>
+        </div>
+
+        <div class="panel" id="close-behavior-panel">
+            <h2 class="panel-title">Pencere Kapatma Davranışı</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                Pencerenin sağ üstündeki <strong>X</strong> düğmesine basınca ne olacağını belirler.
+            </p>
+            <form id="close-behavior-form">
+                @Html.AntiForgeryToken()
+                <div style="display:grid;grid-template-columns:max-content auto;align-items:center;gap:14px 16px;">
+                    <label for="close-behavior-tray" style="cursor:pointer;">Sistem tepsisine küçült (uygulama arka planda çalışmaya devam eder)</label>
+                    <input type="radio" name="close-behavior" id="close-behavior-tray" value="Tray" style="width:18px;height:18px;margin:0;accent-color:var(--accent-gpu);cursor:pointer;">
+                    <label for="close-behavior-exit" style="cursor:pointer;">Uygulamayı kapat</label>
+                    <input type="radio" name="close-behavior" id="close-behavior-exit" value="Exit" style="width:18px;height:18px;margin:0;accent-color:var(--accent-gpu);cursor:pointer;">
+                </div>
+            </form>
+            <p style="color:var(--text-muted);font-size:.85rem;margin:12px 0;">
+                Sistem tepsisindeki simgeye sağ tıklayınca <strong>Göster</strong> ve <strong>Çıkış</strong>
+                seçenekleri bulunur; simgeye çift tıklamak da pencereyi geri getirir.
+            </p>
+            <div id="close-behavior-error" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-bottom:10px;"></div>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button type="button" id="close-behavior-save" class="btn-primary-hwmon">Kaydet</button>
+                <span id="close-behavior-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
             </div>
         </div>
     </div>

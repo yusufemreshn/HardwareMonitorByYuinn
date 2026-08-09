@@ -14,6 +14,14 @@
         diğer cihazlar da bir PIN girerek bu bilgisayardaki veriye erişebilir. Bu trafik şifrelenmez
         (HTTPS değil, düz HTTP); bu yüzden yalnızca güvendiğiniz bir ağda açmanız önerilir.
     </p>
+    <p class="about-note">
+        Bu bilgisayardaki pencere, arayüzü çizmek için Microsoft Edge WebView2'yi (Chromium tabanlı)
+        kullanır. WebView2, yalnızca bu uygulamanın kendi <code>127.0.0.1:5250</code> sayfasını
+        yükler; adres çubuğu yoktur, başka bir siteye gidilemez. Bileşenin varsayılan olarak açık
+        gelen Microsoft Defender SmartScreen özelliği bazı teşhis verisini Microsoft'a
+        gönderebilir, bkz. <a href="https://aka.ms/privacy" target="_blank" rel="noopener">Microsoft
+        Gizlilik Bildirimi</a>.
+    </p>
 </div>
 
 <div class="panel">
@@ -222,6 +230,11 @@
                     <td>SQLite (e_sqlite3.dll)</td>
                     <td>Kamu malı (Public Domain)</td>
                     <td>Kalıcı geçmişin fiziksel veritabanı motoru</td>
+                </tr>
+                <tr>
+                    <td>Microsoft Edge WebView2 (SDK 1.0.4129.50 + Evergreen Bootstrapper)</td>
+                    <td>Microsoft Software License Terms</td>
+                    <td>Masaüstü penceresinin arayüz motoru</td>
                 </tr>
             </tbody>
         </table>
