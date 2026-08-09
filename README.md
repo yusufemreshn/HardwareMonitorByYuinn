@@ -1,10 +1,11 @@
 # HardwareMonitorByYuinn
 
-Windows için, tarayıcı üzerinden çalışan bir donanım izleme paneli. Arka planda bir
-ASP.NET Core servisi olarak çalışır, verileri SignalR ile gerçek zamanlı olarak
-tarayıcıya aktarır. Amaç, HWiNFO/AIDA64 gibi araçların topladığı bilgiyi ayrı bir
-masaüstü uygulaması yerine, açık kalan bir web sayfasında sade ve özelleştirilebilir
-şekilde göstermek.
+Windows için bir donanım izleme uygulaması. Arka planda bir ASP.NET Core servisi olarak
+çalışır, verileri SignalR ile gerçek zamanlı aktarır; arayüz kendi masaüstü penceresinde
+(WebView2 tabanlı) açılır — ayrı bir tarayıcı sekmesi gerekmez. Ayarlar'dan açılabilen
+**Yerel Ağa Açma** özelliğiyle aynı ağdaki başka bir cihazın (telefon, ikinci bilgisayar)
+tarayıcısından da PIN korumalı erişilebilir. Amaç, HWiNFO/AIDA64 gibi araçların topladığı
+bilgiyi sade ve özelleştirilebilir bir arayüzde göstermek.
 
 İşlemci, ekran kartı, bellek, disk ve ağ verilerinin büyük kısmı Windows'un kendi
 arayüzlerinden (WMI performans sayaçları, D3DKMT, ETW) doğrudan okunur. Üretici bazlı
@@ -28,10 +29,14 @@ değiştirilmeden, derlenmiş haliyle dağıtılır (bkz. `LICENSES.txt`).
 - Hazır tema paketleri, cam efekti, kompakt/normal/detaylı yoğunluk modları
 - PIN korumalı yerel ağa açma — aynı ağdaki başka bir cihazdan (telefon, ikinci monitör)
   panele erişim
+- Sistem tepsisi simgesi (Göster/Çıkış); pencerenin kapat düğmesi tepsiye küçültme ya da
+  doğrudan kapatma arasında ayarlanabilir (Ayarlar → Sistem)
+- Pencere kenarlığı/başlık çubuğu aktif temanın arka plan rengiyle uyumlu
 
 ## Teknoloji
 
 - .NET 10 / ASP.NET Core, SignalR
+- Microsoft.Web.WebView2 (masaüstü penceresi)
 - Microsoft.Data.Sqlite (kalıcı geçmiş için)
 - LibreHardwareMonitorLib, DiskInfoToolkit, RAMSPDToolkit (donanım okuma)
 - Microsoft.Diagnostics.Tracing.TraceEvent (ETW üzerinden FPS ölçümü)
@@ -46,6 +51,9 @@ Proje `Business` / `DataAccess` / `Entity` / `Web` katmanlarına ayrılmıştır
 - Derlemek için .NET 10 SDK
 - Bazı sensörler (özellikle ETW tabanlı FPS ölçümü ve bazı donanım sayaçları) yönetici
   yetkisi gerektirebilir
+- Microsoft Edge WebView2 Runtime — neredeyse tüm Windows 10/11 makinelerinde zaten
+  kurulu gelir (Edge ile birlikte); yoksa uygulama ilk açılışta kendisi sessizce kurar
+  (bir kereye mahsus, internet gerektirir)
 
 ## Çalıştırma
 
@@ -53,8 +61,8 @@ Proje `Business` / `DataAccess` / `Entity` / `Web` katmanlarına ayrılmıştır
 
 Kaynak koddan derlemek istemiyorsan [Releases](https://github.com/yusufemreshn/HardwareMonitorByYuinn/releases)
 sayfasından en güncel `HardwareMonitorByYuinn-win-x64.zip` dosyasını indir, bir klasöre
-çıkart ve `HardwareMonitorByYuinn.Web.exe`'yi çalıştır. Self-contained bir derlemedir,
-ayrıca .NET kurulumu gerekmez.
+çıkart ve `HardwareMonitorByYuinn.Web.exe`'yi çalıştır. Uygulama kendi penceresinde açılır
+(tarayıcı sekmesi değil). Self-contained bir derlemedir, ayrıca .NET kurulumu gerekmez.
 
 ### Kaynak koddan
 
@@ -65,8 +73,10 @@ dotnet build
 dotnet run --project HardwareMonitorByYuinn.Web
 ```
 
-Varsayılan olarak `http://127.0.0.1:5250` adresinde açılır. Yerel ağa açma ve PIN
-koruması Ayarlar sekmesinden etkinleştirilebilir.
+`dotnet run` ile başlatıldığında (geliştirme ortamı) pencere otomatik açılmaz; sunucu
+`http://127.0.0.1:5250` adresinde dinler, tarayıcıdan elle açman gerekir — masaüstü
+penceresi yalnızca derlenmiş `.exe`'nin normal kullanımında açılır. Yerel ağa açma ve
+PIN koruması Ayarlar sekmesinden etkinleştirilebilir.
 
 Kalıcı geçmiş verileri (`history.db`, oyun oturumları, process örnekleri, giriş
 denemeleri) `%LOCALAPPDATA%\HardwareMonitorByYuinn\` altında ayrı SQLite dosyaları
