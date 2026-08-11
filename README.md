@@ -31,6 +31,9 @@ değiştirilmeden, derlenmiş haliyle dağıtılır (bkz. `LICENSES.txt`).
   panele erişim
 - Sistem tepsisi simgesi (Göster/Çıkış); pencerenin kapat düğmesi tepsiye küçültme ya da
   doğrudan kapatma arasında ayarlanabilir (Ayarlar → Sistem)
+- Windows açılışında otomatik başlatma (Görev Zamanlayıcı üzerinden), isteğe bağlı olarak
+  pencereyi hiç göstermeden doğrudan sistem tepsisinde başlatma
+- Açılışta ilerleme çubuklu bir yükleme ekranı
 - Pencere kenarlığı/başlık çubuğu aktif temanın arka plan rengiyle uyumlu
 
 ## Teknoloji

@@ -818,19 +818,29 @@
             <h2 class="panel-title">Windows Açılışında Otomatik Başlatma</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
                 Açıksa, Windows'a her giriş yaptığınızda HardwareMonitorByYuinn otomatik başlar. Uygulama
-                yönetici yetkisi gerektirdiğinden (<code>app.manifest</code>), her açılışta yine de
-                bir UAC onayı isteyecektir; bu, Windows'un kendi güvenlik davranışıdır ve atlanamaz.
+                yönetici yetkisi gerektirdiğinden (<code>app.manifest</code>), bu kayıt Görev
+                Zamanlayıcı üzerinden "en yüksek yetkiyle" oluşturulur; oturum açarken ayrıca bir UAC
+                onayı istemez.
             </p>
             <form id="startup-form">
                 @Html.AntiForgeryToken()
-                <div class="thresholds-form">
+                <div class="thresholds-form" style="flex-direction:column;">
                     <label class="threshold-field" style="justify-content:center;">
                         <span class="hwmon-toggle-field">
                             Windows açılışında otomatik başlat<input type="checkbox" id="startup-enabled">
                         </span>
                     </label>
+                    <label class="threshold-field" style="justify-content:center;">
+                        <span class="hwmon-toggle-field">
+                            Başlarken pencereyi gösterme (doğrudan sistem tepsisinde başlat)<input type="checkbox" id="startup-minimized">
+                        </span>
+                    </label>
                 </div>
             </form>
+            <p style="color:var(--text-muted);font-size:.85rem;margin:8px 0 0;">
+                Bu seçenek yalnızca Windows'un kendisinin otomatik başlattığı açılışlarda geçerlidir;
+                uygulamayı kısayoldan elle açtığınızda pencere her zaman normal görünür.
+            </p>
             <div id="startup-path-info" style="color:var(--text-muted);font-size:.85rem;margin:12px 0;"></div>
             <div id="startup-mismatch-warning" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-bottom:10px;">
                 Kayıtlı başlangıç yolu artık geçerli değil (uygulama taşınmış olabilir); düzeltmek için tekrar kaydedin.

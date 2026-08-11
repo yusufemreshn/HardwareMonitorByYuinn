@@ -22,7 +22,7 @@ internal sealed class ShellForm : Form
     /// <summary>true olduğunda kapatma her zaman gerçek çıkıştır — tepsi ayarı ne olursa olsun.</summary>
     private bool _allowExit;
 
-    public ShellForm(string startUrl)
+    public ShellForm(string startUrl, bool startMinimized = false, SplashForm? splash = null)
     {
         Text = "HardwareMonitorByYuinn";
 
@@ -77,10 +77,46 @@ internal sealed class ShellForm : Form
         Load += (_, _) => ShrinkToFitScreenIfNeeded();
         Load += async (_, _) =>
         {
+            splash?.SetProgress(30);
             await _webView.EnsureCoreWebView2Async();
             _webView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
+            splash?.SetProgress(65);
+
+            if (splash is not null)
+            {
+                // Sayfa (ve içindeki SignalR/JS başlatma) tamamen yüklenene kadar bekleyip splash'i
+                // ancak o zaman kapatıyoruz — aksi hâlde splash kapanır kapanmaz boş/yarım bir pencere
+                // görünürdü, bu da splash'in amacını (bekleme hissini gizlemek) boşa çıkarırdı.
+                void OnNavigationCompleted(object? s, CoreWebView2NavigationCompletedEventArgs e)
+                {
+                    _webView.CoreWebView2.NavigationCompleted -= OnNavigationCompleted;
+                    splash.CompleteAndClose(() =>
+                    {
+                        if (IsHandleCreated)
+                        {
+                            BeginInvoke(() =>
+                            {
+                                Show();
+                                Activate();
+                            });
+                        }
+                    });
+                }
+                _webView.CoreWebView2.NavigationCompleted += OnNavigationCompleted;
+            }
+
             _webView.CoreWebView2.Navigate(startUrl);
         };
+
+        if (startMinimized || splash is not null)
+        {
+            // Hide(), Application.Run'ın pencereyi görünür kılma sürecinin BİR PARÇASI olarak tetiklenen
+            // Load olayı sırasında çağrılıyor — pencere henüz ekrana çizilmeden gizlendiğinden gözle
+            // görülür bir açılıp-kapanma (flaş) yaşanmaz. Tepsi simgesi zaten yukarıda Visible=true.
+            // startMinimized ise burada sonsuza dek gizli kalır; splash varsa yukarıdaki
+            // NavigationCompleted tamamlanınca tekrar gösterilir.
+            Load += (_, _) => Hide();
+        }
     }
 
     // Yalnızca gerçekten gerekliyse (küçük ekranlı bir dizüstü vb.) küçültür — 900x700 altına hiç

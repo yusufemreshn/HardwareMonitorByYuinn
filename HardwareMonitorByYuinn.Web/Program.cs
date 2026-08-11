@@ -27,6 +27,22 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     ContentRootPath = AppContext.BaseDirectory
 });
 
+// Açılış ekranı (splash), aşağıdaki builder/DI kurulumu ve Kestrel'in başlaması SÜRERKEN paralel bir
+// STA iş parçacığında HEMEN gösterilir — kullanıcı exe'yi çalıştırdığında (UAC onayından hemen sonra)
+// olabildiğince erken bir ekran görsün diye. Eskiden splash, tüm bu kurulum bittikten SONRA
+// (DesktopShellRunner.Run çağrısıyla) oluşturuluyordu; builder.Build()/middleware/Kestrel kurulumunun
+// kendisi (özellikle bu uygulamanın PublishReadyToRun=false tek dosyalık derlemesinde JIT maliyeti
+// yüzünden) gözle görülür sürebildiğinden, kullanıcı exe'ye tıkladıktan sonra splash'in de geç
+// çıktığını fark etti. Kestrel/host hazır olduğunda aşağıdaki `earlyShell.Continue(...)` bu iş
+// parçacığına devam sinyali verir (bkz. Desktop/DesktopShellRunner.cs). Development'ta (dotnet
+// run/IDE) masaüstü kabuğu hiç kullanılmadığından, sistem tepsisinde sessiz başlarken de (splash zaten
+// gösterilmediğinden) bu erken başlatmaya gerek yoktur.
+bool startMinimized = args.Contains("--minimized", StringComparer.OrdinalIgnoreCase);
+HardwareMonitorByYuinn.Web.Desktop.DesktopShellRunner.Handle? earlyShell =
+    !builder.Environment.IsDevelopment() && !startMinimized
+        ? HardwareMonitorByYuinn.Web.Desktop.DesktopShellRunner.BeginEarly()
+        : null;
+
 builder.Logging.AddFileLogger();
 
 // "Yerel ağa açma" ayarı DI konteynerinden bağımsız, düz bir dosyadan (remote-access.json)
@@ -255,10 +271,21 @@ if (app.Environment.IsDevelopment())
 {
     app.Run();
 }
+else if (startMinimized)
+{
+    // Windows açılışında otomatik başlatma (bkz. StartupController.cs) kullanıcı isteğine göre görev
+    // komut satırına "--minimized" ekleyebilir; bu, uygulama Görev Zamanlayıcı tarafından tetiklendiğinde
+    // pencereyi (ve splash'ı) hiç göstermeden doğrudan sistem tepsisinde başlatır — bu yüzden yukarıda
+    // `earlyShell` hiç oluşturulmadı, burada eski basit `Run` çağrısı kullanılıyor.
+    Task runTask = app.RunAsync();
+    HardwareMonitorByYuinn.Web.Desktop.DesktopShellRunner.Run("http://127.0.0.1:5250/", app.Lifetime.ApplicationStopping, startMinimized: true);
+    await app.StopAsync();
+    await runTask;
+}
 else
 {
     Task runTask = app.RunAsync();
-    HardwareMonitorByYuinn.Web.Desktop.DesktopShellRunner.Run("http://127.0.0.1:5250/", app.Lifetime.ApplicationStopping);
+    earlyShell!.Continue("http://127.0.0.1:5250/", app.Lifetime.ApplicationStopping);
     await app.StopAsync();
     await runTask;
 }

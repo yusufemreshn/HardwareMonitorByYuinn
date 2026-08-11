@@ -2490,6 +2490,7 @@
     // yok: anahtarın var/yok olması zaten gerçek durumdur).
     (function initStartupForm() {
         var enabledCheckbox = document.getElementById("startup-enabled");
+        var minimizedCheckbox = document.getElementById("startup-minimized");
         var pathInfo = document.getElementById("startup-path-info");
         var mismatchWarning = document.getElementById("startup-mismatch-warning");
         var errorBox = document.getElementById("startup-error");
@@ -2505,6 +2506,7 @@
 
         function renderStatus(status) {
             enabledCheckbox.checked = status.enabled;
+            if (minimizedCheckbox) minimizedCheckbox.checked = !!status.startMinimized;
             if (pathInfo) pathInfo.textContent = "Başlangıç yolu: " + status.exePath;
             if (mismatchWarning) mismatchWarning.style.display = status.pathMismatch ? "block" : "none";
         }
@@ -2521,6 +2523,7 @@
             var body = new URLSearchParams();
             body.set("__RequestVerificationToken", tokenInput.value);
             body.set("enabled", enabledCheckbox.checked ? "true" : "false");
+            body.set("startMinimized", (minimizedCheckbox && minimizedCheckbox.checked) ? "true" : "false");
 
             saveButton.disabled = true;
             fetch("/Startup/Configure", {
