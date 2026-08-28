@@ -22,6 +22,19 @@ internal sealed class ShellForm : Form
     /// <summary>true olduğunda kapatma her zaman gerçek çıkıştır — tepsi ayarı ne olursa olsun.</summary>
     private bool _allowExit;
 
+    /// <summary>
+    /// startMinimized ile başlarken true — bkz. Activated abonesi. WebView2'nin ilk gezinme/render
+    /// aşamasında OS'tan odak istemesi, altındaki GİZLİ pencereyi de (Windows'un "odaklanan pencere
+    /// görünür olmalı" davranışı yüzünden) kendiliğinden tekrar görünür/etkin kılabiliyor — bu, bir
+    /// kod çağrısıyla değil doğrudan WM_ACTIVATE ile oluyor, bu yüzden Load'daki tek seferlik Hide()
+    /// bunu önleyemiyor (canlı testte doğrulandı: pencere açılışta gizleniyor ama ~15-20 sn sonra,
+    /// sayfa yüklenince kendiliğinden tekrar görünür oluyor). Activated, tetikleyici ne olursa olsun
+    /// (WinForms bunu WM_ACTIVATE'e karşılık her zaman ateşler) bunu yakalayıp anında geri gizleyen
+    /// bir güvenlik ağı. Kullanıcı tepsiden elle "Göster"e basınca RestoreFromTray bunu kalıcı olarak
+    /// kapatır.
+    /// </summary>
+    private bool _blockAutoShow;
+
     public ShellForm(string startUrl, bool startMinimized = false, SplashForm? splash = null)
     {
         Text = "HardwareMonitorByYuinn";
@@ -42,6 +55,15 @@ internal sealed class ShellForm : Form
         // pencere zemini/kenarlığı çakmaz.
         BackColor = InitialBackground;
         _webView.DefaultBackgroundColor = InitialBackground;
+
+        _blockAutoShow = startMinimized;
+        Activated += (_, _) =>
+        {
+            if (_blockAutoShow)
+            {
+                Hide();
+            }
+        };
 
         string? exePath = Environment.ProcessPath;
         if (!string.IsNullOrEmpty(exePath))
@@ -184,6 +206,7 @@ internal sealed class ShellForm : Form
 
     private void RestoreFromTray()
     {
+        _blockAutoShow = false;
         Show();
         WindowState = FormWindowState.Normal;
         Activate();
