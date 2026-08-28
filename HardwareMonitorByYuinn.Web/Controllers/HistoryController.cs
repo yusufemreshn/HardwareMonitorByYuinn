@@ -28,9 +28,9 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
         HistoryStoreStatus gameSessionsStatus = await historyStore.GetGameSessionsSummaryAsync(cancellationToken);
         HistoryStoreStatus processSamplesStatus = await historyStore.GetProcessSamplesSummaryAsync(cancellationToken);
 
-        // "Kayıtları Görüntüle" tarih kutuları en son kaydedilen dakikadan geriye 15 dakikalık bir
+        // "Kayıtları Görüntüle" tarih kutuları en son kaydedilen dakikadan geriye 1 günlük bir
         // aralıkla dolu gelir; sayfa açılır açılmaz bir şey görünsün diye. Henüz hiç kayıt yoksa
-        // "şimdi"den geriye 15 dakika kullanılır (sonuç: boş tablo, bu da doğrudur). Dışa Aktar
+        // "şimdi"den geriye 1 gün kullanılır (sonuç: boş tablo, bu da doğrudur). Dışa Aktar
         // butonu da aynı formdaki (kullanıcı tarafından değiştirilebilen) aralığı kullanır.
         DateTime defaultToLocal = status.NewestSampleUtc?.ToLocalTime() ?? nowLocal;
         var model = new HistoryViewModel
@@ -39,7 +39,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
             LoginAttemptsStatus = loginAttemptsStatus,
             GameSessionsStatus = gameSessionsStatus,
             ProcessSamplesStatus = processSamplesStatus,
-            DefaultFromLocal = defaultToLocal.AddMinutes(-15),
+            DefaultFromLocal = defaultToLocal.AddDays(-1),
             DefaultToLocal = defaultToLocal,
             MaxDisplayRows = MaxDisplayRows
         };

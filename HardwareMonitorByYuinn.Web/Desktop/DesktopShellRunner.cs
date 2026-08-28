@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using HardwareMonitorByYuinn.DataAccess.History;
 
 namespace HardwareMonitorByYuinn.Web.Desktop;
 
@@ -26,6 +27,9 @@ internal static class DesktopShellRunner
         var uiThread = new Thread(() =>
         {
             InitializeWinForms();
+            // Sessiz (tepsi) başlangıçta hiçbir pencere gösterilmediği ilkeye sadık kalınıp onarım da
+            // sessiz yapılır — sorun log dosyasına yazılır, kullanıcıya ekstra bir pencere çıkmaz.
+            RunRepairIfNeeded(showUi: false);
             CreateAndRunShellForm(startUrl, hostStopping, startMinimized, splash: null);
         });
         uiThread.SetApartmentState(ApartmentState.STA);
@@ -53,6 +57,12 @@ internal static class DesktopShellRunner
     {
         InitializeWinForms();
 
+        // Ana iş parçacığındaki builder/DI kurulumu daha başlamadan, ASP.NET Core hiç bu veritabanı
+        // dosyalarına dokunmadan ÖNCE çalışır — böylece bir sorun varsa Host.StartAsync (dolayısıyla
+        // tüm süreç) hiç çökmeden düzeltilmiş olur (bkz. HistoryDatabaseRepair'in doc yorumu:
+        // 2026-08-27 gecesi yaşanan gerçek olay).
+        RunRepairIfNeeded(showUi: true);
+
         var splash = new SplashForm();
         splash.Show();
         splash.SetProgress(10);
@@ -76,6 +86,47 @@ internal static class DesktopShellRunner
         Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
+    }
+
+    /// <summary>
+    /// Dosyalar sağlamken (olağan durum) HistoryDatabaseRepair hiçbir şey yapmadığından bu, RepairForm'u
+    /// hiç oluşturmadan birkaç milisaniyede döner. Yalnızca gerçekten bir dosya onarıldığında (ör.
+    /// beklenmedik bir kapanmadan sonra) <paramref name="showUi"/> true ise RepairForm gösterilip
+    /// onarım tamamlanana kadar (Application.DoEvents ile mesaj pompalanarak) beklenir.
+    /// </summary>
+    private static void RunRepairIfNeeded(bool showUi)
+    {
+        string historyDirectory = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "HardwareMonitorByYuinn", "history");
+
+        RepairForm? form = null;
+        void Report(string message, int percent)
+        {
+            if (showUi)
+            {
+                form ??= CreateAndShowRepairForm();
+                form.SetStatus(message, percent);
+                Application.DoEvents();
+            }
+        }
+
+        HistoryDatabaseRepair.RepairIfNeeded(historyDirectory, onProgress: Report);
+
+        if (form is not null)
+        {
+            // "Tamamlandı" mesajı göz açıp kapayana kadar geçmesin, kullanıcı okuyabilsin.
+            Thread.Sleep(500);
+            form.Close();
+        }
+    }
+
+    private static RepairForm CreateAndShowRepairForm()
+    {
+        var form = new RepairForm();
+        form.Show();
+        Application.DoEvents();
+        return form;
     }
 
     private static void CreateAndRunShellForm(string startUrl, CancellationToken hostStopping, bool startMinimized, SplashForm? splash)

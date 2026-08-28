@@ -1,5 +1,12 @@
 @{
     ViewData["Title"] = "Karşılaştırma";
+
+    // Aralık A varsayılanı son 24 saat, Aralık B varsayılanı ondan önceki 24 saatlik gün — sayfa
+    // açılır açılmaz "dünle bugünü karşılaştır" hissi versin diye (bkz. Kayıtları Görüntüle'deki
+    // HistoryController.Index'teki benzer "boş gelmesin" mantığı).
+    DateTime nowLocal = DateTime.Now;
+    DateTime rangeAFromLocal = nowLocal.AddHours(-24);
+    DateTime rangeBFromLocal = nowLocal.AddHours(-48);
 }
 
 <div class="settings-shell">
@@ -71,18 +78,18 @@
             </p>
             <div class="thresholds-form" style="margin-bottom:14px;">
                 <label class="threshold-field">Aralık A: Başlangıç
-                    <input type="datetime-local" id="range-a-from" style="width:200px;">
+                    <input type="datetime-local" id="range-a-from" style="width:200px;" value="@rangeAFromLocal.ToString("yyyy-MM-ddTHH:mm")">
                 </label>
                 <label class="threshold-field">Aralık A: Bitiş
-                    <input type="datetime-local" id="range-a-to" style="width:200px;">
+                    <input type="datetime-local" id="range-a-to" style="width:200px;" value="@nowLocal.ToString("yyyy-MM-ddTHH:mm")">
                 </label>
             </div>
             <div class="thresholds-form" style="margin-bottom:14px;">
                 <label class="threshold-field">Aralık B: Başlangıç
-                    <input type="datetime-local" id="range-b-from" style="width:200px;">
+                    <input type="datetime-local" id="range-b-from" style="width:200px;" value="@rangeBFromLocal.ToString("yyyy-MM-ddTHH:mm")">
                 </label>
                 <label class="threshold-field">Aralık B: Bitiş
-                    <input type="datetime-local" id="range-b-to" style="width:200px;">
+                    <input type="datetime-local" id="range-b-to" style="width:200px;" value="@rangeAFromLocal.ToString("yyyy-MM-ddTHH:mm")">
                 </label>
             </div>
             <button type="button" id="range-compare-btn" class="btn-primary-hwmon" style="margin-bottom:14px;">Karşılaştır</button>
