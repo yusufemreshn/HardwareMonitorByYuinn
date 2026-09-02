@@ -14,6 +14,29 @@ core/hotspot temperature, RAM SPD info, SMART disk health, and similar),
 LibreHardwareMonitorLib and a few small additional libraries are used; all of them
 are distributed unmodified, in compiled form (see `LICENSES.txt`).
 
+## Screenshots
+
+**Dashboard**: real-time CPU/GPU/RAM/disk/network cards, resource usage, and a live chart.
+![Dashboard](resimler/image.png)
+
+**Details**: per-metric averages over several time windows.
+![Details page](resimler/image2.png)
+
+**Comparison**: compare two time ranges side by side.
+![Time range comparison](resimler/image3.png)
+
+**History**: per-game session history with average FPS and temperature.
+![Game history](resimler/image4.png)
+
+**Settings**: built-in theme presets.
+![Theme presets](resimler/image5.png)
+
+**Notifications**: threshold alert history.
+![Notification history](resimler/image6.png)
+
+**About**: measurement sources and keyboard shortcuts.
+![About page](resimler/image7.png)
+
 ## Features
 
 - Real-time CPU / GPU / RAM / disk / network cards with threshold-based coloring
@@ -115,6 +138,29 @@ arayüzlerinden (WMI performans sayaçları, D3DKMT, ETW) doğrudan okunur. Üre
 değerler (GPU çekirdek gücü/hotspot sıcaklığı, RAM SPD bilgisi, SMART disk sağlığı gibi)
 için LibreHardwareMonitorLib ve birkaç küçük ek kütüphane kullanılır; bunların hepsi
 değiştirilmeden, derlenmiş haliyle dağıtılır (bkz. `LICENSES.txt`).
+
+### Ekran Görüntüleri
+
+**Panel**: gerçek zamanlı CPU/GPU/RAM/disk/ağ kartları, kaynak kullanımı ve canlı grafik.
+![Panel](resimler/image.png)
+
+**Detaylar**: birden fazla zaman aralığındaki metrik ortalamaları.
+![Detaylar sayfası](resimler/image2.png)
+
+**Karşılaştırma**: iki zaman aralığını yan yana karşılaştırma.
+![Zaman aralığı karşılaştırma](resimler/image3.png)
+
+**Geçmiş**: ortalama FPS ve sıcaklıkla birlikte oyun bazlı oturum geçmişi.
+![Oyun geçmişi](resimler/image4.png)
+
+**Ayarlar**: hazır tema paketleri.
+![Hazır temalar](resimler/image5.png)
+
+**Bildirimler**: eşik aşım geçmişi.
+![Bildirim geçmişi](resimler/image6.png)
+
+**Hakkında**: ölçüm kaynakları ve klavye kısayolları.
+![Hakkında sayfası](resimler/image7.png)
 
 ### Özellikler
 
