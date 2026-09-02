@@ -24,7 +24,7 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
     private static readonly TimeSpan MinSessionDuration = TimeSpan.FromSeconds(30);
 
     /// <summary>Kesintisiz bir oturum bu süreyi geçince kaydedilip aynı process için hemen yeni bir
-    /// oturum başlatılır — saatlerce süren tek bir dev satır yerine, "Oyun Geçmişi" tablosunda daha
+    /// oturum başlatılır, böylece saatlerce süren tek bir dev satır yerine "Oyun Geçmişi" tablosunda daha
     /// okunabilir, sabit uzunlukta parçalar (en fazla 15 dk) birikir.</summary>
     private static readonly TimeSpan MaxSessionDuration = TimeSpan.FromMinutes(15);
 
@@ -32,7 +32,7 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
     private readonly string _connectionString;
 
     // login_attempts, "Giriş Denemesi Özeti" panelindeki "Veritabanı boyutu" değerinin ana geçmişten
-    // bağımsız/dürüst olabilmesi için kardeş bir dosyaya (login-attempts.db) taşındı — artık tüm
+    // bağımsız/dürüst olabilmesi için kardeş bir dosyaya (login-attempts.db) taşındı, artık tüm
     // login_attempts okuma/yazma/budama işlemleri bu bağlantı string'ini kullanır.
     private readonly string _loginAttemptsConnectionString;
 
@@ -46,7 +46,7 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
     private readonly BlockingCollection<(DateTime MinuteUtc, HistorySample Sample)> _queue = new();
     private readonly Thread _writer;
 
-    // Process bazlı kaynak kullanım geçmişi (C20) — ayrı bir kuyruk/iş parçacığı kullanır çünkü
+    // Process bazlı kaynak kullanım geçmişi (C20); ayrı bir kuyruk/iş parçacığı kullanır çünkü
     // bir dakikada birden fazla satır (her üst process için biri) yazılması gerekir; ana `_queue`
     // tek bir HistorySample'a göre tasarlanmıştı, karıştırmamak için ayrı tutuldu.
     private readonly BlockingCollection<(DateTime MinuteUtc, Dictionary<string, ProcessMinuteAccumulator> Data)> _processQueue = new();
@@ -95,7 +95,7 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
         InitializeProcessSamplesSchema();
 
         // login_attempts'in aksine bunlar GERÇEK kullanıcı verisi taşıyabilir (eski history.db'de
-        // hâlâ samples ile aynı dosyada oluşturulmuş olabilir) — terk edilmez, gerçekten taşınır.
+        // hâlâ samples ile aynı dosyada oluşturulmuş olabilir), terk edilmez, gerçekten taşınır.
         bool migratedGameSessions = MigrateLegacyTableIfPresent(databasePath, _gameSessionsConnectionString, "game_sessions");
         bool migratedProcessSamples = MigrateLegacyTableIfPresent(databasePath, _processSamplesConnectionString, "process_samples");
         if (migratedGameSessions || migratedProcessSamples)
@@ -111,7 +111,7 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
             }
 
             // WAL modunda VACUUM'un küçülttüğü içerik önce "-wal" dosyasına yazılır, ana .db dosyası
-            // otomatik checkpoint'e kadar ESKİ (büyük) boyutunda kalır — bu da "Veritabanı boyutu"nun
+            // otomatik checkpoint'e kadar ESKİ (büyük) boyutunda kalır, bu da "Veritabanı boyutu"nun
             // (ana dosya + wal toplamı) migration hemen sonrasında olduğundan daha BÜYÜK görünmesine
             // yol açardı. TRUNCATE checkpoint, WAL içeriğini hemen ana dosyaya yazıp WAL'ı sıfırlar.
             using SqliteCommand checkpoint = legacyVacuumConnection.CreateCommand();
@@ -164,7 +164,7 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
 
     /// <summary>login-attempts.db dosyasını oluşturur, WAL modunu açar ve login_attempts tablosunu
     /// kurar. Eski/paylaşılan history.db'deki aynı isimli tabloya kasıtlı olarak dokunulmaz/migrate
-    /// edilmez (bkz. bekleyen işler notu, adım 5) — orada kalan az sayıdaki test verisi kullanılmaz
+    /// edilmez (bkz. bekleyen işler notu, adım 5); orada kalan az sayıdaki test verisi kullanılmaz
     /// hâlde bırakılır, ileriye dönük tüm okuma/yazma bu yeni dosyaya gider.</summary>
     private void InitializeLoginAttemptsSchema()
     {
@@ -254,9 +254,9 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
     /// <summary>
     /// Eski (taşımadan önceki) history.db'de hâlâ <paramref name="tableName"/> tablosu varsa, onu
     /// yeni bağımsız dosyaya gerçekten taşır (login_attempts'ten farklı olarak burada veri terk
-    /// edilmez — game_sessions/process_samples gerçek/büyük kullanıcı verisi olabilir). Kopyalama
+    /// edilmez, çünkü game_sessions/process_samples gerçek/büyük kullanıcı verisi olabilir). Kopyalama
     /// ve eski tabloyu silme TEK bir transaction içinde yapılır: taskkill gibi bir kesinti yarıda
-    /// kalırsa geri alınır, ne veri kaybı ne çoğalma olur — bir sonraki açılışta baştan denenir.
+    /// kalırsa geri alınır, ne veri kaybı ne çoğalma olur, bir sonraki açılışta baştan denenir.
     /// Tablo eski dosyada zaten yoksa (önceki bir çalıştırmada taşınmışsa) hiçbir şey yapmaz; bu,
     /// aynı zamanda idempotency garantisidir. <paramref name="tableName"/> her zaman bu sınıfın
     /// kendi sabit literalleriyle çağrılır, asla dışarıdan/kullanıcıdan gelmez.
@@ -384,7 +384,7 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
 
     private void ProcessProcessQueue()
     {
-        // Yazıcı thread'i ömrü boyunca tek bir bağlantı açık tutulur — eskiden her dakika (kuyruk
+        // Yazıcı thread'i ömrü boyunca tek bir bağlantı açık tutulur, eskiden her dakika (kuyruk
         // öğesi başına) yeni bir SqliteConnection açılıp kapatılıyordu; WAL modu (InitializeSchema)
         // zaten aktif olduğundan tek bağlantıyı yeniden kullanmak güvenlidir.
         using SqliteConnection connection = OpenProcessSamplesConnection();
@@ -419,7 +419,7 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
     private void ProcessQueue()
     {
         // Yazıcı thread'i ömrü boyunca tek bir bağlantı açık tutulur (bkz. ProcessProcessQueue'daki
-        // aynı not) — her dakika yeniden aç/kapa yerine WAL modunda güvenle yeniden kullanılır.
+        // aynı not); her dakika yeniden aç/kapa yerine WAL modunda güvenle yeniden kullanılır.
         using SqliteConnection connection = OpenConnection();
         foreach ((DateTime minuteUtc, HistorySample sample) in _queue.GetConsumingEnumerable())
         {
@@ -510,7 +510,7 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
         }
     }
 
-    /// <summary>game_sessions için de diğer tablolarla tutarlı 30 günlük otomatik saklama —
+    /// <summary>game_sessions için de diğer tablolarla tutarlı 30 günlük otomatik saklama uygulanır;
     /// eskiden bu tabloya hiç budama uygulanmıyordu (oyun oturumları sınırsız birikiyordu), kendi
     /// dosyasına ayrılırken bu tutarsızlık da giderildi.</summary>
     private void PruneGameSessions()
@@ -533,7 +533,7 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
     }
 
     /// <summary>login_attempts artık ayrı bir dosyada (login-attempts.db) olduğu için budaması da
-    /// ana `Prune`'dan ayrı, kendi bağlantısını açan bir metotla yapılır — giriş denemesi budaması
+    /// ana `Prune`'dan ayrı, kendi bağlantısını açan bir metotla yapılır; giriş denemesi budaması
     /// nadir olduğundan (6 saatte bir) kalıcı bir bağlantı tutmaya gerek yoktur.</summary>
     private void PruneLoginAttempts()
     {
@@ -743,7 +743,7 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
         return results;
     }
 
-    /// <summary>En fazla 2000 satır döner — bir process aralık boyunca sürekli üst sırada kalırsa
+    /// <summary>En fazla 2000 satır döner; bir process aralık boyunca sürekli üst sırada kalırsa
     /// bile sayfaya/aktarıma binlerce satır yüklenmesin diye (Kayıtları Görüntüle'deki 1500 satır
     /// sınırıyla aynı gerekçe).</summary>
     public async Task<IReadOnlyList<ProcessHistorySample>> GetProcessHistoryAsync(string processName, DateTime fromUtc, DateTime toUtc, CancellationToken cancellationToken = default)
@@ -752,9 +752,9 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
         await connection.OpenAsync(cancellationToken);
 
         await using SqliteCommand command = connection.CreateCommand();
-        // Not: burada bilerek bir LIMIT yok — "Rows" uç noktasıyla (HistoryController.Rows) aynı
+        // Not: burada bilerek bir LIMIT yok; "Rows" uç noktasıyla (HistoryController.Rows) aynı
         // desen izleniyor: tüm aralık belleğe okunur, kırpma (en YENİ N kayıt tutulacak şekilde)
-        // controller katmanında yapılır. Eskiden burada "ORDER BY ASC LIMIT 2000" vardı — bu, uzun
+        // controller katmanında yapılır. Eskiden burada "ORDER BY ASC LIMIT 2000" vardı; bu uzun
         // bir process için (ör. 30 gün) aralığın en ESKİ 2000 kaydını döndürüp en YENİ veriyi sessizce
         // düşürüyordu; kullanıcı "son 30 gün" seçip aslında en eski ~1,4 günü görüyordu, hiçbir uyarı
         // da yoktu (kullanıcı tarafından bulunan, canlı doğrulanmış hata).
@@ -955,7 +955,7 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
     /// <summary>
     /// Kullanıcının Geçmiş sayfasındaki "Kayıt Bilgileri" panellerinden elle tetiklediği temizlik:
     /// "en eski N gün" sabit seçeneklerinden biri seçilir (bkz. HistoryController) ve tablodaki EN
-    /// ESKİ kayıttan itibaren o kadar günlük dilim silinir — otomatik <see cref="Prune"/> ile aynı
+    /// ESKİ kayıttan itibaren o kadar günlük dilim silinir; otomatik <see cref="Prune"/> ile aynı
     /// "eşikten eskisini sil" mantığı, tek farkı eşiğin "şimdi − 30 gün" yerine "en eski kayıt + N
     /// gün" olması. Silme sonrası dosya boyutunun kullanıcıya GERÇEKTEN küçülmüş görünmesi için
     /// (DELETE tek başına sayfaları boşaltır ama dosyayı küçültmez) VACUUM ile geri kazanılır; bu

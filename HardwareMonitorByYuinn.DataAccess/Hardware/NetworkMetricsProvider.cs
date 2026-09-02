@@ -8,7 +8,7 @@ namespace HardwareMonitorByYuinn.DataAccess.Hardware;
 /// <summary>
 /// Ağ indirme/yükleme hızını LibreHardwareMonitor'ın "Network" donanım sensörleri yerine .NET'in
 /// kendi arayüz sayaçlarından hesaplar. Bu makinede LibreHardwareMonitor, her NDIS filtre katmanını
-/// (Kaspersky, QoS Packet Scheduler, WFP vb.) ayrı bir "Network" donanımı olarak listeliyor — aynı
+/// (Kaspersky, QoS Packet Scheduler, WFP vb.) ayrı bir "Network" donanımı olarak listeliyor, aynı
 /// fiziksel trafiği birden fazla kez sayıp topluyor.
 ///
 /// Tüm "Up" arayüzleri toplamak da güvenli değil: VPN/tünel istemcileri (ör. Cloudflare WARP)
@@ -28,7 +28,7 @@ internal sealed class NetworkMetricsProvider
     private double _totalUploadedBytes;
 
     // İnternete çıkan arayüzü bulmak (GetAllNetworkInterfaces + GetBestInterface P/Invoke) saniyede
-    // bir tekrarlanan bu sağlayıcı için gereksiz pahalı bir iş — seçilen arayüz neredeyse hiç
+    // bir tekrarlanan bu sağlayıcı için gereksiz pahalı bir iş; seçilen arayüz neredeyse hiç
     // değişmiyor. Seçim birkaç saniye önbelleğe alınır; asıl istatistik okuma (GetIPv4Statistics)
     // önbellek süresi içinde de her turda taze veri döner (arayüz nesnesinin kendisi değil, o an
     // sorgulanan sayaçlar önbelleğe alınıyor).

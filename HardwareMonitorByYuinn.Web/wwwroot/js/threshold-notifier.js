@@ -1,4 +1,4 @@
-// Eşik bildirimleri — her sayfada (Panel, Detaylar, Geçmiş, Ayarlar, ...) çalışır, kendi SignalR
+// Eşik bildirimleri: her sayfada (Panel, Detaylar, Geçmiş, Ayarlar, ...) çalışır, kendi SignalR
 // bağlantısıyla donanım verisini dinler; kullanıcı hangi sekmede olursa olsun eşik aşıldığında
 // bildirim gönderilebilsin diye bu mantık dashboard.js'e değil, her sayfada yüklenen bu dosyaya
 // taşındı. Panel sayfasındaki kart kırmızıya dönme/health-summary gibi görsel şeyler hâlâ
@@ -70,22 +70,22 @@
             var cpuMetric = HwmonThresholds.metrics.cpu[WARNING_THRESHOLDS.cpu.metric];
             var cpuValue = message.cpu[cpuMetric.field];
             var cpuWarning = typeof cpuValue === "number" && cpuValue > WARNING_THRESHOLDS.cpu.value;
-            maybeNotify("cpu", cpuWarning, "İşlemci " + cpuMetric.label.toLowerCase() + " yüksek",
-                cpuMetric.label + " " + fmt(cpuValue, cpuMetric.unit, 1) + " (eşik " + WARNING_THRESHOLDS.cpu.value + " " + cpuMetric.unit + ")");
+            maybeNotify("cpu", cpuWarning, t("İşlemci") + " " + cpuMetric.label.toLowerCase() + " " + t("yüksek"),
+                cpuMetric.label + " " + fmt(cpuValue, cpuMetric.unit, 1) + " (" + t("eşik") + " " + WARNING_THRESHOLDS.cpu.value + " " + cpuMetric.unit + ")");
         }
 
         if (message.gpu) {
             var gpuMetric = HwmonThresholds.metrics.gpu[WARNING_THRESHOLDS.gpu.metric];
             var gpuValue = message.gpu[gpuMetric.field];
             var gpuWarning = typeof gpuValue === "number" && gpuValue > WARNING_THRESHOLDS.gpu.value;
-            maybeNotify("gpu", gpuWarning, "Ekran kartı " + gpuMetric.label.toLowerCase() + " yüksek",
-                gpuMetric.label + " " + fmt(gpuValue, gpuMetric.unit, 1) + " (eşik " + WARNING_THRESHOLDS.gpu.value + " " + gpuMetric.unit + ")");
+            maybeNotify("gpu", gpuWarning, t("Ekran kartı") + " " + gpuMetric.label.toLowerCase() + " " + t("yüksek"),
+                gpuMetric.label + " " + fmt(gpuValue, gpuMetric.unit, 1) + " (" + t("eşik") + " " + WARNING_THRESHOLDS.gpu.value + " " + gpuMetric.unit + ")");
         }
 
         if (message.ram) {
             var ramWarning = typeof message.ram.usedPercent === "number" && message.ram.usedPercent > WARNING_THRESHOLDS.ramUsedPercent;
-            maybeNotify("ram", ramWarning, "Bellek kullanımı yüksek",
-                "Kullanım " + fmt(message.ram.usedPercent, "%", 1) + " (eşik " + WARNING_THRESHOLDS.ramUsedPercent + " %)");
+            maybeNotify("ram", ramWarning, t("Bellek kullanımı") + " " + t("yüksek"),
+                t("Kullanım") + " " + fmt(message.ram.usedPercent, "%", 1) + " (" + t("eşik") + " " + WARNING_THRESHOLDS.ramUsedPercent + " %)");
         }
 
         var storages = Array.isArray(message.storages) ? message.storages : [];
@@ -97,8 +97,8 @@
         // kontrol kullanılır ki "-Infinity °C" gibi anlamsız bir dize hiç hesaplanmasın.
         var diskWarning = maxDiskTemp !== -Infinity && maxDiskTemp > WARNING_THRESHOLDS.diskTempC;
         if (diskWarning) {
-            maybeNotify("storage", diskWarning, "Disk sıcaklığı yüksek",
-                "En yüksek disk sıcaklığı " + maxDiskTemp.toFixed(1) + " °C (eşik " + WARNING_THRESHOLDS.diskTempC + " °C)");
+            maybeNotify("storage", diskWarning, t("Disk sıcaklığı") + " " + t("yüksek"),
+                t("En yüksek disk sıcaklığı") + " " + maxDiskTemp.toFixed(1) + " °C (" + t("eşik") + " " + WARNING_THRESHOLDS.diskTempC + " °C)");
         } else {
             maybeNotify("storage", false, "", "");
         }

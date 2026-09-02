@@ -12,7 +12,7 @@ public sealed class DashboardController(TimeSeriesStore store, IHardwareReader r
     // TimeSeriesStore en fazla 15 dk'lık ince (saniyelik) çözünürlüklü veri tutuyor (bkz.
     // TimeSeriesStore.RetentionMinutes); burada da aynı üst sınırı istiyoruz ki Panel ilk açıldığında
     // "1 saat" gibi daha geniş bir aralığa geçilse bile bellekteki en ince veri hiç sorgu yapmadan
-    // hazır olsun — yalnızca 15 dk'dan eski kısım (varsa) dashboard.js tarafından /History/Rows'tan
+    // hazır olsun, yalnızca 15 dk'dan eski kısım (varsa) dashboard.js tarafından /History/Rows'tan
     // (dakikalık) ayrıca çekilip tamamlanıyor.
     private static readonly TimeSpan ChartWindow = TimeSpan.FromMinutes(15);
 

@@ -1,7 +1,7 @@
 (function () {
     "use strict";
 
-    // Ayarlar sayfası kategori/alt bölüm gezinmesi — sayfadaki tüm bölümler artık tek seferde
+    // Ayarlar sayfası kategori/alt bölüm gezinmesi; sayfadaki tüm bölümler artık tek seferde
     // gösterilmek yerine solda kategori altında listeleniyor, sağda yalnızca seçili bölüm görünür.
     // Diğer init fonksiyonları (initThresholdsForm, initPresetThemes vb.) elemanları gizliyken de
     // normal şekilde bulup kuruyor; `hidden` yalnızca görünürlüğü değiştirir, DOM'dan kaldırmaz.
@@ -10,7 +10,7 @@
         var nav = window.HwmonSectionNav.init("settings-sidebar", "settings-content");
         if (!nav) return;
 
-        // Sol üstteki arama kutusu — yalnızca metne göre filtreler, sayfa değiştirmez. Eşleşmeyen
+        // Sol üstteki arama kutusu; yalnızca metne göre filtreler, sayfa değiştirmez. Eşleşmeyen
         // alt menü öğeleri (hem üst düzey hem "Görünüm" gibi iç içe gruplardakiler) gizlenir; en az
         // bir eşleşmesi olan kategori/grup normal aç/kapa durumundan bağımsız olarak zorla açılır.
         // Hiç eşleşmesi olmayan kategori/grup da tamamen gizlenir. Kutu boşaltılınca (ya da hiç
@@ -18,13 +18,14 @@
         var searchInput = document.getElementById("settings-search-input");
         if (searchInput) {
             searchInput.addEventListener("input", function () {
-                var query = searchInput.value.trim().toLocaleLowerCase("tr");
+                var searchLocale = window.HwmonLocaleTag();
+                var query = searchInput.value.trim().toLocaleLowerCase(searchLocale);
                 var isSearching = query.length > 0;
 
                 nav.subButtons.forEach(function (btn) {
                     var li = btn.closest("li");
                     if (!li) return;
-                    var matches = !isSearching || btn.textContent.toLocaleLowerCase("tr").indexOf(query) !== -1;
+                    var matches = !isSearching || btn.textContent.toLocaleLowerCase(searchLocale).indexOf(query) !== -1;
                     li.classList.toggle("settings-search-hidden", !matches);
                 });
 
@@ -50,7 +51,7 @@
         setTimeout(function () { note.style.display = "none"; }, 2000);
     }
 
-    // Eşik Ayarları — window.HwmonThresholds (site.js) Panel'deki kart uyarıları ve bildirimleriyle
+    // Eşik Ayarları, window.HwmonThresholds (site.js) Panel'deki kart uyarıları ve bildirimleriyle
     // (dashboard.js) aynı kaynağı paylaşır. İşlemci/Ekran Kartı için metrik (sıcaklık/kullanım) +
     // değer ikilisi, Bellek/Disk için ise doğrudan tek bir sayı okunup yazılır.
     (function initThresholdsForm() {
@@ -115,10 +116,10 @@
             errorBox.style.display = message ? "block" : "none";
         }
 
-        // Number("") === 0, NaN DEĞİL — bu yüzden bir kutu boş bırakılıp kaydedilince "geçersiz,
+        // Number("") === 0, NaN DEĞİL; bu yüzden bir kutu boş bırakılıp kaydedilince "geçersiz,
         // varsayılana düş" mantığı hiç tetiklenmiyor, sessizce 0 kaydediliyor (ör. boş bırakılan bir
         // Dikkat alanı 0 olup İşlemci kartının Panel'de sürekli "Dikkat" sarısında kalmasına yol
-        // açıyordu — kullanıcı tarafından bulunan, canlı doğrulanmış hata). Boş/yalnızca boşluk
+        // açıyordu; kullanıcı tarafından bulunan, canlı doğrulanmış hata). Boş/yalnızca boşluk
         // içeren bir değeri de NaN gibi ele alan bu yardımcı, aynı satırdaki isNaN kontrollerinin
         // gerçekten işe yaramasını sağlıyor.
         function parseFieldNumber(input) {
@@ -150,7 +151,7 @@
                 next[cardKey] = { metric: metric, value: value, cautionValue: cautionValue };
             });
 
-            // RAM/Disk için de CPU/GPU'daki gibi fiziksel sınır kırpması uygulanır — aksi halde
+            // RAM/Disk için de CPU/GPU'daki gibi fiziksel sınır kırpması uygulanır; aksi halde
             // negatif ya da anlamsız derecede büyük bir değer (ör. "-10") doğrudan kaydedilebiliyordu,
             // yalnızca "Dikkat < Kritik" ilişkisi kontrol ediliyordu.
             if (ramInput) {
@@ -170,17 +171,17 @@
                 next.diskCautionTempC = isNaN(diskCautionValue) ? api.defaults.diskCautionTempC : Math.min(Math.max(diskCautionValue, 0), 150);
             }
 
-            // Dikkat, Kritik'ten küçük olmalı — aksi halde bir değer Dikkat'i geçtiği anda doğrudan
+            // Dikkat, Kritik'ten küçük olmalı; aksi halde bir değer Dikkat'i geçtiği anda doğrudan
             // Kritik'i de geçmiş sayılır (levelFor önce Kritik'i kontrol eder) ve Dikkat sarısı hiçbir
             // zaman görünmez; kullanıcı arayüzün göründüğünden tamamen farklı davranmasına şaşırır.
             var invalidLabels = [];
-            [["cpu", "İşlemci"], ["gpu", "Ekran Kartı"]].forEach(function (pair) {
+            [["cpu", t("İşlemci")], ["gpu", t("Ekran Kartı")]].forEach(function (pair) {
                 if (next[pair[0]].cautionValue >= next[pair[0]].value) invalidLabels.push(pair[1]);
             });
-            if (next.ramCautionPercent >= next.ramUsedPercent) invalidLabels.push("Bellek");
-            if (next.diskCautionTempC >= next.diskTempC) invalidLabels.push("Disk");
+            if (next.ramCautionPercent >= next.ramUsedPercent) invalidLabels.push(t("Bellek"));
+            if (next.diskCautionTempC >= next.diskTempC) invalidLabels.push(t("Disk"));
             if (invalidLabels.length > 0) {
-                showError("Dikkat değeri Kritik değerinden küçük olmalı: " + invalidLabels.join(", ") + ". Kaydedilmedi.");
+                showError(t("Dikkat değeri Kritik değerinden küçük olmalı:") + " " + invalidLabels.join(", ") + ". " + t("Kaydedilmedi."));
                 return;
             }
 
@@ -190,13 +191,13 @@
             // kullanıcı Ayarlar sayfasında yeni bir eşik (ör. RAM için 95) kaydettikten sonra O AYNI
             // sekmede kalmaya devam ederse (threshold-notifier.js her sayfada, Ayarlar dahil çalışır),
             // bildirim mantığı hâlâ kaydedilmeden ÖNCEKİ (ör. varsayılan 90) eşiği kullanmaya devam
-            // ediyordu — kullanıcının "95 girdim ama 93-94'te uyarı geldi" şikâyetinin kaynağı buydu.
+            // ediyordu; kullanıcının "95 girdim ama 93-94'te uyarı geldi" şikâyetinin kaynağı buydu.
             document.dispatchEvent(new CustomEvent("hwmon:thresholds-changed"));
             flashSavedNote("thresholds-saved-note");
         });
     })();
 
-    // Birim tercihi — window.HwmonUnitPreferences (site.js); gerçek dönüştürme window.HwmonUnits'te.
+    // Birim tercihi, window.HwmonUnitPreferences (site.js); gerçek dönüştürme window.HwmonUnits'te.
     (function initUnitPrefsForm() {
         var api = window.HwmonUnitPreferences;
         if (!api) return;
@@ -224,7 +225,7 @@
         });
     })();
 
-    // Enerji maliyeti — window.HwmonEnergyCost (site.js); anlık CPU+GPU gücünden basit bir önizleme
+    // Enerji maliyeti, window.HwmonEnergyCost (site.js); anlık CPU+GPU gücünden basit bir önizleme
     // hesaplanır (yalnızca kayıtlı oran girilmişse), gerçek canlı gösterim dashboard.js'te.
     (function initEnergyCostForm() {
         var api = window.HwmonEnergyCost;
@@ -240,10 +241,10 @@
 
         function renderPreview(prefs) {
             if (!preview) return;
-            if (!prefs.enabled) { preview.textContent = "Tahmin gizli."; return; }
-            if (!prefs.ratePerKwh) { preview.textContent = "Önizleme için birim fiyat girin."; return; }
+            if (!prefs.enabled) { preview.textContent = t("Tahmin gizli."); return; }
+            if (!prefs.ratePerKwh) { preview.textContent = t("Önizleme için birim fiyat girin."); return; }
             var dailyLira = (0.05 * 24 * prefs.ratePerKwh);
-            preview.textContent = "Örnek: sürekli 50 W tüketimle günlük yaklaşık ₺" + dailyLira.toFixed(2) + ".";
+            preview.textContent = t("Örnek: sürekli 50 W tüketimle günlük yaklaşık") + " ₺" + dailyLira.toFixed(2) + t(" (günlük).");
         }
 
         renderPreview(current);
@@ -261,7 +262,7 @@
         });
     })();
 
-    // Yazı tipi — window.HwmonTypography (site.js) boyutu/aileyi hem localStorage'a yazar hem
+    // Yazı tipi, window.HwmonTypography (site.js) boyutu/aileyi hem localStorage'a yazar hem
     // anında :root'a uygular (apply() sayfa yüklenirken zaten bir kez çağrılıyor).
     (function initTypographyForm() {
         var api = window.HwmonTypography;
@@ -287,7 +288,7 @@
         });
     })();
 
-    // Cam efekti — window.HwmonGlassEffect (site.js); checkbox değişir değişmez anında uygulanır,
+    // Cam efekti, window.HwmonGlassEffect (site.js); checkbox değişir değişmez anında uygulanır,
     // ayrı bir "Kaydet" butonu yok (diğer aç/kapa anahtarlarıyla aynı desen: bildirim zili gibi).
     (function initGlassEffectToggle() {
         var api = window.HwmonGlassEffect;
@@ -301,7 +302,7 @@
         });
     })();
 
-    // Kart yoğunluğu — artık Kart Sıralaması panelinde bir "hazır şablon" düğme grubu. Tıklanınca
+    // Kart yoğunluğu, artık Kart Sıralaması panelinde bir "hazır şablon" düğme grubu. Tıklanınca
     // hem görsel yoğunluğu (dolgu/font, window.HwmonDensity) hem de detay kutucuklarını
     // (window.HwmonDetailVisibility) o şablona göre toplu ayarlar; initDetailVisibilityForm bu
     // olayı dinleyip kutucukları günceller (bkz. hwmon:detail-visibility-changed).
@@ -332,7 +333,7 @@
         refreshActive();
     })();
 
-    // Panel görünümü (grid/liste) — window.HwmonPanelView (site.js); anında uygulanır.
+    // Panel görünümü (grid/liste), window.HwmonPanelView (site.js); anında uygulanır.
     (function initPanelViewForm() {
         var api = window.HwmonPanelView;
         var select = document.getElementById("panel-view-select");
@@ -342,7 +343,7 @@
 
         var preview = document.getElementById("panel-view-preview");
         var layoutApi = window.HwmonPanelLayout;
-        // Bu sayfada değişmiyor (yalnızca Grid/Liste değişiyor) — hangi kartların görüneceği hâlâ
+        // Bu sayfada değişmiyor (yalnızca Grid/Liste değişiyor); hangi kartların görüneceği hâlâ
         // önizlemeye yansısın diye tek seferlik okunuyor.
         var layout = layoutApi ? layoutApi.load() : { order: [], hidden: {} };
 
@@ -360,7 +361,7 @@
         });
     })();
 
-    // Kart bazında grafik tipi — window.HwmonChartTypes (site.js); değişiklik Panel açıksa (başka
+    // Kart bazında grafik tipi, window.HwmonChartTypes (site.js); değişiklik Panel açıksa (başka
     // sekmede) "hwmon:chart-types-changed" ile anında uygulanır (dashboard.js dinliyor). Ayarlar
     // sayfasındaki küçük SVG önizlemesi ise yalnızca burada, gerçek Panel grafiğine dokunmadan.
     (function initChartTypesForm() {
@@ -368,9 +369,9 @@
         var selects = Array.prototype.slice.call(document.querySelectorAll(".chart-type-select"));
         if (!api || selects.length === 0) return;
 
-        var CHART_TYPE_LABELS = { cpu: "İşlemci", gpu: "Ekran Kartı", ram: "Bellek", fps: "Kare Hızı" };
+        var CHART_TYPE_LABELS = { cpu: t("İşlemci"), gpu: t("Ekran Kartı"), ram: t("Bellek"), fps: t("Kare Hızı") };
         var CHART_TYPE_ACCENT_VARS = { cpu: "--accent-cpu", gpu: "--accent-gpu", ram: "--accent-ram", fps: "--accent-fps" };
-        // Sabit örnek veri — gerçek ölçümle ilgisi yok, yalnızca çizgi/alan/bar şeklinin nasıl
+        // Sabit örnek veri, gerçek ölçümle ilgisi yok, yalnızca çizgi/alan/bar şeklinin nasıl
         // göründüğünü göstermek için (0-40 SVG viewBox yüksekliğinde, 5 nokta).
         var SAMPLE_POINTS = [28, 14, 22, 8, 18];
 
@@ -457,7 +458,7 @@
         renderChartTypesPreview();
     })();
 
-    // Açılış sekmesi — window.HwmonStartupTab (site.js); gerçek yönlendirme _Layout.cshtml'de.
+    // Açılış sekmesi, window.HwmonStartupTab (site.js); gerçek yönlendirme _Layout.cshtml'de.
     (function initStartupTabForm() {
         var api = window.HwmonStartupTab;
         var select = document.getElementById("startup-tab-select");
@@ -471,7 +472,7 @@
         });
     })();
 
-    // Anomali tespiti aç/kapa — window.HwmonAnomalyDetection (site.js); gerçek hesaplama dashboard.js'te.
+    // Anomali tespiti aç/kapa, window.HwmonAnomalyDetection (site.js); gerçek hesaplama dashboard.js'te.
     (function initAnomalyDetectionToggle() {
         var api = window.HwmonAnomalyDetection;
         var checkbox = document.getElementById("anomaly-detection-toggle");
@@ -483,7 +484,7 @@
         });
     })();
 
-    // Bellek sızıntısı tespiti aç/kapa — window.HwmonMemoryLeakDetection (site.js); anomali
+    // Bellek sızıntısı tespiti aç/kapa, window.HwmonMemoryLeakDetection (site.js); anomali
     // tespitinden bağımsız, kendi anahtarı var (eskiden ikisi aynı anahtarı paylaşıyordu).
     (function initMemoryLeakDetectionToggle() {
         var api = window.HwmonMemoryLeakDetection;
@@ -496,7 +497,7 @@
         });
     })();
 
-    // Bildirimler — window.HwmonNotifySettings (site.js) tekrar sıklığını ve hangi kartlar için
+    // Bildirimler, window.HwmonNotifySettings (site.js) tekrar sıklığını ve hangi kartlar için
     // bildirim gönderileceğini tutar; gerçek bildirim gönderme mantığı threshold-notifier.js'te.
     (function initNotifySettingsForm() {
         var api = window.HwmonNotifySettings;
@@ -532,7 +533,7 @@
         });
     })();
 
-    // Bildirim sesi — window.HwmonNotifySound (site.js); "Test Et" butonu kaydetmeden mevcut
+    // Bildirim sesi, window.HwmonNotifySound (site.js); "Test Et" butonu kaydetmeden mevcut
     // form değerleriyle anında çalar (kullanıcı kaydetmeden önce sesi duyup ayarlayabilsin diye).
     (function initNotifySoundForm() {
         var api = window.HwmonNotifySound;
@@ -565,18 +566,18 @@
         }
     })();
 
-    // Renkler — window.HwmonAccentColors (site.js) hem varsayılanları hem de :root'a uygulama
+    // Renkler, window.HwmonAccentColors (site.js) hem varsayılanları hem de :root'a uygulama
     // mantığını taşır; burada yalnızca formu o API üzerinden okuyup yazıyoruz.
     var COLOR_FIELD_IDS = {
         cpu: "color-cpu", gpu: "color-gpu", ram: "color-ram", fps: "color-fps",
         storage: "color-storage", network: "color-network", process: "color-process", system: "color-system"
     };
     var COLOR_LABELS = {
-        cpu: "İşlemci", gpu: "Ekran Kartı", ram: "Bellek", fps: "Kare Hızı",
-        storage: "Depolama", network: "Ağ", process: "Kaynak Kullanımı", system: "Sistem Özeti"
+        cpu: t("İşlemci"), gpu: t("Ekran Kartı"), ram: t("Bellek"), fps: t("Kare Hızı"),
+        storage: t("Depolama"), network: t("Ağ"), process: t("Kaynak Kullanımı"), system: t("Sistem Özeti")
     };
 
-    // Renk seçiciler sürüklenirken (henüz Kaydet'e basılmadan) anında görsel geri bildirim verir —
+    // Renk seçiciler sürüklenirken (henüz Kaydet'e basılmadan) anında görsel geri bildirim verir;
     // yalnızca bu küçük önizleme kartlarını günceller, gerçek CSS değişkenlerine/localStorage'a
     // dokunmaz (o hâlâ yalnızca Kaydet'te olur, api.apply çağrısı değişmedi).
     function renderColorsPreview() {
@@ -598,10 +599,10 @@
         });
     }
 
-    // Son tıklanan Hazır Tema'nın id'si — "Varsayılanlara Dön" bir preset seçiliyken app'in genel
+    // Son tıklanan Hazır Tema'nın id'si, "Varsayılanlara Dön" bir preset seçiliyken app'in genel
     // varsayılanına değil, o preset'in kendi renklerine dönsün diye. Kullanıcı Renkler/Görünüm
     // formundan elle "Kaydet"e basarsa (preset'ten sapıp kendi renklerini tanımladığı an) bu işaret
-    // temizlenir — PRESET_THEMES tanımı aşağıda (initPresetThemes), ama bu yardımcılar önce
+    // temizlenir; PRESET_THEMES tanımı aşağıda (initPresetThemes), ama bu yardımcılar önce
     // tanımlanıyor ki hem initColorsForm/initBackgroundForm hem initPresetThemes kullanabilsin.
     var ACTIVE_PRESET_KEY = "hwmon-active-preset-theme";
 
@@ -624,11 +625,11 @@
     }
 
     // Kaydedilen değerler hâlâ aktif preset'in kendi değerleriyle birebir aynıysa (kullanıcı hiçbir
-    // şey değiştirmeden sadece "Kaydet"e bastıysa, ya da başka bir formdan — ör. Görünüm'den —
+    // şey değiştirmeden sadece "Kaydet"e bastıysa, ya da başka bir formdan, ör. Görünüm'den,
     // Kaydet'e bastıysa) preset bağını KOPARMA; yalnızca değerler gerçekten sapınca kopar. Aksi
     // halde her "Kaydet" tıklaması (hatta değer değişmemişken, hatta ilgisiz bir formdan) sessizce
     // ACTIVE_PRESET_KEY'i temizler ve bir sonraki "Varsayılanlara Dön" preset yerine app'in genel
-    // varsayılanına döner — kullanıcının seçtiği temayı kaybettiği hissi burada oluşuyordu.
+    // varsayılanına döner; kullanıcının seçtiği temayı kaybettiği hissi burada oluşuyordu.
     function valuesMatchPreset(values, presetValues) {
         if (!presetValues) return false;
         return Object.keys(presetValues).every(function (key) {
@@ -660,8 +661,8 @@
                 });
                 try { localStorage.setItem(api.storageKey, JSON.stringify(next)); } catch (e) { /* kota aşımı/gizli sekme: yok say */ }
                 api.apply(next);
-                // Kullanıcı elle renk kaydetti VE bu değerler aktif preset'ten gerçekten sapmışsa
-                // — artık preset'in "temiz" hâli değil, kendi ince ayarı; bir sonraki "Varsayılanlara
+                // Kullanıcı elle renk kaydetti VE bu değerler aktif preset'ten gerçekten sapmışsa,
+                // artık preset'in "temiz" hâli değil, kendi ince ayarı; bir sonraki "Varsayılanlara
                 // Dön" preset'e değil app varsayılanına dönmeli. Değerler hâlâ preset'le aynıysa
                 // (ör. hiçbir şey değiştirmeden Kaydet'e basıldıysa) bağı koparma.
                 var activePresetOnSave = findActivePreset();
@@ -694,43 +695,43 @@
         }
     })();
 
-    // Hazır Temalar — her biri hem 8 aksan rengini (Renkler) hem de gündüz/gece arka planını
+    // Hazır Temalar, her biri hem 8 aksan rengini (Renkler) hem de gündüz/gece arka planını
     // (Görünüm) tek pakette tanımlar. Tıklanınca window.HwmonAccentColors/HwmonBackgroundColors
     // üzerinden hem uygulanır hem localStorage'a kaydedilir; Renkler/Görünüm formları da senkron
     // kalsın diye yeniden doldurulur.
     var PRESET_THEMES = [
         {
-            id: "default", label: "Varsayılan",
+            id: "default", label: t("Varsayılan"),
             accentColors: { cpu: "#ff9f45", gpu: "#35d0ba", ram: "#6ea8fe", fps: "#c792ea", storage: "#f2c14e", network: "#4ade80", process: "#f472b6", system: "#38bdf8" },
             bg: { light: "#eef1f6", dark: "#0b0f14" }
         },
         {
-            id: "amoled", label: "AMOLED Siyah",
+            id: "amoled", label: t("AMOLED Siyah"),
             accentColors: { cpu: "#ff9f45", gpu: "#35d0ba", ram: "#6ea8fe", fps: "#c792ea", storage: "#f2c14e", network: "#4ade80", process: "#f472b6", system: "#38bdf8" },
             bg: { light: "#eef1f6", dark: "#000000" }
         },
         {
-            id: "contrast", label: "Yüksek Kontrast",
+            id: "contrast", label: t("Yüksek Kontrast"),
             accentColors: { cpu: "#ff3b30", gpu: "#00e5ff", ram: "#2979ff", fps: "#ffea00", storage: "#ff9100", network: "#00e676", process: "#ff00ff", system: "#d500f9" },
             bg: { light: "#ffffff", dark: "#000000" }
         },
         {
-            id: "ocean", label: "Okyanus",
+            id: "ocean", label: t("Okyanus"),
             accentColors: { cpu: "#0ea5e9", gpu: "#06b6d4", ram: "#3b82f6", fps: "#818cf8", storage: "#2dd4bf", network: "#22d3ee", process: "#6366f1", system: "#0284c7" },
             bg: { light: "#eef4f8", dark: "#071019" }
         },
         {
-            id: "sunset", label: "Gün Batımı",
+            id: "sunset", label: t("Gün Batımı"),
             accentColors: { cpu: "#fb923c", gpu: "#f472b6", ram: "#f87171", fps: "#fbbf24", storage: "#fb7185", network: "#facc15", process: "#e879f9", system: "#fdba74" },
             bg: { light: "#fdf2ee", dark: "#180b0d" }
         },
         {
-            id: "forest", label: "Orman",
+            id: "forest", label: t("Orman"),
             accentColors: { cpu: "#65a30d", gpu: "#16a34a", ram: "#059669", fps: "#84cc16", storage: "#ca8a04", network: "#22c55e", process: "#4d7c0f", system: "#15803d" },
             bg: { light: "#eef6ee", dark: "#08130c" }
         },
         {
-            id: "purple", label: "Mor Rüya",
+            id: "purple", label: t("Mor Rüya"),
             accentColors: { cpu: "#a78bfa", gpu: "#c084fc", ram: "#818cf8", fps: "#e879f9", storage: "#f0abfc", network: "#8b5cf6", process: "#d946ef", system: "#7c3aed" },
             bg: { light: "#f5f0fb", dark: "#100a1a" }
         },
@@ -740,22 +741,22 @@
             bg: { light: "#fbf9fb", dark: "#161320" }
         },
         {
-            id: "crimson", label: "Kızıl Gece",
+            id: "crimson", label: t("Kızıl Gece"),
             accentColors: { cpu: "#ef4444", gpu: "#f87171", ram: "#fb7185", fps: "#fca5a5", storage: "#dc2626", network: "#f43f5e", process: "#e11d48", system: "#b91c1c" },
             bg: { light: "#fdf1f1", dark: "#160707" }
         },
         {
-            id: "ice", label: "Buz Mavisi",
+            id: "ice", label: t("Buz Mavisi"),
             accentColors: { cpu: "#38bdf8", gpu: "#7dd3fc", ram: "#67e8f9", fps: "#a5f3fc", storage: "#0ea5e9", network: "#22d3ee", process: "#0891b2", system: "#0369a1" },
             bg: { light: "#eef8fc", dark: "#050f16" }
         },
         {
-            id: "neon", label: "Neon Şehir",
+            id: "neon", label: t("Neon Şehir"),
             accentColors: { cpu: "#ff2e63", gpu: "#08d9d6", ram: "#f9ed69", fps: "#ff6ec7", storage: "#00ffab", network: "#7b2ff7", process: "#ff9f1c", system: "#2de2e6" },
             bg: { light: "#f5f0ff", dark: "#0a0014" }
         },
         {
-            id: "desert", label: "Çöl Tonları",
+            id: "desert", label: t("Çöl Tonları"),
             accentColors: { cpu: "#c2410c", gpu: "#d97706", ram: "#ca8a04", fps: "#eab308", storage: "#a16207", network: "#f59e0b", process: "#b45309", system: "#92400e" },
             bg: { light: "#fdf6ec", dark: "#1a1006" }
         },
@@ -776,17 +777,17 @@
             bg: { light: "#eceff4", dark: "#2e3440" }
         },
         {
-            id: "gruvbox-dark", label: "Gruvbox Koyu",
+            id: "gruvbox-dark", label: t("Gruvbox Koyu"),
             accentColors: { cpu: "#fb4934", gpu: "#8ec07c", ram: "#83a598", fps: "#d3869b", storage: "#fabd2f", network: "#b8bb26", process: "#fe8019", system: "#a89984" },
             bg: { light: "#fbf1c7", dark: "#282828" }
         },
         {
-            id: "gruvbox-light", label: "Gruvbox Açık",
+            id: "gruvbox-light", label: t("Gruvbox Açık"),
             accentColors: { cpu: "#9d0006", gpu: "#427b58", ram: "#076678", fps: "#8f3f71", storage: "#b57614", network: "#79740e", process: "#af3a03", system: "#7c6f64" },
             bg: { light: "#fbf1c7", dark: "#3c3836" }
         },
         {
-            id: "solarized-dark", label: "Solarized Koyu",
+            id: "solarized-dark", label: t("Solarized Koyu"),
             accentColors: { cpu: "#dc322f", gpu: "#2aa198", ram: "#268bd2", fps: "#6c71c4", storage: "#cb4b16", network: "#859900", process: "#d33682", system: "#b58900" },
             bg: { light: "#fdf6e3", dark: "#002b36" }
         },
@@ -821,12 +822,12 @@
             bg: { light: "#faf4ed", dark: "#191724" }
         },
         {
-            id: "ayu-dark", label: "Ayu Koyu",
+            id: "ayu-dark", label: t("Ayu Koyu"),
             accentColors: { cpu: "#f07171", gpu: "#59c2ff", ram: "#399ee6", fps: "#d2a6ff", storage: "#ffb454", network: "#c2d94c", process: "#ff8f40", system: "#95e6cb" },
             bg: { light: "#fafafa", dark: "#0a0e14" }
         },
         {
-            id: "ayu-light", label: "Ayu Açık",
+            id: "ayu-light", label: t("Ayu Açık"),
             accentColors: { cpu: "#f51818", gpu: "#4cbf99", ram: "#399ee6", fps: "#a37acc", storage: "#f2ae49", network: "#86b300", process: "#fa8d3e", system: "#5c6773" },
             bg: { light: "#fafafa", dark: "#1f2430" }
         },
@@ -846,12 +847,12 @@
             bg: { light: "#f3eefc", dark: "#262335" }
         },
         {
-            id: "github-dark", label: "GitHub Koyu",
+            id: "github-dark", label: t("GitHub Koyu"),
             accentColors: { cpu: "#f85149", gpu: "#39c5cf", ram: "#58a6ff", fps: "#a371f7", storage: "#ffa657", network: "#3fb950", process: "#db61a2", system: "#e3b341" },
             bg: { light: "#ffffff", dark: "#0d1117" }
         },
         {
-            id: "github-light", label: "GitHub Açık",
+            id: "github-light", label: t("GitHub Açık"),
             accentColors: { cpu: "#cf222e", gpu: "#1b7c83", ram: "#0969da", fps: "#8250df", storage: "#bc4c00", network: "#1a7f37", process: "#bf3989", system: "#9a6700" },
             bg: { light: "#ffffff", dark: "#010409" }
         },
@@ -907,12 +908,12 @@
             bg: { light: "#e4f0fb", dark: "#1b1e28" }
         },
         {
-            id: "vitesse-dark", label: "Vitesse Koyu",
+            id: "vitesse-dark", label: t("Vitesse Koyu"),
             accentColors: { cpu: "#cb7676", gpu: "#5da994", ram: "#6394bf", fps: "#a186d5", storage: "#cf9860", network: "#4d9375", process: "#d38aa3", system: "#cccc77" },
             bg: { light: "#ffffff", dark: "#121212" }
         },
         {
-            id: "vitesse-light", label: "Vitesse Açık",
+            id: "vitesse-light", label: t("Vitesse Açık"),
             accentColors: { cpu: "#ab5959", gpu: "#428c6c", ram: "#4b81b3", fps: "#8462c9", storage: "#a65e2b", network: "#1e754f", process: "#a13865", system: "#998418" },
             bg: { light: "#ffffff", dark: "#121212" }
         },
@@ -922,7 +923,7 @@
             bg: { light: "#f5f5f7", dark: "#23262e" }
         },
         {
-            id: "bluloco-dark", label: "Bluloco Koyu",
+            id: "bluloco-dark", label: t("Bluloco Koyu"),
             accentColors: { cpu: "#ff6480", gpu: "#37c3e1", ram: "#3691ff", fps: "#ff78f8", storage: "#ff9d34", network: "#3fc56b", process: "#f9005a", system: "#ebc88d" },
             bg: { light: "#ffffff", dark: "#282c34" }
         },
@@ -953,18 +954,18 @@
         },
         // Aşağıdaki iki tema, renk körlüğü (deuteranopia/protanopia/tritanopia) durumlarında bile
         // birbirinden ayırt edilebilecek, veri görselleştirmede yaygın kabul görmüş kategorik
-        // paletlere dayanır — rastgele "güzel görünen" renkler değil.
+        // paletlere dayanır; rastgele "güzel görünen" renkler değil.
         {
-            // Okabe & Ito (2008) — renk körlüğü için en yaygın önerilen 8 renkli palet. Orijinal
+            // Okabe & Ito (2008), renk körlüğü için en yaygın önerilen 8 renkli palet. Orijinal
             // 8. renk siyahtır; koyu temada görünmez kalacağından burada açık gri ile değiştirildi.
-            id: "colorblind-okabe-ito", label: "Renk Körlüğü Dostu (Okabe-Ito)",
+            id: "colorblind-okabe-ito", label: t("Renk Körlüğü Dostu (Okabe-Ito)"),
             accentColors: { cpu: "#E69F00", gpu: "#56B4E9", ram: "#009E73", fps: "#F0E442", storage: "#0072B2", network: "#D55E00", process: "#CC79A7", system: "#BBBBBB" },
             bg: { light: "#f7f4ef", dark: "#0d0d0c" }
         },
         {
             // Paul Tol'un "bright" niteliksel paleti + "muted" paletinden ödünç alınan bir çivit
-            // rengi (8. renk) — teknik notunda renk körlüğü için güvenli olarak belgelenmiştir.
-            id: "colorblind-tol-bright", label: "Renk Körlüğü Dostu (Yüksek Ayırt Edicilik)",
+            // rengi (8. renk); teknik notunda renk körlüğü için güvenli olarak belgelenmiştir.
+            id: "colorblind-tol-bright", label: t("Renk Körlüğü Dostu (Yüksek Ayırt Edicilik)"),
             accentColors: { cpu: "#4477AA", gpu: "#66CCEE", ram: "#228833", fps: "#CCBB44", storage: "#EE6677", network: "#AA3377", process: "#BBBBBB", system: "#332288" },
             bg: { light: "#f2f4f7", dark: "#0a0d12" }
         }
@@ -978,7 +979,7 @@
 
         // Kayıtlı bir preset bağı (ACTIVE_PRESET_KEY) varsa onu kullan; yoksa (ör. hiç preset
         // seçilmeden gelen ilk kurulum) mevcut renk+arka plan değerleri bir preset'le birebir
-        // eşleşiyor mu diye bakılır — kullanıcı hangi temanın şu an uygulandığını her zaman görsün.
+        // eşleşiyor mu diye bakılır; kullanıcı hangi temanın şu an uygulandığını her zaman görsün.
         function computeActivePresetId() {
             var stored = getActivePresetId();
             if (stored && PRESET_THEMES.some(function (p) { return p.id === stored; })) return stored;
@@ -1012,12 +1013,12 @@
             var card = document.createElement("button");
             card.type = "button";
             card.className = "preset-theme-card";
-            card.dataset.label = preset.label.toLocaleLowerCase("tr-TR");
+            card.dataset.label = preset.label.toLocaleLowerCase(window.HwmonLocaleTag());
             card.dataset.presetId = preset.id;
 
             var activeBadge = document.createElement("span");
             activeBadge.className = "preset-theme-active-badge";
-            activeBadge.textContent = "✓ Kullanılıyor";
+            activeBadge.textContent = "✓ " + t("Kullanılıyor");
             card.appendChild(activeBadge);
 
             var bgPreview = document.createElement("span");
@@ -1059,19 +1060,19 @@
 
         markActiveCard();
         // Renkler/Görünüm formlarından elle "Kaydet"e basılınca aktif preset bağı kopabilir
-        // (valuesMatchPreset ile korunuyor, ama sapan durumlarda) — işareti güncel tut.
+        // (valuesMatchPreset ile korunuyor, ama sapan durumlarda), işareti güncel tut.
         document.addEventListener("hwmon:accent-colors-changed", markActiveCard);
         var colorsSaveButton = document.getElementById("colors-save");
         if (colorsSaveButton) colorsSaveButton.addEventListener("click", markActiveCard);
         var colorsResetButton = document.getElementById("colors-reset");
         if (colorsResetButton) colorsResetButton.addEventListener("click", markActiveCard);
 
-        // Arama kutusu — tema adına göre kartları anlık filtreler; eşleşme yoksa uyarı gösterir.
+        // Arama kutusu, tema adına göre kartları anlık filtreler; eşleşme yoksa uyarı gösterir.
         var searchInput = document.getElementById("preset-theme-search");
         var emptyNote = document.getElementById("preset-theme-empty");
         if (searchInput) {
             searchInput.addEventListener("input", function () {
-                var query = searchInput.value.trim().toLocaleLowerCase("tr-TR");
+                var query = searchInput.value.trim().toLocaleLowerCase(window.HwmonLocaleTag());
                 var visibleCount = 0;
                 grid.querySelectorAll(".preset-theme-card").forEach(function (card) {
                     var matches = !query || card.dataset.label.indexOf(query) !== -1;
@@ -1083,7 +1084,7 @@
         }
     })();
 
-    // Kart sıralaması — window.HwmonCardOrder (site.js) İşlemci/Ekran Kartı kartlarındaki değerlerin
+    // Kart sıralaması, window.HwmonCardOrder (site.js) İşlemci/Ekran Kartı kartlarındaki değerlerin
     // sırasını (ilk iki = büyük satır, kalan iki = küçük satır) tutar. Yukarı/aşağı okları listedeki
     // konumu komşusuyla değiştirir; kaydetmeden önce yalnızca bu sayfadaki bellek içi kopya değişir.
     (function initOrderForm() {
@@ -1106,13 +1107,13 @@
                 var labelWrap = document.createElement("label");
                 labelWrap.className = "order-item-label";
 
-                // Görünürlük kutucuğu — kapatılırsa metrik Panel'de tamamen gizlenir; sıralama
+                // Görünürlük kutucuğu, kapatılırsa metrik Panel'de tamamen gizlenir; sıralama
                 // (yukarı/aşağı) görünür olsun ya da olmasın aynı şekilde çalışmaya devam eder.
                 if (detailApi) {
                     var checkbox = document.createElement("input");
                     checkbox.type = "checkbox";
                     checkbox.checked = detailState[cardKey][metricKey] !== false;
-                    checkbox.title = "Panel'de göster";
+                    checkbox.title = t("Panel'de göster");
                     checkbox.addEventListener("change", function () {
                         detailState[cardKey][metricKey] = checkbox.checked;
                         detailApi.save(detailState);
@@ -1132,7 +1133,7 @@
                 var upButton = document.createElement("button");
                 upButton.type = "button";
                 upButton.textContent = "▲";
-                upButton.setAttribute("aria-label", "Yukarı taşı");
+                upButton.setAttribute("aria-label", t("Yukarı taşı"));
                 upButton.disabled = index === 0;
                 upButton.addEventListener("click", function () { move(cardKey, index, -1); });
                 actions.appendChild(upButton);
@@ -1140,7 +1141,7 @@
                 var downButton = document.createElement("button");
                 downButton.type = "button";
                 downButton.textContent = "▼";
-                downButton.setAttribute("aria-label", "Aşağı taşı");
+                downButton.setAttribute("aria-label", t("Aşağı taşı"));
                 downButton.disabled = index === state[cardKey].length - 1;
                 downButton.addEventListener("click", function () { move(cardKey, index, 1); });
                 actions.appendChild(downButton);
@@ -1194,7 +1195,7 @@
         }
     })();
 
-    // Diğer kartların (VRAM/Bellek/FPS/Ağ/Depolama/Sistem Özeti) detay görünürlüğü — sıralaması
+    // Diğer kartların (VRAM/Bellek/FPS/Ağ/Depolama/Sistem Özeti) detay görünürlüğü, sıralaması
     // olmayan, yalnızca göster/gizle kutucukları. window.HwmonDetailVisibility (site.js).
     // Depolama kartı her tick'te dashboard.js tarafından yeniden çizildiği için kutucuk değişimi
     // orada bir sonraki güncellemede otomatik yansır; diğer kartlarda display anında değişir.
@@ -1204,8 +1205,8 @@
         if (!api || !container) return;
 
         var CARD_LABELS = {
-            vram: "Video Belleği (VRAM)", ram: "Bellek (RAM)", fps: "Kare Hızı (FPS)",
-            network: "Ağ", storage: "Depolama (Disk)", system: "Sistem Özeti"
+            vram: t("Video Belleği (VRAM)"), ram: t("Bellek (RAM)"), fps: t("Kare Hızı (FPS)"),
+            network: t("Ağ"), storage: t("Depolama (Disk)"), system: t("Sistem Özeti")
         };
         var CARD_KEYS = ["vram", "ram", "fps", "network", "storage", "system"];
 
@@ -1258,9 +1259,9 @@
         });
     })();
 
-    // Klavye kısayolları — window.HwmonShortcuts (site.js). Her satırda mevcut kombinasyon
+    // Klavye kısayolları, window.HwmonShortcuts (site.js). Her satırda mevcut kombinasyon
     // gösterilir; "Değiştir" gibi davranan buton bir sonraki tuş basışını yakalayıp (Esc = vazgeç)
-    // hemen kaydeder ve uygular — ayrı bir "Kaydet" butonuna gerek yok, diğer anında-uygulanan
+    // hemen kaydeder ve uygular; ayrı bir "Kaydet" butonuna gerek yok, diğer anında-uygulanan
     // aç/kapa ayarlarıyla (cam efekti, anomali tespiti vb.) aynı desen.
     (function initShortcutsForm() {
         var api = window.HwmonShortcuts;
@@ -1271,7 +1272,7 @@
         var conflictNote = document.getElementById("shortcuts-conflict-note");
 
         function comboLabel(combo) {
-            if (!combo) return "(atanmamış)";
+            if (!combo) return t("(atanmamış)");
             return combo.split("+").map(function (part) {
                 return part.length === 1 ? part.toUpperCase() : part.charAt(0).toUpperCase() + part.slice(1);
             }).join("+");
@@ -1286,7 +1287,7 @@
         function startCapture(action, comboButton) {
             showConflict("");
             var originalText = comboButton.textContent;
-            comboButton.textContent = "Tuşa basın… (Esc: iptal)";
+            comboButton.textContent = t("Tuşa basın… (Esc: iptal)");
             comboButton.disabled = true;
 
             function cleanup() {
@@ -1312,7 +1313,7 @@
                 cleanup();
 
                 if (conflict) {
-                    showConflict('"' + comboLabel(combo) + '" zaten "' + conflict.label + '" eylemine atanmış, önce onu değiştirin.');
+                    showConflict('"' + comboLabel(combo) + '" ' + t("zaten atanmış olan eylem:") + ' "' + conflict.label + '" ' + t("önce onu değiştirin."));
                     comboButton.textContent = originalText;
                     return;
                 }
@@ -1343,7 +1344,7 @@
                 comboButton.type = "button";
                 comboButton.style.width = "auto";
                 comboButton.style.padding = "0 10px";
-                comboButton.title = "Değiştirmek için tıklayın";
+                comboButton.title = t("Değiştirmek için tıklayın");
                 comboButton.textContent = comboLabel(state[action.key]);
                 comboButton.addEventListener("click", function () { startCapture(action, comboButton); });
                 actionsWrap.appendChild(comboButton);
@@ -1373,7 +1374,7 @@
         });
     })();
 
-    // Panel Düzeni — window.HwmonPanelLayout (site.js) Panel'deki 8 kartın görünürlüğünü/sırasını
+    // Panel Düzeni, window.HwmonPanelLayout (site.js) Panel'deki 8 kartın görünürlüğünü/sırasını
     // tutar. Diğer listelerden farklı olarak burada gerçek HTML5 sürükle-bırak kullanılır (ok
     // tuşları değil); kutucuk görünürlüğü, sürükleme sırayı değiştirir.
     (function initPanelLayoutForm() {
@@ -1385,14 +1386,14 @@
         var dragKey = null;
 
         var preview = document.getElementById("panel-layout-preview");
-        // Bu sayfada değişmiyor (yalnızca sıra/görünürlük değişiyor) — Grid/Liste kararı hâlâ
+        // Bu sayfada değişmiyor (yalnızca sıra/görünürlük değişiyor); Grid/Liste kararı hâlâ
         // önizlemeye yansısın diye tek seferlik okunuyor (bkz. window.HwmonPanelView, site.js).
         var viewMode = window.HwmonPanelView ? window.HwmonPanelView.load() : "grid";
 
         // Kaydetmeden ÖNCE bile (sürükleme/kutucuk her değiştiğinde) Panel'de gerçekte görünecek
-        // kartları küçültülmüş bir grid'de gösterir — gizli işaretlenenler hiç çizilmez, çünkü amaç
+        // kartları küçültülmüş bir grid'de gösterir; gizli işaretlenenler hiç çizilmez, çünkü amaç
         // "gerçekten neyi göreceksin" sorusuna cevap vermek. Çizim mantığı paylaşılan
-        // window.HwmonPanelPreviewRenderer'da (site.js) — "Panel Görünümü" bölümündeki önizleme de
+        // window.HwmonPanelPreviewRenderer'da (site.js); "Panel Görünümü" bölümündeki önizleme de
         // aynısını kullanıyor.
         function renderPreview() {
             if (!preview || !window.HwmonPanelPreviewRenderer) return;
@@ -1489,7 +1490,7 @@
         }
     })();
 
-    // Panel Düzeni Profilleri — window.HwmonPanelLayoutProfiles (site.js); yukarıdaki sürükle-bırak
+    // Panel Düzeni Profilleri, window.HwmonPanelLayoutProfiles (site.js); yukarıdaki sürükle-bırak
     // sıralamasını isimli profiller olarak kaydedip aralarında geçiş yapar.
     (function initPanelLayoutProfiles() {
         var api = window.HwmonPanelLayoutProfiles;
@@ -1506,7 +1507,7 @@
             if (profiles.length === 0) {
                 var empty = document.createElement("li");
                 empty.className = "stat-sub";
-                empty.textContent = "Henüz kaydedilmiş profil yok.";
+                empty.textContent = t("Henüz kaydedilmiş profil yok.");
                 list.appendChild(empty);
                 return;
             }
@@ -1518,7 +1519,7 @@
                 var label = document.createElement("span");
                 label.className = "order-item-label";
                 label.style.cursor = "default";
-                label.textContent = profile.name + (profile.id === activeId ? "  ·  Aktif" : "");
+                label.textContent = profile.name + (profile.id === activeId ? "  ·  " + t("Aktif") : "");
                 li.appendChild(label);
 
                 var actions = document.createElement("span");
@@ -1526,7 +1527,7 @@
 
                 var applyButton = document.createElement("button");
                 applyButton.type = "button";
-                applyButton.textContent = "Uygula";
+                applyButton.textContent = t("Uygula");
                 applyButton.style.width = "auto";
                 applyButton.style.padding = "0 8px";
                 applyButton.addEventListener("click", function () {
@@ -1541,7 +1542,7 @@
 
                 var deleteButton = document.createElement("button");
                 deleteButton.type = "button";
-                deleteButton.textContent = "Sil";
+                deleteButton.textContent = t("Sil");
                 deleteButton.style.width = "auto";
                 deleteButton.style.padding = "0 8px";
                 deleteButton.addEventListener("click", function () {
@@ -1573,7 +1574,7 @@
         });
     })();
 
-    // Anlık Görüntü — window.HwmonSnapshotSettings (site.js) 📸 butonuyla oluşturulan PNG'de hangi
+    // Anlık Görüntü, window.HwmonSnapshotSettings (site.js) 📸 butonuyla oluşturulan PNG'de hangi
     // kartların ve her kartın içinde hangi değerlerin, hangi sırayla göründüğünü tutar. Her liste
     // (kartlar ve her kartın değerleri) Kart Sıralaması ile aynı yukarı/aşağı desenini kullanır,
     // ayrıca bir kutucukla açılıp kapatılabilir.
@@ -1608,7 +1609,7 @@
             var upButton = document.createElement("button");
             upButton.type = "button";
             upButton.textContent = "▲";
-            upButton.setAttribute("aria-label", "Yukarı taşı");
+            upButton.setAttribute("aria-label", t("Yukarı taşı"));
             upButton.disabled = disableUp;
             upButton.addEventListener("click", onUp);
             actions.appendChild(upButton);
@@ -1616,7 +1617,7 @@
             var downButton = document.createElement("button");
             downButton.type = "button";
             downButton.textContent = "▼";
-            downButton.setAttribute("aria-label", "Aşağı taşı");
+            downButton.setAttribute("aria-label", t("Aşağı taşı"));
             downButton.disabled = disableDown;
             downButton.addEventListener("click", onDown);
             actions.appendChild(downButton);
@@ -1762,7 +1763,7 @@
         });
     })();
 
-    // Görünüm (arka plan rengi) — window.HwmonBackgroundColors (site.js) aktif temaya göre
+    // Görünüm (arka plan rengi), window.HwmonBackgroundColors (site.js) aktif temaya göre
     // --bg'yi override eder; burada yalnızca formu o API üzerinden okuyup yazıyoruz.
     var BG_FIELD_IDS = { light: "bg-light", dark: "bg-dark" };
 
@@ -1786,7 +1787,7 @@
                 });
                 try { localStorage.setItem(api.storageKey, JSON.stringify(next)); } catch (e) { /* kota aşımı/gizli sekme: yok say */ }
                 api.apply(next);
-                // bkz. initColorsForm'daki aynı isimli kontrol — değerler hâlâ aktif preset'le
+                // bkz. initColorsForm'daki aynı isimli kontrol; değerler hâlâ aktif preset'le
                 // aynıysa (Renkler formunda hiçbir şey değişmemişken buradan Kaydet'e basılmışsa
                 // dahi) preset bağını koparma.
                 var activePresetOnBgSave = findActivePreset();
@@ -1818,7 +1819,7 @@
         }
     })();
 
-    // Oyun Profilleri — window.HwmonGameProfiles (site.js) işlem adına göre renk/eşik/ambiyans
+    // Oyun Profilleri, window.HwmonGameProfiles (site.js) işlem adına göre renk/eşik/ambiyans
     // profillerini saklar; burada yalnızca liste + ekle/düzenle/sil formu var. Profilin CANLI
     // uygulanması (ön plandaki işlem değişince) dashboard.js'te yapılır.
     (function initGameProfilesForm() {
@@ -1830,7 +1831,7 @@
         var COLOR_KEYS = Object.keys(accentApi.vars);
         var editingIndex = -1; // -1 = yeni profil ekleniyor
 
-        // Bilinen oyun işlem adları — /History/GameList, game_sessions tablosundaki (yalnızca tam
+        // Bilinen oyun işlem adları, /History/GameList, game_sessions tablosundaki (yalnızca tam
         // ekranda ETW'den ölçülmüş FPS ile kaydedilmiş, bkz. EtwFpsProvider) process_name'leri
         // döndürür. Bu liste findMatch()'in karşılaştıracağı GERÇEK değerlerin aynısı olduğu için
         // kullanıcının kısa/gündelik oyun adını (ör. "valorant") bu listeye karşı eşleştirmek
@@ -1851,7 +1852,7 @@
         // Kullanıcının yazdığı adı bilinen işlem adlarına karşı eşleştirir: önce normalize edilmiş
         // (tire/boşluk/nokta atılmış, küçük harf) TAM eşleşme, yoksa bilinen adın bu yazıyla
         // BAŞLADIĞI en kısa eşleşme (ör. "valorant" -> "VALORANT-Win64-Shipping"). 3 karakterden kısa
-        // girişler eşleştirilmez — aksi halde ör. "cs" gibi bir giriş çok fazla yanlış pozitif üretir.
+        // girişler eşleştirilmez; aksi halde ör. "cs" gibi bir giriş çok fazla yanlış pozitif üretir.
         function resolveKnownProcessName(typed) {
             var typedNorm = normalizeProcessNameForMatch(typed);
             if (typedNorm.length < 3) return null;
@@ -1877,20 +1878,20 @@
                     matches.push('"' + seg + '" → "' + resolved + '"');
                 }
             });
-            hint.textContent = matches.length > 0 ? ("Eşleşme bulundu: " + matches.join(", ") + " (kaydedince bu ad kullanılacak)") : "";
+            hint.textContent = matches.length > 0 ? (t("Eşleşme bulundu:") + " " + matches.join(", ") + " " + t("(kaydedince bu ad kullanılacak)")) : "";
         }
 
         function colorInput(key) { return document.getElementById("gp-color-" + key); }
 
         // Dikkat alanları (gp-th-*-caution) bu düzeltmeyle eklendi; sunucu henüz yeniden
         // başlatılmadan yalnızca bu JS dosyası dağıtılırsa (statik varlık, derleme gerektirmez)
-        // eski cshtml'de bu input'lar bulunmaz — null referans hatasıyla tüm formun çökmesini
+        // eski cshtml'de bu input'lar bulunmaz; null referans hatasıyla tüm formun çökmesini
         // önlemek için var/yok kontrolü burada.
         function setIfExists(id, value) {
             var el = document.getElementById(id);
             if (el) el.value = value;
         }
-        // Number("") === 0, NaN DEĞİL — alan boş bırakılınca (ki "Dikkat'i boş bırakırsanız genel
+        // Number("") === 0, NaN DEĞİL; alan boş bırakılınca (ki "Dikkat'i boş bırakırsanız genel
         // Eşik Ayarları'ndaki değeriniz kullanılır" diye belgelenmiş bir davranış) eskiden sessizce
         // 0 kaydediliyordu, "genel değeri kullan" hiç devreye girmiyordu. Artık boş/yalnızca boşluk
         // ya da sayı olmayan bir değer de eleman yokmuş gibi `fallback`'e düşüyor.
@@ -1902,13 +1903,13 @@
         }
 
         // Panel düzeni profilleri (window.HwmonPanelLayoutProfiles, Ayarlar → Panel Düzeni'nde
-        // oluşturulur) her form gösteriminde yeniden okunur — kullanıcı yeni bir profil eklemiş
+        // oluşturulur) her form gösteriminde yeniden okunur; kullanıcı yeni bir profil eklemiş
         // olabilir.
         function populatePanelLayoutProfileOptions() {
             var select = document.getElementById("gp-panel-layout-profile");
             if (!select || !window.HwmonPanelLayoutProfiles) return;
             var current = select.value;
-            select.innerHTML = '<option value="">Yok (genel düzen kullanılır)</option>';
+            select.innerHTML = '<option value="">' + t("Yok (genel düzen kullanılır)") + '</option>';
             HwmonPanelLayoutProfiles.load().forEach(function (p) {
                 var option = document.createElement("option");
                 option.value = p.id;
@@ -1958,10 +1959,10 @@
 
             // Eski profillerde (bu düzeltmeden önce kaydedilmiş) Dikkat alanı hiç yoktu; o durumda
             // sabit bir varsayılana değil, kullanıcının O ANKİ genel Eşik Ayarları'ndaki Dikkat
-            // değerine düşülür — sabit varsayılana düşmek kullanıcının tercihini görmezden gelirdi.
+            // değerine düşülür; sabit varsayılana düşmek kullanıcının tercihini görmezden gelirdi.
             // Ama genel Dikkat değeri o profilin Kritik değerine eşit ya da büyükse (ör. genel
             // Dikkat=95, bu profilin Kritik'i de 95), formu OLDUĞU GİBİ (hiç dokunmadan) kaydetmeye
-            // çalışmak yeni Dikkat<Kritik doğrulamasına takılıp reddediliyordu — kullanıcı hiçbir şey
+            // çalışmak yeni Dikkat<Kritik doğrulamasına takılıp reddediliyordu; kullanıcı hiçbir şey
             // değiştirmediği hâlde. Yalnızca bu OTOMATİK DÜŞÜLEN değer Kritik'in altına çekilir;
             // profilin kendi kaydettiği açık bir Dikkat değerine asla dokunulmaz.
             function safeCautionFallback(fallbackValue, criticalValue, min) {
@@ -2000,7 +2001,7 @@
             if (profiles.length === 0) {
                 var empty = document.createElement("li");
                 empty.className = "stat-sub";
-                empty.textContent = "Henüz profil eklenmedi.";
+                empty.textContent = t("Henüz profil eklenmedi.");
                 list.appendChild(empty);
                 return;
             }
@@ -2029,9 +2030,9 @@
                 labelWrap.appendChild(swatches);
 
                 // Çok uzun bir işlem adı listesi (ör. 150+ karakter) satırı taşırıp yatay scrollbar
-                // oluşturmasın diye kırpılır — girdi tarafında maxlength olsa da savunma katmanı.
+                // oluşturmasın diye kırpılır; girdi tarafında maxlength olsa da savunma katmanı.
                 var text = document.createElement("span");
-                text.textContent = api.getProcessNames(profile).join(", ") + (profile.autoAmbientMode ? "   ·   Ambiyans: Açık" : "");
+                text.textContent = api.getProcessNames(profile).join(", ") + (profile.autoAmbientMode ? "   ·   " + t("Ambiyans: Açık") : "");
                 text.style.overflow = "hidden";
                 text.style.textOverflow = "ellipsis";
                 text.style.whiteSpace = "nowrap";
@@ -2046,7 +2047,7 @@
 
                 var editButton = document.createElement("button");
                 editButton.type = "button";
-                editButton.textContent = "Düzenle";
+                editButton.textContent = t("Düzenle");
                 editButton.style.width = "auto";
                 editButton.style.padding = "0 8px";
                 editButton.addEventListener("click", function () {
@@ -2057,12 +2058,12 @@
 
                 var deleteButton = document.createElement("button");
                 deleteButton.type = "button";
-                deleteButton.textContent = "Sil";
+                deleteButton.textContent = t("Sil");
                 deleteButton.style.width = "auto";
                 deleteButton.style.padding = "0 8px";
                 deleteButton.addEventListener("click", function () {
-                    var label = api.getProcessNames(profile).join(", ") || "bu profil";
-                    if (!confirm("\"" + label + "\" profilini silmek istediğinize emin misiniz?")) return;
+                    var label = api.getProcessNames(profile).join(", ") || t("bu profil");
+                    if (!confirm("\"" + label + "\" " + t("profilini silmek istediğinize emin misiniz?"))) return;
                     var current = api.load();
                     current.splice(index, 1);
                     api.save(current);
@@ -2112,9 +2113,9 @@
                     return typed;
                 });
 
-                // Aynı işlem adıyla iki profil oluşturulmasını engelle — aksi halde hangisinin
+                // Aynı işlem adıyla iki profil oluşturulmasını engelle; aksi halde hangisinin
                 // uygulanacağı belirsiz kalırdı (canlı testte bulunan hata). Eşleşen profilin index'i
-                // `api.load()`'un DÖNDÜRDÜĞÜ AYNI dizi üzerinden bulunmalı — `api.findMatch` kendi
+                // `api.load()`'un DÖNDÜRDÜĞÜ AYNI dizi üzerinden bulunmalı; çünkü `api.findMatch` kendi
                 // içinde ayrı bir `load()` çağrısı yapıp localStorage'ı yeniden JSON.parse ettiğinden,
                 // döndürdüğü nesne referansı buradaki `existingProfiles` dizisindeki hiçbir öğeyle asla
                 // eşleşmez (`indexOf` her zaman -1 döner); bu da hem yeni-kayıtta çakışmayı hiç
@@ -2134,7 +2135,7 @@
                     }
                     if (matchIndex !== -1 && matchIndex !== editingIndex) {
                         if (gpErrorBox) {
-                            gpErrorBox.textContent = "\"" + processNames[pnIdx] + "\" işlem adıyla zaten başka bir profil var.";
+                            gpErrorBox.textContent = "\"" + processNames[pnIdx] + "\" " + t("işlem adıyla zaten başka bir profil var.");
                             gpErrorBox.style.display = "block";
                         }
                         return;
@@ -2148,11 +2149,11 @@
                 });
 
                 // Dikkat kutusu boş bırakılırsa (UI'da belgelendiği gibi) kullanıcının O ANKİ genel
-                // Eşik Ayarları değeri kullanılır — sabit bir yer tutucu (ör. -Infinity) DEĞİL, çünkü
+                // Eşik Ayarları değeri kullanılır, sabit bir yer tutucu (ör. -Infinity) DEĞİL, çünkü
                 // öyle bir değer olduğu gibi kaydedilirse JSON.stringify onu `null`'a çevirir ve
                 // profil bozulurdu.
                 // Ana Eşik Ayarları formundaki gibi: fiziksel olarak anlamsız (negatif, aşırı büyük)
-                // değerler kaydedilmeden önce metriğe uygun sınıra kırpılır — bu form şu ana kadar
+                // değerler kaydedilmeden önce metriğe uygun sınıra kırpılır; bu form şu ana kadar
                 // hiç kırpma yapmıyordu.
                 function clamp(x, min, max) { return Math.min(Math.max(x, min), max); }
                 function clampByMetric(x, metric) { return metric === "usage" ? clamp(x, 0, 100) : clamp(x, 0, 150); }
@@ -2170,13 +2171,13 @@
                 var diskCritical = clamp(Number(document.getElementById("gp-th-disk-temp").value), 0, 150);
 
                 var invalidLabels = [];
-                if (cpuCaution >= cpuCritical) invalidLabels.push("İşlemci");
-                if (gpuCaution >= gpuCritical) invalidLabels.push("Ekran Kartı");
-                if (ramCaution >= ramCritical) invalidLabels.push("Bellek");
-                if (diskCaution >= diskCritical) invalidLabels.push("Disk");
+                if (cpuCaution >= cpuCritical) invalidLabels.push(t("İşlemci"));
+                if (gpuCaution >= gpuCritical) invalidLabels.push(t("Ekran Kartı"));
+                if (ramCaution >= ramCritical) invalidLabels.push(t("Bellek"));
+                if (diskCaution >= diskCritical) invalidLabels.push(t("Disk"));
                 if (invalidLabels.length > 0) {
                     if (gpErrorBox) {
-                        gpErrorBox.textContent = "Dikkat değeri Kritik değerinden küçük olmalı: " + invalidLabels.join(", ") + ". Kaydedilmedi.";
+                        gpErrorBox.textContent = t("Dikkat değeri Kritik değerinden küçük olmalı:") + " " + invalidLabels.join(", ") + ". " + t("Kaydedilmedi.");
                         gpErrorBox.style.display = "block";
                     }
                     return;
@@ -2211,7 +2212,7 @@
                 var automatchNote = document.getElementById("gp-automatch-note");
                 if (automatchNote) {
                     if (autoMatchedPairs.length > 0) {
-                        automatchNote.textContent = "Otomatik eşleşti: " + autoMatchedPairs.join(", ");
+                        automatchNote.textContent = t("Otomatik eşleşti:") + " " + autoMatchedPairs.join(", ");
                         automatchNote.style.display = "inline";
                         setTimeout(function () { automatchNote.style.display = "none"; }, 6000);
                     } else {
@@ -2223,7 +2224,7 @@
         }
     })();
 
-    // Yerel Ağa Açma — diğer bölümlerden farklı olarak bu ayar tarayıcıda değil sunucuda
+    // Yerel Ağa Açma, diğer bölümlerden farklı olarak bu ayar tarayıcıda değil sunucuda
     // (remote-access.json) saklanır, çünkü Kestrel'in hangi adrese bağlanacağına uygulama
     // başlarken karar verilir. Bu yüzden localStorage yerine RemoteAccessController'a fetch
     // ile GET/POST yapılıyor; değişiklik yalnızca yeniden başlatınca etkili olur.
@@ -2274,7 +2275,7 @@
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: "__RequestVerificationToken=" + encodeURIComponent(tokenInput.value)
                 }).then(function () {
-                    httpsHint.textContent = "Sertifika silindi. Bir sonraki yeniden başlatmada güncel ağ adresleriyle yenisi üretilecek.";
+                    httpsHint.textContent = t("Sertifika silindi. Bir sonraki yeniden başlatmada güncel ağ adresleriyle yenisi üretilecek.");
                 });
             });
         }
@@ -2285,12 +2286,15 @@
             errorBox.style.display = message ? "block" : "none";
         }
 
+        var pinIsConfigured = false;
+
         function renderStatus(status) {
             enabledCheckbox.checked = status.savedEnabled;
-            pinHint.textContent = status.savedPinConfigured ? "(değiştirmek için yeni PIN girin, korumak için boş bırakın)" : "(gerekli)";
+            pinIsConfigured = !!status.savedPinConfigured;
+            pinHint.textContent = pinIsConfigured ? t("(değiştirmek için yeni PIN girin, korumak için boş bırakın)") : t("(gerekli)");
 
             // HTTPS yalnızca "Yerel ağdan erişime izin ver" AÇIKKEN bir anlam taşır; ham
-            // savedHttpsEnabled'ı tek başına kullanmak (Enabled=false iken bile true kalabilir —
+            // savedHttpsEnabled'ı tek başına kullanmak (Enabled=false iken bile true kalabilir,
             // bkz. RemoteAccessController.Status'taki aynı düzeltme) hem kutunun hem de aşağıdaki
             // adres metninin yanlış görünmesine yol açardı.
             var effectiveHttpsEnabled = status.savedEnabled && !!status.savedHttpsEnabled;
@@ -2304,14 +2308,14 @@
             if (status.lanAddresses && status.lanAddresses.length > 0) {
                 var scheme = effectiveHttpsEnabled ? "https" : "http";
                 var port = effectiveHttpsEnabled ? status.httpsPort : status.port;
-                lanInfo.textContent = "Yerel ağdan erişim adresi: " +
+                lanInfo.textContent = t("Yerel ağdan erişim adresi:") + " " +
                     status.lanAddresses.map(function (ip) { return scheme + "://" + ip + ":" + port; }).join(", ");
             } else {
-                lanInfo.textContent = "Bu bilgisayar için yerel ağ adresi bulunamadı.";
+                lanInfo.textContent = t("Bu bilgisayar için yerel ağ adresi bulunamadı.");
             }
 
             if (status.restartRequired) {
-                restartWarning.textContent = "Kaydedilen ayar henüz etkin değil. Etkili olması için uygulamayı yeniden başlatın.";
+                restartWarning.textContent = t("Kaydedilen ayar henüz etkin değil. Etkili olması için uygulamayı yeniden başlatın.");
                 restartWarning.style.display = "block";
                 if (restartButton) restartButton.style.display = "";
             } else {
@@ -2331,16 +2335,16 @@
             var enabled = enabledCheckbox.checked;
             var pin = pinInput.value.trim();
 
-            if (enabled && !pin && pinHint.textContent.indexOf("gerekli") !== -1) {
-                showError("Yerel ağa açmak için bir PIN belirlemelisiniz.");
+            if (enabled && !pin && !pinIsConfigured) {
+                showError(t("Yerel ağa açmak için bir PIN belirlemelisiniz."));
                 return;
             }
             if (pin && pin.length < 4) {
-                showError("PIN en az 4 karakter olmalı.");
+                showError(t("PIN en az 4 karakter olmalı."));
                 return;
             }
             if (pin && pin.length > 32) {
-                showError("PIN en fazla 32 karakter olabilir.");
+                showError(t("PIN en fazla 32 karakter olabilir."));
                 return;
             }
 
@@ -2356,14 +2360,14 @@
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: body.toString()
             }).then(function (r) {
-                if (!r.ok) return r.json().then(function (data) { throw new Error(data.error || "Kaydedilemedi."); });
+                if (!r.ok) return r.json().then(function (data) { throw new Error(data.error || t("Kaydedilemedi.")); });
                 return r.json();
             }).then(function () {
                 pinInput.value = "";
                 flashSavedNote("ra-saved-note");
                 return fetch("/RemoteAccess/Status").then(function (r) { return r.json(); }).then(renderStatus);
             }).catch(function (err) {
-                showError(err.message || "Kaydedilemedi.");
+                showError(err.message || t("Kaydedilemedi."));
             }).finally(function () {
                 saveButton.disabled = false;
             });
@@ -2387,7 +2391,7 @@
             function poll() {
                 if (Date.now() - startedAt > maxWaitMs) {
                     if (restartNote) {
-                        restartNote.textContent = "Sunucu beklenenden uzun sürede geri gelmedi. UAC penceresini onayladıysanız sayfayı elle yenileyin.";
+                        restartNote.textContent = t("Sunucu beklenenden uzun sürede geri gelmedi. UAC penceresini onayladıysanız sayfayı elle yenileyin.");
                     }
                     return;
                 }
@@ -2400,7 +2404,7 @@
                         }
                         // Eski sunucu (kapanmadan hemen önceki ~300ms içinde) hâlâ yanıt veriyor
                         // olabilir; bunu "geri geldi" saymadan önce gerçekten kapandığını görmemiz
-                        // gerekir — aksi hâlde sayfa yeniden başlamadan önce kendini yenileyip aynı
+                        // gerekir; aksi hâlde sayfa yeniden başlamadan önce kendini yenileyip aynı
                         // (kapanmakta olan) sürece bağlanabilir.
                         setTimeout(poll, pollIntervalMs);
                     })
@@ -2416,7 +2420,7 @@
         if (restartButton) {
             restartButton.addEventListener("click", function () {
                 if (restartButton.disabled) return;
-                if (!confirm("Uygulama şimdi kapatılıp yeniden başlatılacak. Windows bir yönetici izni (UAC) penceresi gösterecek, onaylamanız gerekir. Devam edilsin mi?")) {
+                if (!confirm(t("Uygulama şimdi kapatılıp yeniden başlatılacak. Windows bir yönetici izni (UAC) penceresi gösterecek, onaylamanız gerekir. Devam edilsin mi?"))) {
                     return;
                 }
 
@@ -2429,23 +2433,23 @@
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: body.toString()
                 }).then(function (r) {
-                    if (!r.ok) throw new Error("Yeniden başlatma tetiklenemedi.");
+                    if (!r.ok) throw new Error(t("Yeniden başlatma tetiklenemedi."));
                     if (restartNote) {
-                        restartNote.textContent = "Yeniden başlatılıyor. Birkaç saniye içinde UAC penceresi açılacak, onaylayın. Sunucu geri gelince sayfa kendiliğinden yenilenecek.";
+                        restartNote.textContent = t("Yeniden başlatılıyor. Birkaç saniye içinde UAC penceresi açılacak, onaylayın. Sunucu geri gelince sayfa kendiliğinden yenilenecek.");
                         restartNote.style.display = "inline";
                     }
                     waitForRestartAndReload();
                 }).catch(function () {
                     restartButton.disabled = false;
-                    showError("Yeniden başlatma tetiklenemedi. Uygulamayı elle kapatıp tekrar açabilirsiniz.");
+                    showError(t("Yeniden başlatma tetiklenemedi. Uygulamayı elle kapatıp tekrar açabilirsiniz."));
                 });
             });
         }
     })();
 
-    // Ayarları dışa/içe aktar — window.HwmonSettingsBackup (site.js). İçe aktarma sonrası sayfa
+    // Ayarları dışa/içe aktar, window.HwmonSettingsBackup (site.js). İçe aktarma sonrası sayfa
     // yeniden yüklenir: onlarca modülün her birine ayrı ayrı "değişti" olayı göndermek yerine, her
-    // modül zaten sayfa yüklenirken kendi load()'unu çağırıyor — bu en basit ve hatasız yol.
+    // modül zaten sayfa yüklenirken kendi load()'unu çağırıyor; bu en basit ve hatasız yol.
     (function initSettingsBackup() {
         var api = window.HwmonSettingsBackup;
         var exportButton = document.getElementById("settings-export");
@@ -2456,7 +2460,7 @@
 
         exportButton.addEventListener("click", function () {
             api.exportToFile();
-            if (status) status.textContent = "Dosya indirildi.";
+            if (status) status.textContent = t("Dosya indirildi.");
         });
 
         importTrigger.addEventListener("click", function () {
@@ -2472,20 +2476,20 @@
             reader.onload = function () {
                 var result = api.importFromText(String(reader.result));
                 if (!result.ok) {
-                    if (status) status.textContent = "İçe aktarılamadı: " + result.error;
+                    if (status) status.textContent = t("İçe aktarılamadı:") + " " + result.error;
                     return;
                 }
-                if (status) status.textContent = result.count + " ayar içe aktarıldı, sayfa yenileniyor…";
+                if (status) status.textContent = result.count + " " + t("ayar içe aktarıldı, sayfa yenileniyor…");
                 setTimeout(function () { window.location.reload(); }, 800);
             };
             reader.onerror = function () {
-                if (status) status.textContent = "Dosya okunamadı.";
+                if (status) status.textContent = t("Dosya okunamadı.");
             };
             reader.readAsText(file);
         });
     })();
 
-    // Otomatik başlatma — durum HKCU\...\Run kayıt defteri anahtarının kendisinden okunur
+    // Otomatik başlatma, durum HKCU\...\Run kayıt defteri anahtarının kendisinden okunur
     // (RemoteAccess'teki ayrı JSON dosyasının aksine, burada başka bir "tek doğru kaynak"a gerek
     // yok: anahtarın var/yok olması zaten gerçek durumdur).
     (function initStartupForm() {
@@ -2507,7 +2511,7 @@
         function renderStatus(status) {
             enabledCheckbox.checked = status.enabled;
             if (minimizedCheckbox) minimizedCheckbox.checked = !!status.startMinimized;
-            if (pathInfo) pathInfo.textContent = "Başlangıç yolu: " + status.exePath;
+            if (pathInfo) pathInfo.textContent = t("Başlangıç yolu:") + " " + status.exePath;
             if (mismatchWarning) mismatchWarning.style.display = status.pathMismatch ? "block" : "none";
         }
 
@@ -2531,20 +2535,20 @@
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: body.toString()
             }).then(function (r) {
-                if (!r.ok) return r.json().then(function (data) { throw new Error(data.error || "Kaydedilemedi."); });
+                if (!r.ok) return r.json().then(function (data) { throw new Error(data.error || t("Kaydedilemedi.")); });
                 return r.json();
             }).then(function () {
                 flashSavedNote("startup-saved-note");
                 return fetch("/Startup/Status").then(function (r) { return r.json(); }).then(renderStatus);
             }).catch(function (err) {
-                showError(err.message || "Kaydedilemedi.");
+                showError(err.message || t("Kaydedilemedi."));
             }).finally(function () {
                 saveButton.disabled = false;
             });
         });
     })();
 
-    // Pencere kapatma davranışı (sistem tepsisine küçült / uygulamayı kapat) — HKCU'da tutulur
+    // Pencere kapatma davranışı (sistem tepsisine küçült / uygulamayı kapat), HKCU'da tutulur
     // (bkz. Desktop/DesktopShellSettings.cs), gerçek karar ShellForm.OnFormClosing'de verilir.
     (function initCloseBehaviorForm() {
         var trayRadio = document.getElementById("close-behavior-tray");
@@ -2585,13 +2589,64 @@
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: body.toString()
             }).then(function (r) {
-                if (!r.ok) return r.json().then(function (data) { throw new Error(data.error || "Kaydedilemedi."); });
+                if (!r.ok) return r.json().then(function (data) { throw new Error(data.error || t("Kaydedilemedi.")); });
                 return r.json();
             }).then(function () {
                 flashSavedNote("close-behavior-saved-note");
             }).catch(function (err) {
-                showError(err.message || "Kaydedilemedi.");
+                showError(err.message || t("Kaydedilemedi."));
             }).finally(function () {
+                saveButton.disabled = false;
+            });
+        });
+    })();
+
+    // Arayüz dili (tr/en), HKCU'da tutulur (bkz. Localization/LanguageSettings.cs). Kayıt
+    // sonrası sayfa yeniden yüklenir: Razor tarafındaki tüm metinler (nav, bu panel vb.) sunucu
+    // tarafında CultureInfo.CurrentUICulture'a göre render edildiğinden, değişikliğin görünmesi
+    // için yeni bir isteğe (dolayısıyla reload'a) ihtiyaç var; SPA gibi istemci tarafında canlı
+    // yeniden çizim yapılmıyor.
+    (function initLanguageForm() {
+        var select = document.getElementById("language-select");
+        var errorBox = document.getElementById("language-error");
+        var saveButton = document.getElementById("language-save");
+        var tokenInput = document.querySelector("#language-form input[name='__RequestVerificationToken']");
+        if (!select || !saveButton || !tokenInput) return;
+
+        function showError(message) {
+            if (!errorBox) return;
+            errorBox.textContent = message;
+            errorBox.style.display = message ? "block" : "none";
+        }
+
+        fetch("/Settings/Language")
+            .then(function (r) { return r.json(); })
+            .then(function (status) {
+                select.value = status.language;
+            })
+            .catch(function () { /* durum okunamadıysa form varsayılan (Türkçe) görünümde kalır */ });
+
+        saveButton.addEventListener("click", function () {
+            if (saveButton.disabled) return;
+            showError("");
+
+            var body = new URLSearchParams();
+            body.set("__RequestVerificationToken", tokenInput.value);
+            body.set("language", select.value);
+
+            saveButton.disabled = true;
+            fetch("/Settings/SetLanguage", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: body.toString()
+            }).then(function (r) {
+                if (!r.ok) return r.json().then(function (data) { throw new Error(data.error || t("Kaydedilemedi.")); });
+                return r.json();
+            }).then(function () {
+                flashSavedNote("language-saved-note");
+                location.reload();
+            }).catch(function (err) {
+                showError(err.message || t("Kaydedilemedi."));
                 saveButton.disabled = false;
             });
         });

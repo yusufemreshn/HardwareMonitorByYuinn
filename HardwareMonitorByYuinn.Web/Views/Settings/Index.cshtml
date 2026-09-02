@@ -1,279 +1,269 @@
 @{
-    ViewData["Title"] = "Ayarlar";
+    ViewData["Title"] = Localizer["Ayarlar"];
 }
 
 <div class="settings-shell">
     <nav class="settings-sidebar" id="settings-sidebar">
-        <button type="button" class="sidebar-toggle" aria-label="Menüyü daralt/genişlet" aria-pressed="false">
+        <button type="button" class="sidebar-toggle" aria-label="@Localizer["Menüyü daralt/genişlet"]" aria-pressed="false">
             <span></span><span></span><span></span>
         </button>
         <div class="settings-search">
-            <input type="search" id="settings-search-input" placeholder="Ayarlarda ara…" aria-label="Ayarlarda ara">
+            <input type="search" id="settings-search-input" placeholder="@Localizer["Ayarlarda ara…"]" aria-label="@Localizer["Ayarlarda ara"]">
         </div>
         <div class="settings-category" data-category="customize">
             <button type="button" class="settings-category-toggle">
-                Özelleştirme <span class="chevron">›</span>
+                @Localizer["Özelleştirme"] <span class="chevron">›</span>
             </button>
             <ul class="settings-subnav">
-                <li><button type="button" data-target="preset-themes">Hazır Temalar</button></li>
-                <li><button type="button" data-target="colors-panel">Renkler</button></li>
+                <li><button type="button" data-target="preset-themes">@Localizer["Hazır Temalar"]</button></li>
+                <li><button type="button" data-target="colors-panel">@Localizer["Renkler"]</button></li>
                 <li class="settings-subnav-group">
                     <button type="button" class="settings-subnav-group-toggle">
-                        Görünüm <span class="chevron">›</span>
+                        @Localizer["Görünüm"] <span class="chevron">›</span>
                     </button>
                     <ul class="settings-subnav-nested">
-                        <li><button type="button" data-target="appearance-panel">Genel</button></li>
-                        <li><button type="button" data-target="unit-prefs-panel">Birim Tercihi</button></li>
-                        <li><button type="button" data-target="typography-panel">Yazı Tipi</button></li>
-                        <li><button type="button" data-target="glass-effect-panel">Cam Efekti</button></li>
-                        <li><button type="button" data-target="panel-view-panel">Panel Görünümü</button></li>
-                        <li><button type="button" data-target="startup-tab-panel">Açılış Sekmesi</button></li>
-                        <li><button type="button" data-target="chart-types-panel">Grafik Tipi</button></li>
+                        <li><button type="button" data-target="appearance-panel">@Localizer["Genel"]</button></li>
+                        <li><button type="button" data-target="unit-prefs-panel">@Localizer["Birim Tercihi"]</button></li>
+                        <li><button type="button" data-target="typography-panel">@Localizer["Yazı Tipi"]</button></li>
+                        <li><button type="button" data-target="glass-effect-panel">@Localizer["Cam Efekti"]</button></li>
+                        <li><button type="button" data-target="panel-view-panel">@Localizer["Panel Görünümü"]</button></li>
+                        <li><button type="button" data-target="startup-tab-panel">@Localizer["Açılış Sekmesi"]</button></li>
+                        <li><button type="button" data-target="chart-types-panel">@Localizer["Grafik Tipi"]</button></li>
                     </ul>
                 </li>
-                <li><button type="button" data-target="card-order-panel">Kart Sıralaması ve Detayları</button></li>
-                <li><button type="button" data-target="panel-layout">Panel Düzeni</button></li>
-                <li><button type="button" data-target="snapshot-settings">Anlık Görüntü</button></li>
-                <li><button type="button" data-target="ambient-settings">Ambiyans Modu</button></li>
-                <li><button type="button" data-target="energy-cost-panel">Enerji Maliyeti</button></li>
+                <li><button type="button" data-target="card-order-panel">@Localizer["Kart Sıralaması ve Detayları"]</button></li>
+                <li><button type="button" data-target="panel-layout">@Localizer["Panel Düzeni"]</button></li>
+                <li><button type="button" data-target="snapshot-settings">@Localizer["Anlık Görüntü"]</button></li>
+                <li><button type="button" data-target="ambient-settings">@Localizer["Ambiyans Modu"]</button></li>
+                <li><button type="button" data-target="energy-cost-panel">@Localizer["Enerji Maliyeti"]</button></li>
             </ul>
         </div>
         <div class="settings-category" data-category="thresholds">
             <button type="button" class="settings-category-toggle">
-                Eşikler ve Bildirimler <span class="chevron">›</span>
+                @Localizer["Eşikler ve Bildirimler"] <span class="chevron">›</span>
             </button>
             <ul class="settings-subnav">
                 <li class="settings-subnav-group">
                     <button type="button" class="settings-subnav-group-toggle">
-                        Eşik Ayarları <span class="chevron">›</span>
+                        @Localizer["Eşik Ayarları"] <span class="chevron">›</span>
                     </button>
                     <ul class="settings-subnav-nested">
-                        <li><button type="button" data-target="thresholds-panel">Sabit Eşikler</button></li>
-                        <li><button type="button" data-target="anomaly-detection-panel">Anomali Tespiti</button></li>
-                        <li><button type="button" data-target="memory-leak-detection-panel">Bellek Sızıntısı Tespiti</button></li>
+                        <li><button type="button" data-target="thresholds-panel">@Localizer["Sabit Eşikler"]</button></li>
+                        <li><button type="button" data-target="anomaly-detection-panel">@Localizer["Anomali Tespiti"]</button></li>
+                        <li><button type="button" data-target="memory-leak-detection-panel">@Localizer["Bellek Sızıntısı Tespiti"]</button></li>
                     </ul>
                 </li>
                 <li class="settings-subnav-group">
                     <button type="button" class="settings-subnav-group-toggle">
-                        Bildirimler <span class="chevron">›</span>
+                        @Localizer["Bildirimler"] <span class="chevron">›</span>
                     </button>
                     <ul class="settings-subnav-nested">
-                        <li><button type="button" data-target="notify-settings-panel">Bildirim Kuralları</button></li>
-                        <li><button type="button" data-target="notify-sound-panel">Bildirim Sesi</button></li>
+                        <li><button type="button" data-target="notify-settings-panel">@Localizer["Bildirim Kuralları"]</button></li>
+                        <li><button type="button" data-target="notify-sound-panel">@Localizer["Bildirim Sesi"]</button></li>
                     </ul>
                 </li>
             </ul>
         </div>
         <div class="settings-category" data-category="games">
             <button type="button" class="settings-category-toggle">
-                Oyun Profilleri <span class="chevron">›</span>
+                @Localizer["Oyun Profilleri"] <span class="chevron">›</span>
             </button>
             <ul class="settings-subnav">
-                <li><button type="button" data-target="game-profiles">Oyun Profilleri</button></li>
+                <li><button type="button" data-target="game-profiles">@Localizer["Oyun Profilleri"]</button></li>
             </ul>
         </div>
         <div class="settings-category" data-category="network">
             <button type="button" class="settings-category-toggle">
-                Ağ ve Erişim <span class="chevron">›</span>
+                @Localizer["Ağ ve Erişim"] <span class="chevron">›</span>
             </button>
             <ul class="settings-subnav">
-                <li><button type="button" data-target="remote-access">Yerel Ağa Açma</button></li>
+                <li><button type="button" data-target="remote-access">@Localizer["Yerel Ağa Açma"]</button></li>
             </ul>
         </div>
         <div class="settings-category" data-category="shortcuts">
             <button type="button" class="settings-category-toggle">
-                Klavye Kısayolları <span class="chevron">›</span>
+                @Localizer["Klavye Kısayolları"] <span class="chevron">›</span>
             </button>
             <ul class="settings-subnav">
-                <li><button type="button" data-target="keyboard-shortcuts-panel">Kısayolları Düzenle</button></li>
+                <li><button type="button" data-target="keyboard-shortcuts-panel">@Localizer["Kısayolları Düzenle"]</button></li>
             </ul>
         </div>
         <div class="settings-category" data-category="backup">
             <button type="button" class="settings-category-toggle">
-                Yedekleme <span class="chevron">›</span>
+                @Localizer["Yedekleme"] <span class="chevron">›</span>
             </button>
             <ul class="settings-subnav">
-                <li><button type="button" data-target="settings-backup">Ayarları Dışa/İçe Aktar</button></li>
+                <li><button type="button" data-target="settings-backup">@Localizer["Ayarları Dışa/İçe Aktar"]</button></li>
             </ul>
         </div>
         <div class="settings-category" data-category="system">
             <button type="button" class="settings-category-toggle">
-                Sistem <span class="chevron">›</span>
+                @Localizer["Sistem"] <span class="chevron">›</span>
             </button>
             <ul class="settings-subnav">
-                <li><button type="button" data-target="startup-panel">Otomatik Başlatma</button></li>
-                <li><button type="button" data-target="close-behavior-panel">Pencere Kapatma Davranışı</button></li>
+                <li><button type="button" data-target="startup-panel">@Localizer["Otomatik Başlatma"]</button></li>
+                <li><button type="button" data-target="close-behavior-panel">@Localizer["Pencere Kapatma Davranışı"]</button></li>
+                <li><button type="button" data-target="language-panel">@Localizer["Dil"]</button></li>
             </ul>
         </div>
     </nav>
 
     <div class="settings-content" id="settings-content">
         <div class="panel" id="thresholds-panel">
-            <h2 class="panel-title">Eşik Ayarları — Sabit Eşikler</h2>
+            <h2 class="panel-title">@Localizer["Eşik Ayarları: Sabit Eşikler"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Bir değer "Dikkat" eşiğini aştığında Panel'deki ilgili kart sarıya, "Kritik" eşiğini
-                aştığında kırmızıya döner; kritik eşik aynı zamanda (🔔 ile bildirimlere izin verdiyseniz)
-                bildirim de gönderir. İşlemci ve Ekran Kartı için hangi metriğin izleneceğini de
-                seçebilirsiniz. Ayarlar yalnızca bu tarayıcıda saklanır.
+                @Localizer["Bir değer \"Dikkat\" eşiğini aştığında Panel'deki ilgili kart sarıya, \"Kritik\" eşiğini aştığında kırmızıya döner; kritik eşik aynı zamanda (🔔 ile bildirimlere izin verdiyseniz) bildirim de gönderir. İşlemci ve Ekran Kartı için hangi metriğin izleneceğini de seçebilirsiniz. Ayarlar yalnızca bu tarayıcıda saklanır."]
             </p>
             <div class="thresholds-form">
-                <label class="threshold-field">İşlemci eşiği
+                <label class="threshold-field">@Localizer["İşlemci eşiği"]
                     <div class="threshold-metric-row">
                         <select id="th-cpu-metric">
-                            <option value="temp">Sıcaklık (°C)</option>
-                            <option value="usage">Kullanım (%)</option>
+                            <option value="temp">@Localizer["Sıcaklık (°C)"]</option>
+                            <option value="usage">@Localizer["Kullanım (%)"]</option>
                         </select>
                     </div>
                     <div class="threshold-tier-row">
-                        <label class="threshold-tier-input">Dikkat<input type="number" id="th-cpu-caution" min="0" step="1"></label>
-                        <label class="threshold-tier-input">Kritik<input type="number" id="th-cpu-value" min="0" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Dikkat"]<input type="number" id="th-cpu-caution" min="0" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Kritik"]<input type="number" id="th-cpu-value" min="0" step="1"></label>
                     </div>
                 </label>
-                <label class="threshold-field">Ekran kartı eşiği
+                <label class="threshold-field">@Localizer["Ekran kartı eşiği"]
                     <div class="threshold-metric-row">
                         <select id="th-gpu-metric">
-                            <option value="temp">Sıcaklık (°C)</option>
-                            <option value="usage">Kullanım (%)</option>
+                            <option value="temp">@Localizer["Sıcaklık (°C)"]</option>
+                            <option value="usage">@Localizer["Kullanım (%)"]</option>
                         </select>
                     </div>
                     <div class="threshold-tier-row">
-                        <label class="threshold-tier-input">Dikkat<input type="number" id="th-gpu-caution" min="0" step="1"></label>
-                        <label class="threshold-tier-input">Kritik<input type="number" id="th-gpu-value" min="0" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Dikkat"]<input type="number" id="th-gpu-caution" min="0" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Kritik"]<input type="number" id="th-gpu-value" min="0" step="1"></label>
                     </div>
                 </label>
-                <label class="threshold-field">Bellek kullanımı (%)
+                <label class="threshold-field">@Localizer["Bellek kullanımı (%)"]
                     <div class="threshold-metric-row">
-                        <select class="threshold-metric-fixed" disabled title="Bu metrik için tek seçenek var"><option>Kullanım (%)</option></select>
+                        <select class="threshold-metric-fixed" disabled title="@Localizer["Bu metrik için tek seçenek var"]"><option>@Localizer["Kullanım (%)"]</option></select>
                     </div>
                     <div class="threshold-tier-row">
-                        <label class="threshold-tier-input">Dikkat<input type="number" id="th-ram-usage-caution" min="0" max="100" step="1"></label>
-                        <label class="threshold-tier-input">Kritik<input type="number" id="th-ram-usage" min="0" max="100" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Dikkat"]<input type="number" id="th-ram-usage-caution" min="0" max="100" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Kritik"]<input type="number" id="th-ram-usage" min="0" max="100" step="1"></label>
                     </div>
                 </label>
-                <label class="threshold-field">Disk sıcaklığı (°C)
+                <label class="threshold-field">@Localizer["Disk sıcaklığı (°C)"]
                     <div class="threshold-metric-row">
-                        <select class="threshold-metric-fixed" disabled title="Bu metrik için tek seçenek var"><option>Sıcaklık (°C)</option></select>
+                        <select class="threshold-metric-fixed" disabled title="@Localizer["Bu metrik için tek seçenek var"]"><option>@Localizer["Sıcaklık (°C)"]</option></select>
                     </div>
                     <div class="threshold-tier-row">
-                        <label class="threshold-tier-input">Dikkat<input type="number" id="th-disk-temp-caution" min="0" max="150" step="1"></label>
-                        <label class="threshold-tier-input">Kritik<input type="number" id="th-disk-temp" min="0" max="150" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Dikkat"]<input type="number" id="th-disk-temp-caution" min="0" max="150" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Kritik"]<input type="number" id="th-disk-temp" min="0" max="150" step="1"></label>
                     </div>
                 </label>
             </div>
             <div id="thresholds-error" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-top:10px;"></div>
-            <button type="button" id="thresholds-save" class="btn-primary-hwmon" style="margin-top:14px;">Kaydet</button>
-            <span id="thresholds-saved-note" class="stat-sub" style="margin-left:12px;display:none;">Kaydedildi ✓</span>
+            <button type="button" id="thresholds-save" class="btn-primary-hwmon" style="margin-top:14px;">@Localizer["Kaydet"]</button>
+            <span id="thresholds-saved-note" class="stat-sub" style="margin-left:12px;display:none;">@Localizer["Kaydedildi ✓"]</span>
         </div>
 
         <div class="panel" id="anomaly-detection-panel">
-            <h2 class="panel-title">Eşik Ayarları — Anomali Tespiti</h2>
+            <h2 class="panel-title">@Localizer["Eşik Ayarları: Anomali Tespiti"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Sabit eşiklere ek olarak, bir metrik son ~2 dakikaya göre ani bir sıçrama
-                yaşadığında (eşiği aşmasa bile) Genel Sağlık Özeti'nde "⚡" ile belirtir.
+                @Localizer["Sabit eşiklere ek olarak, bir metrik son ~2 dakikaya göre ani bir sıçrama yaşadığında (eşiği aşmasa bile) Genel Sağlık Özeti'nde \"⚡\" ile belirtir."]
             </p>
             <label class="notify-metric-field">
-                <input type="checkbox" id="anomaly-detection-toggle"> Anomali tespitini etkinleştir
+                <input type="checkbox" id="anomaly-detection-toggle"> @Localizer["Anomali tespitini etkinleştir"]
             </label>
         </div>
 
         <div class="panel" id="memory-leak-detection-panel">
-            <h2 class="panel-title">Eşik Ayarları — Bellek Sızıntısı Tespiti</h2>
+            <h2 class="panel-title">@Localizer["Eşik Ayarları: Bellek Sızıntısı Tespiti"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Kaynak Kullanımı listesindeki bir süreç, listede göründüğü sürece RAM kullanımı sürekli
-                artıyorsa Genel Sağlık Özeti'nde "⚡" ile belirtir. Anomali tespitinden bağımsız, ayrı
-                bir açma/kapama anahtarıdır.
+                @Localizer["Kaynak Kullanımı listesindeki bir süreç, listede göründüğü sürece RAM kullanımı sürekli artıyorsa Genel Sağlık Özeti'nde \"⚡\" ile belirtir. Anomali tespitinden bağımsız, ayrı bir açma/kapama anahtarıdır."]
             </p>
             <label class="notify-metric-field">
-                <input type="checkbox" id="memory-leak-detection-toggle"> Bellek sızıntısı tespitini etkinleştir
+                <input type="checkbox" id="memory-leak-detection-toggle"> @Localizer["Bellek sızıntısı tespitini etkinleştir"]
             </label>
         </div>
 
         <div class="panel" id="notify-settings-panel">
-            <h2 class="panel-title">Bildirimler — Bildirim Kuralları</h2>
+            <h2 class="panel-title">@Localizer["Bildirimler: Bildirim Kuralları"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Bir eşik aşıldığında (🔔 ile izin verdiyseniz) bildirim gönderilir. Eşik aşılı kaldığı
-                sürece ne sıklıkla tekrar bildirim gönderileceğini ve hangi kartlar için bildirim
-                istediğinizi burada seçebilirsiniz. Bu sayfa açık olmasa bile (Detaylar, Geçmiş vb.
-                başka bir sekmedeyken de) bildirimler çalışmaya devam eder.
+                @Localizer["Bir eşik aşıldığında (🔔 ile izin verdiyseniz) bildirim gönderilir. Eşik aşılı kaldığı sürece ne sıklıkla tekrar bildirim gönderileceğini ve hangi kartlar için bildirim istediğinizi burada seçebilirsiniz. Bu sayfa açık olmasa bile (Detaylar, Geçmiş vb. başka bir sekmedeyken de) bildirimler çalışmaya devam eder."]
             </p>
             <div class="thresholds-form">
-                <label class="threshold-field">Tekrar sıklığı
+                <label class="threshold-field">@Localizer["Tekrar sıklığı"]
                     <select id="notify-repeat-seconds">
-                        <option value="0">Yalnızca eşik aşıldığında (tekrar etmesin)</option>
-                        <option value="5">Her 5 saniyede bir</option>
-                        <option value="10">Her 10 saniyede bir</option>
-                        <option value="30">Her 30 saniyede bir</option>
-                        <option value="60">Her 1 dakikada bir</option>
-                        <option value="300">Her 5 dakikada bir</option>
+                        <option value="0">@Localizer["Yalnızca eşik aşıldığında (tekrar etmesin)"]</option>
+                        <option value="5">@Localizer["Her 5 saniyede bir"]</option>
+                        <option value="10">@Localizer["Her 10 saniyede bir"]</option>
+                        <option value="30">@Localizer["Her 30 saniyede bir"]</option>
+                        <option value="60">@Localizer["Her 1 dakikada bir"]</option>
+                        <option value="300">@Localizer["Her 5 dakikada bir"]</option>
                     </select>
                 </label>
             </div>
-            <p class="stat-sub" style="margin:18px 0 8px;">Bildirim gönderilecek kartlar</p>
+            <p class="stat-sub" style="margin:18px 0 8px;">@Localizer["Bildirim gönderilecek kartlar"]</p>
             <div class="notify-metrics">
                 <label class="notify-metric-field">
-                    <input type="checkbox" id="notify-metric-cpu"> İşlemci
+                    <input type="checkbox" id="notify-metric-cpu"> @Localizer["İşlemci"]
                 </label>
                 <label class="notify-metric-field">
-                    <input type="checkbox" id="notify-metric-gpu"> Ekran Kartı
+                    <input type="checkbox" id="notify-metric-gpu"> @Localizer["Ekran Kartı"]
                 </label>
                 <label class="notify-metric-field">
-                    <input type="checkbox" id="notify-metric-ram"> Bellek
+                    <input type="checkbox" id="notify-metric-ram"> @Localizer["Bellek"]
                 </label>
                 <label class="notify-metric-field">
-                    <input type="checkbox" id="notify-metric-storage"> Depolama
+                    <input type="checkbox" id="notify-metric-storage"> @Localizer["Depolama"]
                 </label>
             </div>
-            <button type="button" id="notify-settings-save" class="btn-primary-hwmon" style="margin-top:14px;">Kaydet</button>
-            <span id="notify-settings-saved-note" class="stat-sub" style="margin-left:12px;display:none;">Kaydedildi ✓</span>
+            <button type="button" id="notify-settings-save" class="btn-primary-hwmon" style="margin-top:14px;">@Localizer["Kaydet"]</button>
+            <span id="notify-settings-saved-note" class="stat-sub" style="margin-left:12px;display:none;">@Localizer["Kaydedildi ✓"]</span>
         </div>
 
         <div class="panel" id="notify-sound-panel">
-            <h2 class="panel-title">Bildirimler — Bildirim Sesi</h2>
+            <h2 class="panel-title">@Localizer["Bildirimler: Bildirim Sesi"]</h2>
             <div class="thresholds-form">
-                <label class="threshold-field">Ses
+                <label class="threshold-field">@Localizer["Ses"]
                     <select id="notify-sound-select">
-                        <option value="classic">Klasik</option>
-                        <option value="soft">Yumuşak</option>
-                        <option value="alert">Dikkat Çekici</option>
-                        <option value="none">Sessiz (yalnızca görsel bildirim)</option>
+                        <option value="classic">@Localizer["Klasik"]</option>
+                        <option value="soft">@Localizer["Yumuşak"]</option>
+                        <option value="alert">@Localizer["Dikkat Çekici"]</option>
+                        <option value="none">@Localizer["Sessiz (yalnızca görsel bildirim)"]</option>
                     </select>
                 </label>
-                <label class="threshold-field">Ses seviyesi
+                <label class="threshold-field">@Localizer["Ses seviyesi"]
                     <input type="range" id="notify-sound-volume" min="0" max="100" step="5" style="width:160px;">
                 </label>
             </div>
-            <button type="button" id="notify-sound-save" class="btn-primary-hwmon" style="margin-top:14px;">Kaydet</button>
-            <button type="button" id="notify-sound-test" class="legend-item" style="margin-left:8px;">🔊 Test Et</button>
-            <span id="notify-sound-saved-note" class="stat-sub" style="margin-left:12px;display:none;">Kaydedildi ✓</span>
+            <button type="button" id="notify-sound-save" class="btn-primary-hwmon" style="margin-top:14px;">@Localizer["Kaydet"]</button>
+            <button type="button" id="notify-sound-test" class="legend-item" style="margin-left:8px;">🔊 @Localizer["Test Et"]</button>
+            <span id="notify-sound-saved-note" class="stat-sub" style="margin-left:12px;display:none;">@Localizer["Kaydedildi ✓"]</span>
         </div>
 
         <div class="panel" id="colors-panel">
-            <h2 class="panel-title">Renkler</h2>
+            <h2 class="panel-title">@Localizer["Renkler"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                İşlemci, ekran kartı, bellek, kare hızı, depolama, ağ, kaynak kullanımı ve sistem özetinin
-                Panel'deki kartlarda ve grafikte kullanılan rengini değiştirin. Değişiklik tüm sayfalara ve
-                grafiğe hemen yansır.
+                @Localizer["İşlemci, ekran kartı, bellek, kare hızı, depolama, ağ, kaynak kullanımı ve sistem özetinin Panel'deki kartlarda ve grafikte kullanılan rengini değiştirin. Değişiklik tüm sayfalara ve grafiğe hemen yansır."]
             </p>
             <div class="panel-layout-columns">
                 <div class="panel-layout-column-main">
                     <div class="colors-form">
-                        <label class="color-field">İşlemci<input type="color" id="color-cpu" data-color-key="cpu"></label>
-                        <label class="color-field">Ekran Kartı<input type="color" id="color-gpu" data-color-key="gpu"></label>
-                        <label class="color-field">Bellek<input type="color" id="color-ram" data-color-key="ram"></label>
-                        <label class="color-field">Kare Hızı<input type="color" id="color-fps" data-color-key="fps"></label>
-                        <label class="color-field">Depolama<input type="color" id="color-storage" data-color-key="storage"></label>
-                        <label class="color-field">Ağ<input type="color" id="color-network" data-color-key="network"></label>
-                        <label class="color-field">Kaynak Kullanımı<input type="color" id="color-process" data-color-key="process"></label>
-                        <label class="color-field">Sistem Özeti<input type="color" id="color-system" data-color-key="system"></label>
+                        <label class="color-field">@Localizer["İşlemci"]<input type="color" id="color-cpu" data-color-key="cpu"></label>
+                        <label class="color-field">@Localizer["Ekran Kartı"]<input type="color" id="color-gpu" data-color-key="gpu"></label>
+                        <label class="color-field">@Localizer["Bellek"]<input type="color" id="color-ram" data-color-key="ram"></label>
+                        <label class="color-field">@Localizer["Kare Hızı"]<input type="color" id="color-fps" data-color-key="fps"></label>
+                        <label class="color-field">@Localizer["Depolama"]<input type="color" id="color-storage" data-color-key="storage"></label>
+                        <label class="color-field">@Localizer["Ağ"]<input type="color" id="color-network" data-color-key="network"></label>
+                        <label class="color-field">@Localizer["Kaynak Kullanımı"]<input type="color" id="color-process" data-color-key="process"></label>
+                        <label class="color-field">@Localizer["Sistem Özeti"]<input type="color" id="color-system" data-color-key="system"></label>
                     </div>
                     <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
-                        <button type="button" id="colors-save" class="btn-primary-hwmon">Kaydet</button>
-                        <button type="button" id="colors-reset" class="legend-item">Varsayılanlara Dön</button>
-                        <span id="colors-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+                        <button type="button" id="colors-save" class="btn-primary-hwmon">@Localizer["Kaydet"]</button>
+                        <button type="button" id="colors-reset" class="legend-item">@Localizer["Varsayılanlara Dön"]</button>
+                        <span id="colors-saved-note" class="stat-sub" style="display:none;">@Localizer["Kaydedildi ✓"]</span>
                     </div>
                 </div>
                 <div class="panel-layout-column-preview">
-                    <span class="panel-layout-preview-label">Önizleme</span>
+                    <span class="panel-layout-preview-label">@Localizer["Önizleme"]</span>
                     <div class="panel-layout-preview" id="colors-preview"></div>
                 </div>
             </div>
@@ -282,225 +272,210 @@
         <div class="panel" id="preset-themes">
             <div class="preset-theme-header">
                 <div class="preset-theme-heading">
-                    <h2 class="panel-title">Hazır Temalar</h2>
+                    <h2 class="panel-title">@Localizer["Hazır Temalar"]</h2>
                     <p style="color:var(--text-muted);font-size:.9rem;margin:0;">
-                        Tek tıkla hem aksan renklerini hem arka planı bir temaya göre değiştirin. Renkler ve
-                        Görünüm bölümlerindeki değerler de otomatik güncellenir, isterseniz üzerine ince ayar
-                        yapabilirsiniz.
+                        @Localizer["Tek tıkla hem aksan renklerini hem arka planı bir temaya göre değiştirin. Renkler ve Görünüm bölümlerindeki değerler de otomatik güncellenir, isterseniz üzerine ince ayar yapabilirsiniz."]
                     </p>
                 </div>
-                <input type="search" id="preset-theme-search" class="preset-theme-search" placeholder="Tema ara…" aria-label="Tema ara">
+                <input type="search" id="preset-theme-search" class="preset-theme-search" placeholder="@Localizer["Tema ara…"]" aria-label="@Localizer["Tema ara"]">
             </div>
             <div class="preset-theme-grid" id="preset-theme-grid"></div>
-            <p id="preset-theme-empty" class="stat-sub" style="display:none;">Aramanızla eşleşen tema yok.</p>
-            <span id="preset-theme-saved-note" class="stat-sub" style="display:none;margin-top:10px;">Uygulandı ✓</span>
+            <p id="preset-theme-empty" class="stat-sub" style="display:none;">@Localizer["Aramanızla eşleşen tema yok."]</p>
+            <span id="preset-theme-saved-note" class="stat-sub" style="display:none;margin-top:10px;">@Localizer["Uygulandı ✓"]</span>
         </div>
 
         <div class="panel" id="card-order-panel">
-            <h2 class="panel-title">Kart Sıralaması ve Detayları</h2>
+            <h2 class="panel-title">@Localizer["Kart Sıralaması ve Detayları"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                İşlemci ve Ekran Kartı kartlarında değerlerin gösterim sırasını, tüm kartlarda ise hangi
-                ikincil detayların görüneceğini buradan yönetin. Değişiklik Panel'e hemen yansır.
+                @Localizer["İşlemci ve Ekran Kartı kartlarında değerlerin gösterim sırasını, tüm kartlarda ise hangi ikincil detayların görüneceğini buradan yönetin. Değişiklik Panel'e hemen yansır."]
             </p>
 
             <label class="threshold-field" style="margin-bottom:18px;">
-                Yoğunluk (hazır şablon)
-                <div class="chart-range-toggle" id="density-preset-toggle" role="group" aria-label="Kart yoğunluğu">
-                    <button type="button" data-density="compact">Kompakt</button>
-                    <button type="button" data-density="normal">Normal</button>
-                    <button type="button" data-density="detailed">Detaylı</button>
+                @Localizer["Yoğunluk (hazır şablon)"]
+                <div class="chart-range-toggle" id="density-preset-toggle" role="group" aria-label="@Localizer["Kart yoğunluğu"]">
+                    <button type="button" data-density="compact">@Localizer["Kompakt"]</button>
+                    <button type="button" data-density="normal">@Localizer["Normal"]</button>
+                    <button type="button" data-density="detailed">@Localizer["Detaylı"]</button>
                 </div>
             </label>
             <p style="color:var(--text-muted);font-size:.85rem;margin:0 0 18px;">
-                Bir düzeye tıklamak aşağıdaki detay kutucuklarını o düzeye göre toplu ayarlar; "Kompakt"
-                yalnızca ana değerleri bırakır, "Normal"/"Detaylı" hepsini gösterir (aralarındaki fark
-                dolgu/font boyutudur). Kutucukları seçtikten sonra dilediğinizi yine elle
-                açıp kapatabilirsiniz.
+                @Localizer["Bir düzeye tıklamak aşağıdaki detay kutucuklarını o düzeye göre toplu ayarlar; \"Kompakt\" yalnızca ana değerleri bırakır, \"Normal\"/\"Detaylı\" hepsini gösterir (aralarındaki fark dolgu/font boyutudur). Kutucukları seçtikten sonra dilediğinizi yine elle açıp kapatabilirsiniz."]
             </p>
 
             <div class="order-form">
                 <div class="order-group">
-                    <h4>İşlemci</h4>
+                    <h4>@Localizer["İşlemci"]</h4>
                     <ol class="order-list" id="order-cpu"></ol>
                 </div>
                 <div class="order-group">
-                    <h4>Ekran Kartı</h4>
+                    <h4>@Localizer["Ekran Kartı"]</h4>
                     <ol class="order-list" id="order-gpu"></ol>
                 </div>
             </div>
             <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
-                <button type="button" id="order-save" class="btn-primary-hwmon">Kaydet</button>
-                <button type="button" id="order-reset" class="legend-item">Varsayılanlara Dön</button>
-                <span id="order-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+                <button type="button" id="order-save" class="btn-primary-hwmon">@Localizer["Kaydet"]</button>
+                <button type="button" id="order-reset" class="legend-item">@Localizer["Varsayılanlara Dön"]</button>
+                <span id="order-saved-note" class="stat-sub" style="display:none;">@Localizer["Kaydedildi ✓"]</span>
             </div>
 
-            <h4 class="panel-title" style="font-size:.9rem;color:var(--text-muted);margin-top:26px;">Diğer Kartların Detayları</h4>
+            <h4 class="panel-title" style="font-size:.9rem;color:var(--text-muted);margin-top:26px;">@Localizer["Diğer Kartların Detayları"]</h4>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Video Belleği, Bellek, Kare Hızı, Depolama, Ağ ve Sistem Özeti kartlarında hangi ikincil
-                bilgilerin gösterileceğini seçin.
+                @Localizer["Video Belleği, Bellek, Kare Hızı, Depolama, Ağ ve Sistem Özeti kartlarında hangi ikincil bilgilerin gösterileceğini seçin."]
             </p>
             <div class="order-form" id="detail-visibility-form"></div>
         </div>
 
         <div class="panel" id="panel-layout">
-            <h2 class="panel-title">Panel Düzeni</h2>
+            <h2 class="panel-title">@Localizer["Panel Düzeni"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Panel'deki kartları sürükleyip bırakarak yeniden sıralayın, istemediğinizi kutucuğundan
-                kapatın. Değişiklik Panel'e hemen yansır.
+                @Localizer["Panel'deki kartları sürükleyip bırakarak yeniden sıralayın, istemediğinizi kutucuğundan kapatın. Değişiklik Panel'e hemen yansır."]
             </p>
             <div class="panel-layout-columns">
                 <div class="panel-layout-column-main">
                     <ol class="order-list panel-layout-list" id="panel-layout-list" style="min-width:280px;"></ol>
                     <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
-                        <button type="button" id="panel-layout-save" class="btn-primary-hwmon">Kaydet</button>
-                        <button type="button" id="panel-layout-reset" class="legend-item">Varsayılanlara Dön</button>
-                        <span id="panel-layout-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+                        <button type="button" id="panel-layout-save" class="btn-primary-hwmon">@Localizer["Kaydet"]</button>
+                        <button type="button" id="panel-layout-reset" class="legend-item">@Localizer["Varsayılanlara Dön"]</button>
+                        <span id="panel-layout-saved-note" class="stat-sub" style="display:none;">@Localizer["Kaydedildi ✓"]</span>
                     </div>
                 </div>
                 <div class="panel-layout-column-preview">
-                    <span class="panel-layout-preview-label">Önizleme</span>
+                    <span class="panel-layout-preview-label">@Localizer["Önizleme"]</span>
                     <div class="panel-layout-preview" id="panel-layout-preview"></div>
                 </div>
             </div>
 
-            <h4 class="panel-title" style="font-size:.9rem;color:var(--text-muted);margin-top:22px;">Düzen Profilleri</h4>
+            <h4 class="panel-title" style="font-size:.9rem;color:var(--text-muted);margin-top:22px;">@Localizer["Düzen Profilleri"]</h4>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Yukarıdaki sıralamayı isimli bir profil olarak kaydedip sonra tek tıkla o profile
-                geri dönebilirsiniz (ör. "İzleme Düzeni" / "Oyun Düzeni").
+                @Localizer["Yukarıdaki sıralamayı isimli bir profil olarak kaydedip sonra tek tıkla o profile geri dönebilirsiniz (ör. \"İzleme Düzeni\" / \"Oyun Düzeni\")."]
             </p>
             <ol class="order-list" id="panel-layout-profiles-list" style="margin-bottom:14px;"></ol>
             <div style="display:flex;align-items:center;gap:10px;">
-                <input type="text" id="panel-layout-profile-name" class="hwmon-field" placeholder="Profil adı, ör. Oyun Düzeni" style="width:240px;">
-                <button type="button" id="panel-layout-profile-save" class="btn-primary-hwmon">Mevcut Düzeni Kaydet</button>
+                <input type="text" id="panel-layout-profile-name" class="hwmon-field" placeholder="@Localizer["Profil adı, ör. Oyun Düzeni"]" style="width:240px;">
+                <button type="button" id="panel-layout-profile-save" class="btn-primary-hwmon">@Localizer["Mevcut Düzeni Kaydet"]</button>
             </div>
         </div>
 
         <div class="panel" id="snapshot-settings">
-            <h2 class="panel-title">Anlık Görüntü</h2>
+            <h2 class="panel-title">@Localizer["Anlık Görüntü"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                📸 Anlık Görüntü ile oluşturulan PNG'de hangi kartların (İşlemci, Ekran Kartı, Bellek, Kare
-                Hızı, Depolama) ve her kartın içinde hangi değerlerin (sıcaklık, kullanım, güç, frekans vb.)
-                hangi sırayla gireceğini seçin. Kutucuğu işaretli olmayanlar görüntüde yer almaz; her kartın
-                listesindeki ilk etkin değer büyük, kalanlar altında küçük gösterilir.
+                @Localizer["📸 Anlık Görüntü ile oluşturulan PNG'de hangi kartların (İşlemci, Ekran Kartı, Bellek, Kare Hızı, Depolama) ve her kartın içinde hangi değerlerin (sıcaklık, kullanım, güç, frekans vb.) hangi sırayla gireceğini seçin. Kutucuğu işaretli olmayanlar görüntüde yer almaz; her kartın listesindeki ilk etkin değer büyük, kalanlar altında küçük gösterilir."]
             </p>
 
             <div class="order-group" style="margin-bottom:20px;">
-                <h4>Gösterilecek Kartlar ve Sırası</h4>
+                <h4>@Localizer["Gösterilecek Kartlar ve Sırası"]</h4>
                 <ol class="order-list" id="snapshot-blocks" style="min-width:280px;"></ol>
             </div>
 
             <div class="order-form" id="snapshot-metric-groups"></div>
 
             <div class="order-group" style="margin-top:20px;">
-                <h4>Çözünürlük</h4>
+                <h4>@Localizer["Çözünürlük"]</h4>
                 <select id="snapshot-resolution" class="hwmon-field">
-                    <option value="1080p">1080p (Varsayılan)</option>
+                    <option value="1080p">@Localizer["1080p (Varsayılan)"]</option>
                     <option value="2k">2K (1440p)</option>
                     <option value="4k">4K (2160p)</option>
                 </select>
             </div>
 
             <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
-                <button type="button" id="snapshot-settings-save" class="btn-primary-hwmon">Kaydet</button>
-                <button type="button" id="snapshot-settings-reset" class="legend-item">Varsayılanlara Dön</button>
-                <span id="snapshot-settings-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+                <button type="button" id="snapshot-settings-save" class="btn-primary-hwmon">@Localizer["Kaydet"]</button>
+                <button type="button" id="snapshot-settings-reset" class="legend-item">@Localizer["Varsayılanlara Dön"]</button>
+                <span id="snapshot-settings-saved-note" class="stat-sub" style="display:none;">@Localizer["Kaydedildi ✓"]</span>
             </div>
         </div>
 
         <div class="panel" id="ambient-settings">
-            <h2 class="panel-title">Ambiyans Modu</h2>
+            <h2 class="panel-title">@Localizer["Ambiyans Modu"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                ⛶ Ambiyans Modu'nda (Panel sayfasındaki tam ekran saat görünümü) hangi kartların
-                gösterileceğini seçin.
+                @Localizer["⛶ Ambiyans Modu'nda (Panel sayfasındaki tam ekran saat görünümü) hangi kartların gösterileceğini seçin."]
             </p>
             <div class="colors-form" id="ambient-metric-checkboxes"></div>
         </div>
 
         <div class="panel" id="appearance-panel">
-            <h2 class="panel-title">Görünüm — Genel</h2>
+            <h2 class="panel-title">@Localizer["Görünüm: Genel"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Aydınlık ve karanlık mod için arka plan rengini ayrı ayrı özelleştirin. Değişiklik tüm
-                sayfalara hemen yansır ve bu tarayıcıda saklanır.
+                @Localizer["Aydınlık ve karanlık mod için arka plan rengini ayrı ayrı özelleştirin. Değişiklik tüm sayfalara hemen yansır ve bu tarayıcıda saklanır."]
             </p>
             <div class="colors-form">
-                <label class="color-field">Gündüz modu arka planı<input type="color" id="bg-light"></label>
-                <label class="color-field">Gece modu arka planı<input type="color" id="bg-dark"></label>
+                <label class="color-field">@Localizer["Gündüz modu arka planı"]<input type="color" id="bg-light"></label>
+                <label class="color-field">@Localizer["Gece modu arka planı"]<input type="color" id="bg-dark"></label>
             </div>
             <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
-                <button type="button" id="bg-save" class="btn-primary-hwmon">Kaydet</button>
-                <button type="button" id="bg-reset" class="legend-item">Varsayılanlara Dön</button>
-                <span id="bg-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+                <button type="button" id="bg-save" class="btn-primary-hwmon">@Localizer["Kaydet"]</button>
+                <button type="button" id="bg-reset" class="legend-item">@Localizer["Varsayılanlara Dön"]</button>
+                <span id="bg-saved-note" class="stat-sub" style="display:none;">@Localizer["Kaydedildi ✓"]</span>
             </div>
         </div>
 
         <div class="panel" id="unit-prefs-panel">
-            <h2 class="panel-title">Görünüm — Birim Tercihi</h2>
+            <h2 class="panel-title">@Localizer["Görünüm: Birim Tercihi"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Panel, Detaylar, Geçmiş ve Karşılaştırma sayfalarındaki tüm sıcaklık/hız/boyut
-                değerlerini etkiler.
+                @Localizer["Panel, Detaylar, Geçmiş ve Karşılaştırma sayfalarındaki tüm sıcaklık/hız/boyut değerlerini etkiler."]
             </p>
             <div class="thresholds-form">
-                <label class="threshold-field">Sıcaklık
+                <label class="threshold-field">@Localizer["Sıcaklık"]
                     <select id="unit-temp">
-                        <option value="C">Santigrat (°C)</option>
-                        <option value="F">Fahrenhayt (°F)</option>
+                        <option value="C">@Localizer["Santigrat (°C)"]</option>
+                        <option value="F">@Localizer["Fahrenhayt (°F)"]</option>
                     </select>
                 </label>
-                <label class="threshold-field">Veri hızı
+                <label class="threshold-field">@Localizer["Veri hızı"]
                     <select id="unit-speed">
                         <option value="MBps">MB/s</option>
                         <option value="Mbps">Mbps</option>
                     </select>
                 </label>
-                <label class="threshold-field">Boyut
+                <label class="threshold-field">@Localizer["Boyut"]
                     <select id="unit-size">
                         <option value="GB">GB</option>
                         <option value="GiB">GiB</option>
                     </select>
                 </label>
             </div>
-            <button type="button" id="unit-prefs-save" class="btn-primary-hwmon" style="margin-top:14px;">Kaydet</button>
-            <span id="unit-prefs-saved-note" class="stat-sub" style="margin-left:12px;display:none;">Kaydedildi ✓</span>
+            <button type="button" id="unit-prefs-save" class="btn-primary-hwmon" style="margin-top:14px;">@Localizer["Kaydet"]</button>
+            <span id="unit-prefs-saved-note" class="stat-sub" style="margin-left:12px;display:none;">@Localizer["Kaydedildi ✓"]</span>
         </div>
 
         <div class="panel" id="typography-panel">
-            <h2 class="panel-title">Görünüm — Yazı Tipi</h2>
+            <h2 class="panel-title">@Localizer["Görünüm: Yazı Tipi"]</h2>
             <div class="thresholds-form">
-                <label class="threshold-field">Boyut
+                <label class="threshold-field">@Localizer["Boyut"]
                     <select id="typography-font-size">
-                        <option value="sm">Küçük</option>
-                        <option value="md">Normal</option>
-                        <option value="lg">Büyük</option>
+                        <option value="sm">@Localizer["Küçük"]</option>
+                        <option value="md">@Localizer["Normal"]</option>
+                        <option value="lg">@Localizer["Büyük"]</option>
                     </select>
                 </label>
-                <label class="threshold-field">Yazı tipi ailesi
+                <label class="threshold-field">@Localizer["Yazı tipi ailesi"]
                     <select id="typography-font-family">
-                        <option value="system">Sistem varsayılanı</option>
+                        <option value="system">@Localizer["Sistem varsayılanı"]</option>
                         <option value="serif">Serif</option>
-                        <option value="mono">Sabit genişlikli (monospace)</option>
+                        <option value="mono">@Localizer["Sabit genişlikli (monospace)"]</option>
                     </select>
                 </label>
             </div>
-            <button type="button" id="typography-save" class="btn-primary-hwmon" style="margin-top:14px;">Kaydet</button>
-            <span id="typography-saved-note" class="stat-sub" style="margin-left:12px;display:none;">Kaydedildi ✓</span>
+            <button type="button" id="typography-save" class="btn-primary-hwmon" style="margin-top:14px;">@Localizer["Kaydet"]</button>
+            <span id="typography-saved-note" class="stat-sub" style="margin-left:12px;display:none;">@Localizer["Kaydedildi ✓"]</span>
         </div>
 
         <div class="panel" id="glass-effect-panel">
-            <h2 class="panel-title">Görünüm — Cam Efekti</h2>
+            <h2 class="panel-title">@Localizer["Görünüm: Cam Efekti"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Kartları ve panelleri yarı saydam yapıp arkalarını bulanıklaştırır (glassmorphism).
+                @Localizer["Kartları ve panelleri yarı saydam yapıp arkalarını bulanıklaştırır (glassmorphism)."]
             </p>
             <div class="panel-layout-columns">
                 <div class="panel-layout-column-main">
                     <label class="notify-metric-field">
-                        <input type="checkbox" id="glass-effect-toggle"> Cam efektini etkinleştir
+                        <input type="checkbox" id="glass-effect-toggle"> @Localizer["Cam efektini etkinleştir"]
                     </label>
                 </div>
                 <div class="panel-layout-column-preview">
-                    <span class="panel-layout-preview-label">Önizleme</span>
+                    <span class="panel-layout-preview-label">@Localizer["Önizleme"]</span>
                     <div class="glass-demo-backdrop">
                         <div class="stat-card glass-demo-card" style="--accent: var(--accent-cpu)">
-                            <div class="stat-card-header"><span class="stat-dot"></span> İşlemci</div>
+                            <div class="stat-card-header"><span class="stat-dot"></span> @Localizer["İşlemci"]</div>
                             <div class="stat-value">42%</div>
                         </div>
                     </div>
@@ -509,238 +484,220 @@
         </div>
 
         <div class="panel" id="panel-view-panel">
-            <h2 class="panel-title">Görünüm — Panel Görünümü</h2>
+            <h2 class="panel-title">@Localizer["Görünüm: Panel Görünümü"]</h2>
             <div class="panel-layout-columns">
                 <div class="panel-layout-column-main">
                     <div class="thresholds-form">
-                        <label class="threshold-field">Düzen
+                        <label class="threshold-field">@Localizer["Düzen"]
                             <select id="panel-view-select">
-                                <option value="grid">Grid (çok sütunlu)</option>
-                                <option value="list">Liste (tek sütun)</option>
+                                <option value="grid">@Localizer["Grid (çok sütunlu)"]</option>
+                                <option value="list">@Localizer["Liste (tek sütun)"]</option>
                             </select>
                         </label>
                     </div>
                 </div>
                 <div class="panel-layout-column-preview">
-                    <span class="panel-layout-preview-label">Önizleme</span>
+                    <span class="panel-layout-preview-label">@Localizer["Önizleme"]</span>
                     <div class="panel-layout-preview" id="panel-view-preview"></div>
                 </div>
             </div>
         </div>
 
         <div class="panel" id="startup-tab-panel">
-            <h2 class="panel-title">Görünüm — Açılış Sekmesi</h2>
+            <h2 class="panel-title">@Localizer["Görünüm: Açılış Sekmesi"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Uygulamanın kök adresine (<code>127.0.0.1:5250</code>) gidildiğinde hangi sekmenin
-                gösterileceğini seçin.
+                @Localizer["Uygulamanın kök adresine ("] <code>127.0.0.1:5250</code>@Localizer[") gidildiğinde hangi sekmenin gösterileceğini seçin."]
             </p>
             <div class="thresholds-form">
-                <label class="threshold-field">Sekme
+                <label class="threshold-field">@Localizer["Sekme"]
                     <select id="startup-tab-select">
-                        <option value="panel">Panel</option>
-                        <option value="details">Detaylar</option>
-                        <option value="comparison">Karşılaştırma</option>
-                        <option value="history">Geçmiş</option>
-                        <option value="settings">Ayarlar</option>
-                        <option value="notifications">Bildirimler</option>
-                        <option value="about">Hakkında</option>
+                        <option value="panel">@Localizer["Panel"]</option>
+                        <option value="details">@Localizer["Detaylar"]</option>
+                        <option value="comparison">@Localizer["Karşılaştırma"]</option>
+                        <option value="history">@Localizer["Geçmiş"]</option>
+                        <option value="settings">@Localizer["Ayarlar"]</option>
+                        <option value="notifications">@Localizer["Bildirimler"]</option>
+                        <option value="about">@Localizer["Hakkında"]</option>
                     </select>
                 </label>
             </div>
-            <button type="button" id="startup-tab-save" class="btn-primary-hwmon" style="margin-top:14px;">Kaydet</button>
-            <span id="startup-tab-saved-note" class="stat-sub" style="margin-left:12px;display:none;">Kaydedildi ✓</span>
+            <button type="button" id="startup-tab-save" class="btn-primary-hwmon" style="margin-top:14px;">@Localizer["Kaydet"]</button>
+            <span id="startup-tab-saved-note" class="stat-sub" style="margin-left:12px;display:none;">@Localizer["Kaydedildi ✓"]</span>
         </div>
 
         <div class="panel" id="chart-types-panel">
-            <h2 class="panel-title">Görünüm — Grafik Tipi</h2>
+            <h2 class="panel-title">@Localizer["Görünüm: Grafik Tipi"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Panel'in altındaki grafikte her serinin nasıl çizileceğini seçin. Not: birden fazla
-                seri "Bar" seçilirse üst üste biner, en iyi tek seferde bir seri için kullanılır.
+                @Localizer["Panel'in altındaki grafikte her serinin nasıl çizileceğini seçin. Not: birden fazla seri \"Bar\" seçilirse üst üste biner, en iyi tek seferde bir seri için kullanılır."]
             </p>
             <div class="panel-layout-columns">
                 <div class="panel-layout-column-main">
                     <div class="thresholds-form">
-                        <label class="threshold-field">İşlemci
+                        <label class="threshold-field">@Localizer["İşlemci"]
                             <select class="chart-type-select" data-series-key="cpu">
-                                <option value="line">Çizgi</option>
-                                <option value="area">Alan</option>
-                                <option value="bar">Bar</option>
+                                <option value="line">@Localizer["Çizgi"]</option>
+                                <option value="area">@Localizer["Alan"]</option>
+                                <option value="bar">@Localizer["Bar"]</option>
                             </select>
                         </label>
-                        <label class="threshold-field">Ekran Kartı
+                        <label class="threshold-field">@Localizer["Ekran Kartı"]
                             <select class="chart-type-select" data-series-key="gpu">
-                                <option value="line">Çizgi</option>
-                                <option value="area">Alan</option>
-                                <option value="bar">Bar</option>
+                                <option value="line">@Localizer["Çizgi"]</option>
+                                <option value="area">@Localizer["Alan"]</option>
+                                <option value="bar">@Localizer["Bar"]</option>
                             </select>
                         </label>
-                        <label class="threshold-field">Bellek
+                        <label class="threshold-field">@Localizer["Bellek"]
                             <select class="chart-type-select" data-series-key="ram">
-                                <option value="line">Çizgi</option>
-                                <option value="area">Alan</option>
-                                <option value="bar">Bar</option>
+                                <option value="line">@Localizer["Çizgi"]</option>
+                                <option value="area">@Localizer["Alan"]</option>
+                                <option value="bar">@Localizer["Bar"]</option>
                             </select>
                         </label>
-                        <label class="threshold-field">Kare Hızı
+                        <label class="threshold-field">@Localizer["Kare Hızı"]
                             <select class="chart-type-select" data-series-key="fps">
-                                <option value="line">Çizgi</option>
-                                <option value="area">Alan</option>
-                                <option value="bar">Bar</option>
+                                <option value="line">@Localizer["Çizgi"]</option>
+                                <option value="area">@Localizer["Alan"]</option>
+                                <option value="bar">@Localizer["Bar"]</option>
                             </select>
                         </label>
                     </div>
                 </div>
                 <div class="panel-layout-column-preview">
-                    <span class="panel-layout-preview-label">Önizleme</span>
+                    <span class="panel-layout-preview-label">@Localizer["Önizleme"]</span>
                     <div class="panel-layout-preview" id="chart-types-preview"></div>
                 </div>
             </div>
         </div>
 
         <div class="panel" id="game-profiles">
-            <h2 class="panel-title">Oyun Profilleri</h2>
+            <h2 class="panel-title">@Localizer["Oyun Profilleri"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Bir işlem (oyun) ön plana geldiğinde renkleri/eşikleri otomatik olarak burada
-                tanımladığınız profile geçirir; oyun kapanınca kendi genel ayarlarınıza döner. İşlem adı,
-                Kare Hızı kartında/Detaylar sayfasında gördüğünüz kaynak adıyla aynı olmalı (ör.
-                <code>VALORANT-Win64-Shipping</code>), büyük/küçük harf önemli değildir. Oyunun kısa adını
-                yazarsanız (ör. "valorant"), bu bilgisayarda daha önce tam ekran çalışırken görülmüş gerçek
-                işlem adıyla otomatik eşleştirmeyi deneriz.
+                @Localizer["Bir işlem (oyun) ön plana geldiğinde renkleri/eşikleri otomatik olarak burada tanımladığınız profile geçirir; oyun kapanınca kendi genel ayarlarınıza döner. İşlem adı, Kare Hızı kartında/Detaylar sayfasında gördüğünüz kaynak adıyla aynı olmalı (ör."]
+                <code>VALORANT-Win64-Shipping</code>@Localizer["), büyük/küçük harf önemli değildir. Oyunun kısa adını yazarsanız (ör. \"valorant\"), bu bilgisayarda daha önce tam ekran çalışırken görülmüş gerçek işlem adıyla otomatik eşleştirmeyi deneriz."]
             </p>
             <p style="color:var(--accent-caution);font-size:.85rem;margin:0 0 14px;">
-                ⚠ Otomatik eşleştirme yalnızca <strong>HardwareMonitorByYuinn açıkken en az bir kez tam ekran
-                oynadığınız</strong> oyunlar için çalışır. Bir oyunu daha hiç bu şekilde çalıştırmadıysanız
-                kısa adı yazmanız bir şey eşleştirmez; o oyunun tam işlem adını (Kare Hızı kartında/
-                Detaylar sayfasında görünür) kendiniz yazmanız gerekir.
+                ⚠ @Localizer["Otomatik eşleştirme yalnızca"] <strong>@Localizer["HardwareMonitorByYuinn açıkken en az bir kez tam ekran oynadığınız"]</strong> @Localizer["oyunlar için çalışır. Bir oyunu daha hiç bu şekilde çalıştırmadıysanız kısa adı yazmanız bir şey eşleştirmez; o oyunun tam işlem adını (Kare Hızı kartında/ Detaylar sayfasında görünür) kendiniz yazmanız gerekir."]
             </p>
 
             <ol class="order-list" id="game-profiles-list" style="margin-bottom:20px;"></ol>
 
-            <h4 class="panel-title" style="font-size:.9rem;color:var(--text-muted);">Yeni Profil / Düzenle</h4>
+            <h4 class="panel-title" style="font-size:.9rem;color:var(--text-muted);">@Localizer["Yeni Profil / Düzenle"]</h4>
             <div class="thresholds-form">
-                <label class="threshold-field">İşlem Adı (birden fazlaysa virgülle ayırın)
-                    <input type="text" id="gp-process-name" maxlength="150" placeholder="ör. valorant" style="width:260px;">
+                <label class="threshold-field">@Localizer["İşlem Adı (birden fazlaysa virgülle ayırın)"]
+                    <input type="text" id="gp-process-name" maxlength="150" placeholder="@Localizer["ör. valorant"]" style="width:260px;">
                     <span id="gp-process-name-hint" class="stat-sub" style="display:block;margin-top:4px;"></span>
                 </label>
                 <label class="threshold-field" style="justify-content:center;">
                     <span class="hwmon-toggle-field">
-                        Otomatik Ambiyans Moduna geç<input type="checkbox" id="gp-auto-ambient">
+                        @Localizer["Otomatik Ambiyans Moduna geç"]<input type="checkbox" id="gp-auto-ambient">
                     </span>
                 </label>
-                <label class="threshold-field">Panel düzeni
+                <label class="threshold-field">@Localizer["Panel Düzeni"]
                     <select id="gp-panel-layout-profile">
-                        <option value="">Yok (genel düzen kullanılır)</option>
+                        <option value="">@Localizer["Yok (genel düzen kullanılır)"]</option>
                     </select>
                 </label>
                 <label class="threshold-field" style="justify-content:center;">
                     <span class="hwmon-toggle-field">
-                        Oyun kapanınca otomatik anlık görüntü al<input type="checkbox" id="gp-auto-snapshot">
+                        @Localizer["Oyun kapanınca otomatik anlık görüntü al"]<input type="checkbox" id="gp-auto-snapshot">
                     </span>
                 </label>
             </div>
 
             <div class="colors-form" style="margin-top:14px;">
-                <label class="color-field">İşlemci<input type="color" id="gp-color-cpu"></label>
-                <label class="color-field">Ekran Kartı<input type="color" id="gp-color-gpu"></label>
-                <label class="color-field">Bellek<input type="color" id="gp-color-ram"></label>
-                <label class="color-field">Kare Hızı<input type="color" id="gp-color-fps"></label>
-                <label class="color-field">Depolama<input type="color" id="gp-color-storage"></label>
-                <label class="color-field">Ağ<input type="color" id="gp-color-network"></label>
-                <label class="color-field">Kaynak Kullanımı<input type="color" id="gp-color-process"></label>
-                <label class="color-field">Sistem Özeti<input type="color" id="gp-color-system"></label>
+                <label class="color-field">@Localizer["İşlemci"]<input type="color" id="gp-color-cpu"></label>
+                <label class="color-field">@Localizer["Ekran Kartı"]<input type="color" id="gp-color-gpu"></label>
+                <label class="color-field">@Localizer["Bellek"]<input type="color" id="gp-color-ram"></label>
+                <label class="color-field">@Localizer["Kare Hızı"]<input type="color" id="gp-color-fps"></label>
+                <label class="color-field">@Localizer["Depolama"]<input type="color" id="gp-color-storage"></label>
+                <label class="color-field">@Localizer["Ağ"]<input type="color" id="gp-color-network"></label>
+                <label class="color-field">@Localizer["Kaynak Kullanımı"]<input type="color" id="gp-color-process"></label>
+                <label class="color-field">@Localizer["Sistem Özeti"]<input type="color" id="gp-color-system"></label>
             </div>
 
-            <h4 class="panel-title" style="font-size:.9rem;color:var(--text-muted);margin-top:16px;">Bu Profildeki Eşikler</h4>
+            <h4 class="panel-title" style="font-size:.9rem;color:var(--text-muted);margin-top:16px;">@Localizer["Bu Profildeki Eşikler"]</h4>
             <p style="color:var(--text-muted);font-size:.85rem;margin:0 0 10px;">
-                Dikkat'i boş bırakırsanız genel Eşik Ayarları'ndaki değeriniz kullanılır.
+                @Localizer["Dikkat'i boş bırakırsanız genel Eşik Ayarları'ndaki değeriniz kullanılır."]
             </p>
             <div class="thresholds-form">
-                <label class="threshold-field">İşlemci eşiği
+                <label class="threshold-field">@Localizer["İşlemci eşiği"]
                     <div class="threshold-metric-row">
                         <select id="gp-th-cpu-metric">
-                            <option value="temp">Sıcaklık (°C)</option>
-                            <option value="usage">Kullanım (%)</option>
+                            <option value="temp">@Localizer["Sıcaklık (°C)"]</option>
+                            <option value="usage">@Localizer["Kullanım (%)"]</option>
                         </select>
                     </div>
                     <div class="threshold-tier-row">
-                        <label class="threshold-tier-input">Dikkat<input type="number" id="gp-th-cpu-caution" min="0" step="1"></label>
-                        <label class="threshold-tier-input">Kritik<input type="number" id="gp-th-cpu-value" min="0" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Dikkat"]<input type="number" id="gp-th-cpu-caution" min="0" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Kritik"]<input type="number" id="gp-th-cpu-value" min="0" step="1"></label>
                     </div>
                 </label>
-                <label class="threshold-field">Ekran kartı eşiği
+                <label class="threshold-field">@Localizer["Ekran kartı eşiği"]
                     <div class="threshold-metric-row">
                         <select id="gp-th-gpu-metric">
-                            <option value="temp">Sıcaklık (°C)</option>
-                            <option value="usage">Kullanım (%)</option>
+                            <option value="temp">@Localizer["Sıcaklık (°C)"]</option>
+                            <option value="usage">@Localizer["Kullanım (%)"]</option>
                         </select>
                     </div>
                     <div class="threshold-tier-row">
-                        <label class="threshold-tier-input">Dikkat<input type="number" id="gp-th-gpu-caution" min="0" step="1"></label>
-                        <label class="threshold-tier-input">Kritik<input type="number" id="gp-th-gpu-value" min="0" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Dikkat"]<input type="number" id="gp-th-gpu-caution" min="0" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Kritik"]<input type="number" id="gp-th-gpu-value" min="0" step="1"></label>
                     </div>
                 </label>
-                <label class="threshold-field">Bellek kullanımı (%)
+                <label class="threshold-field">@Localizer["Bellek kullanımı (%)"]
                     <div class="threshold-tier-row">
-                        <label class="threshold-tier-input">Dikkat<input type="number" id="gp-th-ram-usage-caution" min="0" max="100" step="1"></label>
-                        <label class="threshold-tier-input">Kritik<input type="number" id="gp-th-ram-usage" min="0" max="100" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Dikkat"]<input type="number" id="gp-th-ram-usage-caution" min="0" max="100" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Kritik"]<input type="number" id="gp-th-ram-usage" min="0" max="100" step="1"></label>
                     </div>
                 </label>
-                <label class="threshold-field">Disk sıcaklığı (°C)
+                <label class="threshold-field">@Localizer["Disk sıcaklığı (°C)"]
                     <div class="threshold-tier-row">
-                        <label class="threshold-tier-input">Dikkat<input type="number" id="gp-th-disk-temp-caution" min="0" max="150" step="1"></label>
-                        <label class="threshold-tier-input">Kritik<input type="number" id="gp-th-disk-temp" min="0" max="150" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Dikkat"]<input type="number" id="gp-th-disk-temp-caution" min="0" max="150" step="1"></label>
+                        <label class="threshold-tier-input">@Localizer["Kritik"]<input type="number" id="gp-th-disk-temp" min="0" max="150" step="1"></label>
                     </div>
                 </label>
             </div>
             <div id="gp-th-error" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-top:8px;"></div>
 
             <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
-                <button type="button" id="gp-save" class="btn-primary-hwmon">Profili Kaydet</button>
-                <button type="button" id="gp-new" class="legend-item">Yeni Profil</button>
-                <span id="gp-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+                <button type="button" id="gp-save" class="btn-primary-hwmon">@Localizer["Profili Kaydet"]</button>
+                <button type="button" id="gp-new" class="legend-item">@Localizer["Yeni Profil"]</button>
+                <span id="gp-saved-note" class="stat-sub" style="display:none;">@Localizer["Kaydedildi ✓"]</span>
                 <span id="gp-automatch-note" class="stat-sub" style="display:none;"></span>
             </div>
         </div>
 
         <div class="panel" id="energy-cost-panel">
-            <h2 class="panel-title">Enerji Tüketimi Maliyeti</h2>
+            <h2 class="panel-title">@Localizer["Enerji Tüketimi Maliyeti"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Yalnızca İşlemci ve Ekran Kartı'nın anlık paket güçlerinden hesaplanan bir TAHMİNDİR;
-                anakart, depolama, ekran ve diğer bileşenlerin tüketimini içermez, bu yüzden gerçek
-                toplam sistem tüketiminden düşük çıkar.
+                @Localizer["Yalnızca İşlemci ve Ekran Kartı'nın anlık paket güçlerinden hesaplanan bir TAHMİNDİR; anakart, depolama, ekran ve diğer bileşenlerin tüketimini içermez, bu yüzden gerçek toplam sistem tüketiminden düşük çıkar."]
             </p>
             <div class="thresholds-form">
                 <label class="threshold-field" style="justify-content:center;">
                     <span class="hwmon-toggle-field">
-                        Enerji maliyeti tahminini göster<input type="checkbox" id="energy-cost-enabled">
+                        @Localizer["Enerji maliyeti tahminini göster"]<input type="checkbox" id="energy-cost-enabled">
                     </span>
                 </label>
-                <label class="threshold-field">Birim Fiyat (₺/kWh)
-                    <input type="number" id="energy-cost-rate" min="0" step="0.01" placeholder="ör. 2.75" style="width:160px;">
+                <label class="threshold-field">@Localizer["Birim Fiyat (₺/kWh)"]
+                    <input type="number" id="energy-cost-rate" min="0" step="0.01" placeholder="@Localizer["ör. 2.75"]" style="width:160px;">
                 </label>
             </div>
             <div id="energy-cost-preview" style="color:var(--text-muted);font-size:.85rem;margin-top:12px;"></div>
             <div style="display:flex;align-items:center;gap:12px;margin-top:12px;">
-                <button type="button" id="energy-cost-save" class="btn-primary-hwmon">Kaydet</button>
-                <span id="energy-cost-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+                <button type="button" id="energy-cost-save" class="btn-primary-hwmon">@Localizer["Kaydet"]</button>
+                <span id="energy-cost-saved-note" class="stat-sub" style="display:none;">@Localizer["Kaydedildi ✓"]</span>
             </div>
         </div>
 
         <div class="panel" id="remote-access">
-            <h2 class="panel-title">Yerel Ağa Açma</h2>
+            <h2 class="panel-title">@Localizer["Yerel Ağa Açma"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Varsayılan olarak bu uygulamaya yalnızca bu bilgisayardan (<code>127.0.0.1</code>) erişilebilir.
-                Bunu açarsanız aynı yerel ağdaki (ev/ofis Wi-Fi'niz gibi) diğer cihazlardan (telefon, tablet)
-                da erişilebilir; bu yüzden bir PIN zorunludur. <strong>Değişiklik ancak uygulamayı yeniden
-                başlattığınızda etkili olur.</strong>
+                @Localizer["Varsayılan olarak bu uygulamaya yalnızca bu bilgisayardan ("]<code>127.0.0.1</code>@Localizer[") erişilebilir. Bunu açarsanız aynı yerel ağdaki (ev/ofis Wi-Fi'niz gibi) diğer cihazlardan (telefon, tablet) da erişilebilir; bu yüzden bir PIN zorunludur."] <strong>@Localizer["Değişiklik ancak uygulamayı yeniden başlattığınızda etkili olur."]</strong>
             </p>
             <p style="color:var(--accent-danger);font-size:.85rem;margin:0 0 14px;">
-                ⚠ Bu bağlantı varsayılan olarak şifrelenmez (HTTPS değil, düz HTTP); PIN ve oturum aynı
-                ağdaki başka biri tarafından teorik olarak dinlenebilir. Yalnızca güvendiğiniz bir ev/ofis
-                ağında açın, halka açık/paylaşımlı Wi-Fi'lerde açmayın. Aşağıdaki "HTTPS kullan" ile bunu
-                şifreleyebilir, ya da hiç uyarı almadan tamamen şifreli bağlanmak için
-                <a href="https://tailscale.com" target="_blank" rel="noopener">Tailscale</a> ya da
-                ZeroTier gibi ücretsiz bir VPN kurup uygulamayı yalnızca o VPN üzerinden kullanabilirsiniz.
+                ⚠ @Localizer["Bu bağlantı varsayılan olarak şifrelenmez (HTTPS değil, düz HTTP); PIN ve oturum aynı ağdaki başka biri tarafından teorik olarak dinlenebilir. Yalnızca güvendiğiniz bir ev/ofis ağında açın, halka açık/paylaşımlı Wi-Fi'lerde açmayın. Aşağıdaki \"HTTPS kullan\" ile bunu şifreleyebilir, ya da hiç uyarı almadan tamamen şifreli bağlanmak için"]
+                <a href="https://tailscale.com" target="_blank" rel="noopener">Tailscale</a> @Localizer["ya da ZeroTier gibi ücretsiz bir VPN kurup uygulamayı yalnızca o VPN üzerinden kullanabilirsiniz."]
             </p>
             <form id="remote-access-form">
                 @Html.AntiForgeryToken()
@@ -748,132 +705,148 @@
                     <div style="display:flex;flex-direction:column;gap:10px;">
                         <label class="threshold-field" style="justify-content:center;width:auto;">
                             <span class="hwmon-toggle-field">
-                                <span style="display:inline-block;width:200px;">Yerel ağdan erişime izin ver</span><input type="checkbox" id="ra-enabled">
+                                <span style="display:inline-block;width:200px;">@Localizer["Yerel ağdan erişime izin ver"]</span><input type="checkbox" id="ra-enabled">
                             </span>
                         </label>
                         <label class="threshold-field" style="justify-content:center;width:auto;">
                             <span class="hwmon-toggle-field">
-                                <span style="display:inline-block;width:200px;">HTTPS kullan (gelişmiş)</span><input type="checkbox" id="ra-https-enabled">
+                                <span style="display:inline-block;width:200px;">@Localizer["HTTPS kullan (gelişmiş)"]</span><input type="checkbox" id="ra-https-enabled">
                             </span>
                         </label>
                     </div>
-                    <label class="threshold-field">PIN <span id="ra-pin-hint" style="font-weight:400;color:var(--text-muted);"></span>
-                        <input type="password" id="ra-pin" inputmode="numeric" autocomplete="off" maxlength="32" placeholder="ör. 4821" style="width:160px;">
+                    <label class="threshold-field">@Localizer["PIN"] <span id="ra-pin-hint" style="font-weight:400;color:var(--text-muted);"></span>
+                        <input type="password" id="ra-pin" inputmode="numeric" autocomplete="off" maxlength="32" placeholder="@Localizer["ör. 4821"]" style="width:160px;">
                     </label>
                 </div>
             </form>
             <p id="ra-https-hint" style="color:var(--text-muted);font-size:.82rem;margin:10px 0 0;display:none;">
-                Kendinden imzalı bir sertifika kullanılır (gerçek bir sertifika otoritesi özel ağ
-                adresleri için sertifika vermez). Bağlanan her cihazda tarayıcı <strong>ilk seferde</strong>
-                "bağlantı güvenli değil" uyarısı gösterir; "Gelişmiş → yine de devam et"e bir kez
-                basmanız yeterli, sonrasında genelde tekrar sormaz. Ev/ofis ağınız (yönlendiriciniz) IP
-                adresinizi değiştirirse sertifikayı
-                <button type="button" id="ra-regen-cert" class="legend-item" style="padding:0;border:none;background:none;color:inherit;text-decoration:underline;cursor:pointer;font-size:inherit;">yeniden oluşturabilirsiniz</button>
-                (bir sonraki yeniden başlatmada).
+                @Localizer["Kendinden imzalı bir sertifika kullanılır (gerçek bir sertifika otoritesi özel ağ adresleri için sertifika vermez). Bağlanan her cihazda tarayıcı"] <strong>@Localizer["ilk seferde"]</strong>
+                @Localizer["\"bağlantı güvenli değil\" uyarısı gösterir; \"Gelişmiş → yine de devam et\"e bir kez basmanız yeterli, sonrasında genelde tekrar sormaz. Ev/ofis ağınız (yönlendiriciniz) IP adresinizi değiştirirse sertifikayı"]
+                <button type="button" id="ra-regen-cert" class="legend-item" style="padding:0;border:none;background:none;color:inherit;text-decoration:underline;cursor:pointer;font-size:inherit;">@Localizer["yeniden oluşturabilirsiniz"]</button>
+                @Localizer["(bir sonraki yeniden başlatmada)."]
             </p>
             <div id="ra-lan-info" style="color:var(--text-muted);font-size:.85rem;margin:12px 0;"></div>
             <div id="ra-restart-warning" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-bottom:10px;"></div>
             <div id="ra-error" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-bottom:10px;"></div>
             <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-                <button type="button" id="ra-save" class="btn-primary-hwmon">Kaydet</button>
-                <span id="ra-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
-                <button type="button" id="ra-restart" class="legend-item" style="display:none;">Şimdi Yeniden Başlat</button>
+                <button type="button" id="ra-save" class="btn-primary-hwmon">@Localizer["Kaydet"]</button>
+                <span id="ra-saved-note" class="stat-sub" style="display:none;">@Localizer["Kaydedildi ✓"]</span>
+                <button type="button" id="ra-restart" class="legend-item" style="display:none;">@Localizer["Şimdi Yeniden Başlat"]</button>
                 <span id="ra-restart-note" class="stat-sub" style="display:none;"></span>
             </div>
         </div>
 
         <div class="panel" id="keyboard-shortcuts-panel">
-            <h2 class="panel-title">Klavye Kısayolları</h2>
+            <h2 class="panel-title">@Localizer["Klavye Kısayolları"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Bir kısayolu değiştirmek için "Değiştir"e basıp yeni tuş kombinasyonuna basın; Esc ile
-                vazgeçebilirsiniz. Aynı kombinasyon iki eyleme birden atanamaz. Bir metin kutusu/açılır
-                menü gibi bir alana yazı yazarken kısayollar çalışmaz (yanlışlıkla sayfa değişmesin diye).
+                @Localizer["Bir kısayolu değiştirmek için \"Değiştir\"e basıp yeni tuş kombinasyonuna basın; Esc ile vazgeçebilirsiniz. Aynı kombinasyon iki eyleme birden atanamaz. Bir metin kutusu/açılır menü gibi bir alana yazı yazarken kısayollar çalışmaz (yanlışlıkla sayfa değişmesin diye)."]
             </p>
             <ol class="order-list" id="shortcuts-list" style="max-width:440px;"></ol>
             <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
-                <button type="button" id="shortcuts-reset" class="legend-item">Varsayılanlara Dön</button>
+                <button type="button" id="shortcuts-reset" class="legend-item">@Localizer["Varsayılanlara Dön"]</button>
                 <span id="shortcuts-conflict-note" class="stat-sub" style="display:none;color:var(--accent-danger);"></span>
             </div>
         </div>
 
         <div class="panel" id="settings-backup">
-            <h2 class="panel-title">Ayarları Dışa/İçe Aktar</h2>
+            <h2 class="panel-title">@Localizer["Ayarları Dışa/İçe Aktar"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Bu sayfadaki ve Panel'deki tüm tercihleri (eşikler, temalar, panel düzeni, oyun
-                profilleri, bildirim ayarları vb.) tek bir JSON dosyasına kaydedip başka bir tarayıcıya
-                veya bu bilgisayarın yeniden kurulumundan sonra geri yükleyebilirsiniz. Bildirim geçmişi
-                dahil değildir. <strong>Ağ ve Erişim → Yerel Ağa Açma PIN ayarı da dahil değildir</strong>;
-                o, tarayıcıda değil sunucudaki ayrı bir dosyada tutulur, bu yüzden yeniden kurmanız
-                gerekirse onu ayrıca yapılandırmanız gerekir.
+                @Localizer["Bu sayfadaki ve Panel'deki tüm tercihleri (eşikler, temalar, panel düzeni, oyun profilleri, bildirim ayarları vb.) tek bir JSON dosyasına kaydedip başka bir tarayıcıya veya bu bilgisayarın yeniden kurulumundan sonra geri yükleyebilirsiniz. Bildirim geçmişi dahil değildir."] <strong>@Localizer["Ağ ve Erişim → Yerel Ağa Açma PIN ayarı da dahil değildir"]</strong>@Localizer["; o, tarayıcıda değil sunucudaki ayrı bir dosyada tutulur, bu yüzden yeniden kurmanız gerekirse onu ayrıca yapılandırmanız gerekir."]
             </p>
             <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-                <button type="button" id="settings-export" class="btn-primary-hwmon">Dışa Aktar (.json indir)</button>
-                <button type="button" id="settings-import-trigger" class="btn-primary-hwmon">İçe Aktar (.json seç)</button>
+                <button type="button" id="settings-export" class="btn-primary-hwmon">@Localizer["Dışa Aktar (.json indir)"]</button>
+                <button type="button" id="settings-import-trigger" class="btn-primary-hwmon">@Localizer["İçe Aktar (.json seç)"]</button>
                 <input type="file" id="settings-import-file" accept="application/json" style="display:none;">
             </div>
             <div id="settings-backup-status" style="color:var(--text-muted);font-size:.85rem;margin-top:12px;"></div>
         </div>
 
         <div class="panel" id="startup-panel">
-            <h2 class="panel-title">Windows Açılışında Otomatik Başlatma</h2>
+            <h2 class="panel-title">@Localizer["Windows Açılışında Otomatik Başlatma"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Açıksa, Windows'a her giriş yaptığınızda HardwareMonitorByYuinn otomatik başlar. Uygulama
-                yönetici yetkisi gerektirdiğinden (<code>app.manifest</code>), bu kayıt Görev
-                Zamanlayıcı üzerinden "en yüksek yetkiyle" oluşturulur; oturum açarken ayrıca bir UAC
-                onayı istemez.
+                @Localizer["Açıksa, Windows'a her giriş yaptığınızda HardwareMonitorByYuinn otomatik başlar. Uygulama yönetici yetkisi gerektirdiğinden ("]<code>app.manifest</code>@Localizer["), bu kayıt Görev Zamanlayıcı üzerinden \"en yüksek yetkiyle\" oluşturulur; oturum açarken ayrıca bir UAC onayı istemez."]
             </p>
             <form id="startup-form">
                 @Html.AntiForgeryToken()
                 <div class="thresholds-form" style="flex-direction:column;">
                     <label class="threshold-field" style="justify-content:center;">
                         <span class="hwmon-toggle-field">
-                            Windows açılışında otomatik başlat<input type="checkbox" id="startup-enabled">
+                            @Localizer["Windows açılışında otomatik başlat"]<input type="checkbox" id="startup-enabled">
                         </span>
                     </label>
                     <label class="threshold-field" style="justify-content:center;">
                         <span class="hwmon-toggle-field">
-                            Başlarken pencereyi gösterme (doğrudan sistem tepsisinde başlat)<input type="checkbox" id="startup-minimized">
+                            @Localizer["Başlarken pencereyi gösterme (doğrudan sistem tepsisinde başlat)"]<input type="checkbox" id="startup-minimized">
                         </span>
                     </label>
                 </div>
             </form>
             <p style="color:var(--text-muted);font-size:.85rem;margin:8px 0 0;">
-                Bu seçenek yalnızca Windows'un kendisinin otomatik başlattığı açılışlarda geçerlidir;
-                uygulamayı kısayoldan elle açtığınızda pencere her zaman normal görünür.
+                @Localizer["Bu seçenek yalnızca Windows'un kendisinin otomatik başlattığı açılışlarda geçerlidir; uygulamayı kısayoldan elle açtığınızda pencere her zaman normal görünür."]
             </p>
             <div id="startup-path-info" style="color:var(--text-muted);font-size:.85rem;margin:12px 0;"></div>
             <div id="startup-mismatch-warning" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-bottom:10px;">
-                Kayıtlı başlangıç yolu artık geçerli değil (uygulama taşınmış olabilir); düzeltmek için tekrar kaydedin.
+                @Localizer["Kayıtlı başlangıç yolu artık geçerli değil (uygulama taşınmış olabilir); düzeltmek için tekrar kaydedin."]
             </div>
             <div id="startup-error" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-bottom:10px;"></div>
             <div style="display:flex;align-items:center;gap:12px;">
-                <button type="button" id="startup-save" class="btn-primary-hwmon">Kaydet</button>
-                <span id="startup-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+                <button type="button" id="startup-save" class="btn-primary-hwmon">@Localizer["Kaydet"]</button>
+                <span id="startup-saved-note" class="stat-sub" style="display:none;">@Localizer["Kaydedildi ✓"]</span>
             </div>
         </div>
 
         <div class="panel" id="close-behavior-panel">
-            <h2 class="panel-title">Pencere Kapatma Davranışı</h2>
+            <h2 class="panel-title">@Localizer["Pencere Kapatma Davranışı"]</h2>
             <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-                Pencerenin sağ üstündeki <strong>X</strong> düğmesine basınca ne olacağını belirler.
+                @Localizer["Pencerenin sağ üstündeki"] <strong>X</strong> @Localizer["düğmesine basınca ne olacağını belirler."]
             </p>
             <form id="close-behavior-form">
                 @Html.AntiForgeryToken()
                 <div style="display:grid;grid-template-columns:max-content auto;align-items:center;gap:14px 16px;">
-                    <label for="close-behavior-tray" style="cursor:pointer;">Sistem tepsisine küçült (uygulama arka planda çalışmaya devam eder)</label>
+                    <label for="close-behavior-tray" style="cursor:pointer;">@Localizer["Sistem tepsisine küçült (uygulama arka planda çalışmaya devam eder)"]</label>
                     <input type="radio" name="close-behavior" id="close-behavior-tray" value="Tray" style="width:18px;height:18px;margin:0;accent-color:var(--accent-gpu);cursor:pointer;">
-                    <label for="close-behavior-exit" style="cursor:pointer;">Uygulamayı kapat</label>
+                    <label for="close-behavior-exit" style="cursor:pointer;">@Localizer["Uygulamayı kapat"]</label>
                     <input type="radio" name="close-behavior" id="close-behavior-exit" value="Exit" style="width:18px;height:18px;margin:0;accent-color:var(--accent-gpu);cursor:pointer;">
                 </div>
             </form>
             <p style="color:var(--text-muted);font-size:.85rem;margin:12px 0;">
-                Sistem tepsisindeki simgeye sağ tıklayınca <strong>Göster</strong> ve <strong>Çıkış</strong>
-                seçenekleri bulunur; simgeye çift tıklamak da pencereyi geri getirir.
+                @Localizer["Sistem tepsisindeki simgeye sağ tıklayınca"] <strong>@Localizer["Göster"]</strong> @Localizer["ve"] <strong>@Localizer["Çıkış"]</strong>
+                @Localizer["seçenekleri bulunur; simgeye çift tıklamak da pencereyi geri getirir."]
             </p>
             <div id="close-behavior-error" style="display:none;color:var(--accent-danger);font-size:.85rem;margin-bottom:10px;"></div>
             <div style="display:flex;align-items:center;gap:12px;">
-                <button type="button" id="close-behavior-save" class="btn-primary-hwmon">Kaydet</button>
-                <span id="close-behavior-saved-note" class="stat-sub" style="display:none;">Kaydedildi ✓</span>
+                <button type="button" id="close-behavior-save" class="btn-primary-hwmon">@Localizer["Kaydet"]</button>
+                <span id="close-behavior-saved-note" class="stat-sub" style="display:none;">@Localizer["Kaydedildi ✓"]</span>
+            </div>
+        </div>
+
+        <div class="panel" id="language-panel">
+            <h2 class="panel-title">@Localizer["Dil"]</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                @Localizer["Uygulama arayüz dilini seçin."]
+            </p>
+            <form id="language-form">
+                @Html.AntiForgeryToken()
+                @* Her dil kendi adıyla (autonym) listelenir, o anki arayüz diline çevrilmez; kullanıcı
+                   arayüzü anlamasa bile kendi dilini bulabilsin diye yaygın bir arayüz kuralı. Görünüm
+                   diğer seçicilerle (ör. Geçmiş > Oyun Geçmişi'ndeki oyun seçici) tutarlı olsun diye
+                   ortak .hwmon-field stilini kullanır (bkz. site.css). *@
+                <select id="language-select" name="language" class="hwmon-field" style="min-width:240px;">
+                    <option value="tr">Türkçe</option>
+                    <option value="en">English</option>
+                    <option value="de">Deutsch</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="pt">Português</option>
+                    <option value="ru">Русский</option>
+                    <option value="ja">日本語</option>
+                    <option value="zh">简体中文</option>
+                </select>
+            </form>
+            <div id="language-error" style="display:none;color:var(--accent-danger);font-size:.85rem;margin:12px 0 0;"></div>
+            <div style="display:flex;align-items:center;gap:12px;margin-top:12px;">
+                <button type="button" id="language-save" class="btn-primary-hwmon">@Localizer["Kaydet"]</button>
+                <span id="language-saved-note" class="stat-sub" style="display:none;">@Localizer["Kaydedildi ✓"]</span>
             </div>
         </div>
     </div>

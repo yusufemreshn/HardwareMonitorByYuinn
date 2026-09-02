@@ -4,7 +4,7 @@ namespace HardwareMonitorByYuinn.DataAccess.Hardware.Native;
 
 /// <summary>
 /// Ekrana o an hangi pencerenin (ve dolayısıyla hangi sürecin) kare sunduğunu belirlemek için
-/// kullanılır — kare hızı yalnızca kullanıcının aktif olarak kullandığı uygulama için anlamlıdır.
+/// kullanılır; kare hızı yalnızca kullanıcının aktif olarak kullandığı uygulama için anlamlıdır.
 /// </summary>
 internal static class User32
 {

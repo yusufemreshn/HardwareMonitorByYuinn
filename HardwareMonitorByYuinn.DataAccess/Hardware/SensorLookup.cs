@@ -42,7 +42,7 @@ internal static partial class SensorLookup
     /// numarası yanlışlıkla P-core'larla aynı indekslere (1-4) düşüyor ve üzerine yazıyordu; sonuçta
     /// E-core sayısı P-core sayısını aştığı için son birkaç fiziksel çekirdeğin (ör. 12 çekirdekli
     /// 4P+8E bir CPU'da 9-12) hiç Frekans/Voltaj sensörü kalmıyordu (ham sensör dökümüyle
-    /// doğrulandı — bkz. CHANGELOG 2026-08-03). Bu yüzden E-Core'lar önce ayrıca yakalanıp
+    /// doğrulandı, bkz. CHANGELOG 2026-08-03). Bu yüzden E-Core'lar önce ayrıca yakalanıp
     /// <paramref name="pCoreCount"/> kadar kaydırılarak Yük sensörlerininkiyle aynı birleşik
     /// numaralandırmaya getiriliyor.
     /// </summary>

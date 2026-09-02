@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- Nav / Layout -->
+  <data name="Panel" xml:space="preserve"><value>Painel</value></data>
+  <data name="Detaylar" xml:space="preserve"><value>Detalhes</value></data>
+  <data name="Karşılaştırma" xml:space="preserve"><value>Comparação</value></data>
+  <data name="Geçmiş" xml:space="preserve"><value>Histórico</value></data>
+  <data name="Ayarlar" xml:space="preserve"><value>Configurações</value></data>
+  <data name="Bildirimler" xml:space="preserve"><value>Notificações</value></data>
+  <data name="Hakkında" xml:space="preserve"><value>Sobre</value></data>
+  <data name="Programın açık kalma süresi" xml:space="preserve"><value>Tempo de atividade do aplicativo</value></data>
+  <data name="Çalışma Süresi" xml:space="preserve"><value>Tempo ativo</value></data>
+  <data name="Eşik bildirimlerini aç/kapat" xml:space="preserve"><value>Ativar/desativar notificações de limite</value></data>
+  <data name="Tema değiştir" xml:space="preserve"><value>Trocar tema</value></data>
+
+  <!-- Settings > Language panel -->
+  <data name="Dil" xml:space="preserve"><value>Idioma</value></data>
+  <data name="Uygulama arayüz dilini seçin." xml:space="preserve"><value>Escolha o idioma da interface do aplicativo.</value></data>
+  <data name="Türkçe" xml:space="preserve"><value>Turco</value></data>
+  <data name="İngilizce" xml:space="preserve"><value>Inglês</value></data>
+  <data name="Kaydet" xml:space="preserve"><value>Salvar</value></data>
+  <data name="Kaydedildi ✓" xml:space="preserve"><value>Salvo ✓</value></data>
+
+  <!-- Dashboard -->
+  <data name="PawnIO sürücüsü kurulu değil" xml:space="preserve"><value>O driver PawnIO não está instalado</value></data>
+  <data name="İşlemcinin güç tüketimi ve çip içi sıcaklığı yalnızca" xml:space="preserve"><value>O consumo de energia e a temperatura interna do processador só podem ser lidos enquanto o driver</value></data>
+  <data name="sürücüsü kuruluyken okunabilir. Şu anda sürücü kurulu değil; ikisi de" xml:space="preserve"><value>estiver instalado. No momento ele não está instalado, então ambos exibem</value></data>
+  <data name="gösterilir." xml:space="preserve"><value>em vez disso.</value></data>
+  <data name="nasıl kurulur" xml:space="preserve"><value>como instalá-lo</value></data>
+  <data name="İşlemci (CPU)" xml:space="preserve"><value>Processador (CPU)</value></data>
+  <data name="Ekran Kartı (GPU)" xml:space="preserve"><value>Placa de vídeo (GPU)</value></data>
+  <data name="Video Belleği (VRAM)" xml:space="preserve"><value>Memória de vídeo (VRAM)</value></data>
+  <data name="Bellek (RAM)" xml:space="preserve"><value>Memória (RAM)</value></data>
+  <data name="Kare Hızı (FPS)" xml:space="preserve"><value>Taxa de quadros (FPS)</value></data>
+  <data name="Kare Süresi" xml:space="preserve"><value>Tempo de quadro</value></data>
+  <data name="Ölçülemiyor" xml:space="preserve"><value>Não é possível medir</value></data>
+  <data name="Depolama (Disk)" xml:space="preserve"><value>Armazenamento (Disco)</value></data>
+  <data name="Veri bekleniyor…" xml:space="preserve"><value>Aguardando dados…</value></data>
+  <data name="Ağ" xml:space="preserve"><value>Rede</value></data>
+  <data name="Bu oturum:" xml:space="preserve"><value>Esta sessão:</value></data>
+  <data name="Kaynak Kullanımı" xml:space="preserve"><value>Uso de recursos</value></data>
+  <data name="Sistem Özeti" xml:space="preserve"><value>Resumo do sistema</value></data>
+  <data name="Bellek:" xml:space="preserve"><value>Memória:</value></data>
+  <data name="Depolama:" xml:space="preserve"><value>Armazenamento:</value></data>
+  <data name="Açık kalma süresi:" xml:space="preserve"><value>Tempo ativo:</value></data>
+  <data name="İşlemci" xml:space="preserve"><value>Processador</value></data>
+  <data name="Ekran Kartı" xml:space="preserve"><value>Placa de vídeo</value></data>
+  <data name="Bellek" xml:space="preserve"><value>Memória</value></data>
+  <data name="İndirme" xml:space="preserve"><value>Download</value></data>
+  <data name="Yükleme" xml:space="preserve"><value>Upload</value></data>
+  <data name="Grafik zaman aralığı" xml:space="preserve"><value>Intervalo de tempo do gráfico</value></data>
+  <data name="dk" xml:space="preserve"><value>min</value></data>
+  <data name="sa" xml:space="preserve"><value>h</value></data>
+  <data name="Ambiyans Modu" xml:space="preserve"><value>Modo Ambiente</value></data>
+  <data name="Anlık Görüntü" xml:space="preserve"><value>Instantâneo</value></data>
+  <data name="Anlık görüntüde neyin görüneceğini seçin" xml:space="preserve"><value>Escolha o que aparece no instantâneo</value></data>
+  <data name="Anlık Görüntü Ayarları" xml:space="preserve"><value>Configurações do instantâneo</value></data>
+  <data name="Bu grafikte her serinin çizgi/alan/bar olarak nasıl çizileceğini seçin" xml:space="preserve"><value>Escolha como cada série deste gráfico é desenhada: linha/área/barra</value></data>
+  <data name="Grafik Ayarları" xml:space="preserve"><value>Configurações do gráfico</value></data>
+  <data name="Fare tekerleğiyle yakınlaştır/uzaklaştır · çift tıkla → canlıya dön" xml:space="preserve"><value>Role a roda do mouse para ampliar/reduzir · clique duplo para voltar ao tempo real</value></data>
+  <data name="Ambiyans modundan çık" xml:space="preserve"><value>Sair do modo ambiente</value></data>
+  <data name="Depolama" xml:space="preserve"><value>Armazenamento</value></data>
+
+  <!-- Notifications -->
+  <data name="Bildirim Geçmişi" xml:space="preserve"><value>Histórico de notificações</value></data>
+  <data name="Ayarlar sayfasında belirlediğiniz eşiklerden hangisinin ne zaman aşıldığını gösterir. Bir eşik aşıldığında, siz normale dönüp tekrar aşılmadıkça yalnızca bir kez kaydedilir. Bu geçmiş yalnızca bu tarayıcıda saklanır." xml:space="preserve"><value>Mostra quais dos limites definidos na página de configurações foram ultrapassados e quando. Quando um limite é ultrapassado, ele é registrado apenas uma vez até voltar ao normal e ser ultrapassado novamente. Este histórico é armazenado apenas neste navegador.</value></data>
+  <data name="Tüm Kayıtlar" xml:space="preserve"><value>Todos os registros</value></data>
+  <data name="Geçmişi Temizle" xml:space="preserve"><value>Limpar histórico</value></data>
+
+  <!-- Error -->
+  <data name="Hata" xml:space="preserve"><value>Erro</value></data>
+  <data name="Bir hata oluştu" xml:space="preserve"><value>Ocorreu um erro</value></data>
+  <data name="İsteğiniz işlenirken beklenmeyen bir hata meydana geldi." xml:space="preserve"><value>Ocorreu um erro inesperado ao processar sua solicitação.</value></data>
+  <data name="İstek Kimliği:" xml:space="preserve"><value>ID da solicitação:</value></data>
+  <data name="Panele Dön" xml:space="preserve"><value>Voltar ao painel</value></data>
+
+  <!-- About > PawnIO -->
+  <data name="PawnIO Kurulumu" xml:space="preserve"><value>Instalação do PawnIO</value></data>
+  <data name="PawnIO nedir, neden gerekli?" xml:space="preserve"><value>O que é o PawnIO e por que ele é necessário?</value></data>
+  <data name="İşlemcinin gerçek güç tüketimini (watt), çip içi sıcaklığını (Tctl/Tdie) ve donanımsal çekirdek frekanslarını okumak, işletim sisteminin normalde izin vermediği düşük seviyeli bir erişim gerektirir. Bu erişimi" xml:space="preserve"><value>Ler o consumo real de energia (watts), a temperatura interna (Tctl/Tdie) e as frequências de núcleo em nível de hardware do processador exige um acesso de baixo nível que o sistema operacional normalmente não permite. Esse acesso é fornecido por</value></data>
+  <data name="adlı imzalı, açık kaynaklı bir çekirdek sürücüsü sağlar. Sürücü kurulu değilse uygulama çökmez ya da hata vermez, yalnızca bu üç değeri okuyamaz; bunun yerine frekansı Windows performans sayaçlarından türetir (gerçek ama daha yaklaşık bir değer). Güç tüketimi ve sıcaklık için sürücüsüz güvenilir bir alternatif yok (ACPI termal bölgesi denenmişti ama gerçek çip sıcaklığından onlarca derece sapabildiği için kaldırıldı), bu yüzden ikisi de" xml:space="preserve"><value>um driver de kernel assinado e de código aberto com esse nome. Se o driver não estiver instalado, o aplicativo não trava nem exibe erro; ele apenas não consegue ler esses três valores e, em vez disso, calcula a frequência a partir dos contadores de desempenho do Windows (uma estimativa real, porém menos precisa). Não existe uma alternativa confiável sem driver para consumo de energia e temperatura (a zona térmica ACPI foi testada, mas removida por poder divergir dezenas de graus da temperatura real do chip); por isso, ambos exibem</value></data>
+  <data name="Kurulum adımları" xml:space="preserve"><value>Etapas de instalação</value></data>
+  <data name="adresine gidin ve &quot;Download Now&quot; ile kurulumu indirin." xml:space="preserve"><value>e baixe o instalador em "Download Now".</value></data>
+  <data name="İndirilen kurulumu çalıştırın (yönetici onayı isteyecektir). Kurulum sihirbazı bir sürüm seçimi sorarsa &quot;Unrestricted&quot; seçeneğini işaretleyin." xml:space="preserve"><value>Execute o instalador baixado (ele solicitará aprovação de administrador). Se o assistente de instalação pedir para escolher um modo, selecione "Unrestricted".</value></data>
+  <data name="Kurulum bittikten sonra HardwareMonitorByYuinn'ü" xml:space="preserve"><value>Após a instalação terminar, feche completamente o</value></data>
+  <data name="tamamen kapatıp" xml:space="preserve"><value></value></data>
+  <data name="(görev çubuğundan değil, uygulamanın kendisinden) tekrar açın. Sürücü yalnızca uygulama başlarken bir kez kontrol edilir, açıkken kurulursa fark edilmez." xml:space="preserve"><value>HardwareMonitorByYuinn (a partir do próprio aplicativo, não da barra de tarefas) e abra-o novamente. O driver é verificado apenas uma vez, ao iniciar o aplicativo; instalá-lo enquanto ele está aberto não será detectado.</value></data>
+  <data name="Detaylar → İşlemci" xml:space="preserve"><value>Detalhes → Processador</value></data>
+  <data name="sekmesine bakın: bu sayfanın en üstündeki uyarı kutusu kaybolduysa ve güç tüketimi artık" xml:space="preserve"><value>verifique esta aba: se o aviso no topo desta página desapareceu e o consumo de energia agora exibe um valor real em watts em vez de</value></data>
+  <data name="yerine gerçek bir watt değeri gösteriyorsa kurulum başarılı demektir." xml:space="preserve"><value>, a instalação foi bem-sucedida.</value></data>
+  <data name="Sorun giderme" xml:space="preserve"><value>Solução de problemas</value></data>
+  <data name="Kurulumdan sonra uyarı hâlâ görünüyorsa şunları kontrol edin:" xml:space="preserve"><value>Se o aviso continuar aparecendo após a instalação, verifique o seguinte:</value></data>
+  <data name="Uygulamayı gerçekten tamamen kapatıp yeniden açtığınızdan emin olun (yeniden başlatma," xml:space="preserve"><value>Certifique-se de realmente ter fechado completamente e reaberto o aplicativo (também é possível reiniciar pelo</value></data>
+  <data name="Ayarlar → Ağ ve Erişim → Yerel Ağa Açma" xml:space="preserve"><value>Configurações → Rede e acesso → Acesso pela rede local</value></data>
+  <data name="panelindeki &quot;Şimdi Yeniden Başlat&quot; butonuyla da yapılabilir)." xml:space="preserve"><value>botão "Reiniciar agora" do painel).</value></data>
+  <data name="Bazı anti-cheat/güvenlik yazılımları (ör. FACEIT Anti-Cheat) çekirdek sürücü kurulumlarını engelleyebilir; böyle bir yazılım kuruluysa geçici olarak kaldırıp tekrar deneyin." xml:space="preserve"><value>Alguns softwares anti-cheat/de segurança (por ex. FACEIT Anti-Cheat) podem bloquear a instalação de drivers de kernel; se você tiver um instalado, remova-o temporariamente e tente novamente.</value></data>
+  <data name="Bazı anakartlarda/işlemcilerde LibreHardwareMonitor kütüphanesi güç sensörünü PawnIO kurulu olsa bile farklı bir isimle yayınlayabilir; bu durumda uyarı kurulumdan bağımsız bir uyumluluk sınırlamasıdır." xml:space="preserve"><value>Em algumas placas-mãe/processadores, a biblioteca LibreHardwareMonitor pode expor o sensor de energia com um nome diferente mesmo com o PawnIO instalado; nesse caso, o aviso reflete uma limitação de compatibilidade não relacionada à instalação.</value></data>
+
+  <!-- History > Report -->
+  <data name="HardwareMonitorByYuinn Sistem Raporu" xml:space="preserve"><value>Relatório do sistema HardwareMonitorByYuinn</value></data>
+  <data name="Oluşturulma:" xml:space="preserve"><value>Gerado em:</value></data>
+  <data name="Aralık" xml:space="preserve"><value>Intervalo</value></data>
+  <data name="Son 1 gün" xml:space="preserve"><value>Último 1 dia</value></data>
+  <data name="Son 7 gün" xml:space="preserve"><value>Últimos 7 dias</value></data>
+  <data name="Son 14 gün" xml:space="preserve"><value>Últimos 14 dias</value></data>
+  <data name="Son 30 gün" xml:space="preserve"><value>Últimos 30 dias</value></data>
+  <data name="Yazdır / PDF Olarak Kaydet" xml:space="preserve"><value>Imprimir / Salvar como PDF</value></data>
+  <data name="Genel Özet" xml:space="preserve"><value>Visão geral</value></data>
+  <data name="Yükleniyor…" xml:space="preserve"><value>Carregando…</value></data>
+  <data name="Sistem Sağlığı Trendi" xml:space="preserve"><value>Tendência de saúde do sistema</value></data>
+  <data name="Tarih" xml:space="preserve"><value>Data</value></data>
+  <data name="Puan" xml:space="preserve"><value>Pontuação</value></data>
+  <data name="Örnek" xml:space="preserve"><value>Amostras</value></data>
+  <data name="Sistem Olayları" xml:space="preserve"><value>Eventos do sistema</value></data>
+  <data name="Zaman" xml:space="preserve"><value>Hora</value></data>
+  <data name="Tür" xml:space="preserve"><value>Tipo</value></data>
+  <data name="Açıklama" xml:space="preserve"><value>Descrição</value></data>
+
+  <!-- RemoteAccess > Login -->
+  <data name="Giriş" xml:space="preserve"><value>Login</value></data>
+  <data name="Bu bilgisayar yerel ağa açık. Devam etmek için PIN girin." xml:space="preserve"><value>Este computador está exposto à rede local. Digite o PIN para continuar.</value></data>
+  <data name="Giriş Yap" xml:space="preserve"><value>Entrar</value></data>
+  <data name="Çok fazla hatalı deneme. Lütfen biraz sonra tekrar deneyin." xml:space="preserve"><value>Muitas tentativas incorretas. Tente novamente daqui a pouco.</value></data>
+  <data name="PIN hatalı." xml:space="preserve"><value>PIN incorreto.</value></data>
+
+  <!-- Comparison -->
+  <data name="Menüyü daralt/genişlet" xml:space="preserve"><value>Recolher/expandir menu</value></data>
+  <data name="Oturum Karşılaştırma" xml:space="preserve"><value>Comparação de sessões</value></data>
+  <data name="Verileri Kaydet" xml:space="preserve"><value>Salvar dados</value></data>
+  <data name="Zaman Aralığı Karşılaştırma" xml:space="preserve"><value>Comparação de intervalos de tempo</value></data>
+  <data name="İki Zaman Aralığını Karşılaştır" xml:space="preserve"><value>Comparar dois intervalos de tempo</value></data>
+  <data name="Bu oturumun tüm ortalama verilerini (1, 2, 5, 10, 15 dakikalık ve genel ortalamalar) bir metin dosyasına kaydedip bilgisayarınıza indirebilirsiniz. Programı tekrar açtığınızda bu dosyayı aşağıdan yükleyerek eski verilerle karşılaştırma yapabilirsiniz." xml:space="preserve"><value>Você pode salvar todos os dados médios desta sessão (médias de 1, 2, 5, 10, 15 minutos e geral) em um arquivo de texto e baixá-lo. Ao reabrir o programa, você pode carregar esse arquivo abaixo para compará-lo com dados anteriores.</value></data>
+  <data name="Daha önce kaydettiğiniz bir .txt raporunu seçin; bu oturumla karşılaştırması aşağıdaki tabloda görünür." xml:space="preserve"><value>Selecione um relatório .txt salvo anteriormente; a comparação com esta sessão aparecerá na tabela abaixo.</value></data>
+  <data name="Dosya Seç" xml:space="preserve"><value>Escolher arquivo</value></data>
+  <data name="Metrik" xml:space="preserve"><value>Métrica</value></data>
+  <data name="Bu Oturum" xml:space="preserve"><value>Esta sessão</value></data>
+  <data name="Yüklenen Kayıt" xml:space="preserve"><value>Registro carregado</value></data>
+  <data name="Fark" xml:space="preserve"><value>Diferença</value></data>
+  <data name="Şu anki oturum verileri yükleniyor..." xml:space="preserve"><value>Carregando dados da sessão atual…</value></data>
+  <data name="Aralık A: Başlangıç" xml:space="preserve"><value>Intervalo A: Início</value></data>
+  <data name="Aralık A: Bitiş" xml:space="preserve"><value>Intervalo A: Fim</value></data>
+  <data name="Aralık B: Başlangıç" xml:space="preserve"><value>Intervalo B: Início</value></data>
+  <data name="Aralık B: Bitiş" xml:space="preserve"><value>Intervalo B: Fim</value></data>
+  <data name="Karşılaştır" xml:space="preserve"><value>Comparar</value></data>
+  <data name="Aralık A" xml:space="preserve"><value>Intervalo A</value></data>
+  <data name="Aralık B" xml:space="preserve"><value>Intervalo B</value></data>
+  <data name="İki aralık seçip Karşılaştır'a basın." xml:space="preserve"><value>Selecione dois intervalos e clique em Comparar.</value></data>
+
+  <!-- About -->
+  <data name="Bu bilgisayarın işlemci, ekran kartı ve bellek kullanımını gerçek zamanlı gösteren yerel bir izleme uygulamasıdır. Varsayılan olarak yalnızca" xml:space="preserve"><value>Este é um aplicativo de monitoramento local que exibe em tempo real o uso de CPU, GPU e memória deste computador. Por padrão, ele funciona apenas em</value></data>
+  <data name="adresinde çalışır, yani yalnızca bu bilgisayardan erişilebilir ve hiçbir şekilde internete bağlanmaz. Tüm ölçümler doğrudan bu bilgisayarın donanımından okunur." xml:space="preserve"><value>, ou seja, é acessível apenas a partir deste computador e nunca se conecta à internet de forma alguma. Todas as medições são lidas diretamente do hardware deste computador.</value></data>
+  <data name="'yı kendiniz etkinleştirirseniz, aynı yerel ağdaki (ev ya da ofis Wi-Fi'niz gibi) diğer cihazlar da bir PIN girerek bu bilgisayardaki veriye erişebilir. Bu trafik şifrelenmez (HTTPS değil, düz HTTP); bu yüzden yalnızca güvendiğiniz bir ağda açmanız önerilir." xml:space="preserve"><value>você mesmo, outros dispositivos na mesma rede local (como o Wi-Fi da sua casa ou escritório) também poderão acessar os dados deste computador digitando um PIN. Esse tráfego não é criptografado (HTTP simples, não HTTPS); por isso, recomenda-se ativar isso apenas em uma rede confiável.</value></data>
+  <data name="Bu bilgisayardaki pencere, arayüzü çizmek için Microsoft Edge WebView2'yi (Chromium tabanlı) kullanır. WebView2, yalnızca bu uygulamanın kendi" xml:space="preserve"><value>A janela deste computador usa o Microsoft Edge WebView2 (baseado em Chromium) para renderizar a interface. O WebView2 carrega apenas a própria</value></data>
+  <data name="sayfasını yükler; adres çubuğu yoktur, başka bir siteye gidilemez. Bileşenin varsayılan olarak açık gelen Microsoft Defender SmartScreen özelliği bazı teşhis verisini Microsoft'a gönderebilir, bkz." xml:space="preserve"><value>página deste aplicativo; não há barra de endereço, e não é possível navegar para outro site. O recurso Microsoft Defender SmartScreen do componente, ativado por padrão, pode enviar alguns dados de diagnóstico à Microsoft; veja</value></data>
+  <data name="Microsoft Gizlilik Bildirimi" xml:space="preserve"><value>Declaração de Privacidade da Microsoft</value></data>
+  <data name="Klavye Kısayolları" xml:space="preserve"><value>Atalhos de teclado</value></data>
+  <data name="Kısayol" xml:space="preserve"><value>Atalho</value></data>
+  <data name="Etki" xml:space="preserve"><value>Efeito</value></data>
+  <data name="Anlık Görüntü al (yalnızca Panel sayfasında)" xml:space="preserve"><value>Tirar um instantâneo (somente na página do Painel)</value></data>
+  <data name="Bir metin kutusuna veya seçim listesine yazı yazarken rakam tuşları devre dışı kalır, böylece bir eşik değeri girerken sayfa değişmez." xml:space="preserve"><value>As teclas numéricas ficam desativadas ao digitar em uma caixa de texto ou lista de seleção, para que a página não mude enquanto você insere um valor de limite.</value></data>
+  <data name="Ölçümler nereden geliyor?" xml:space="preserve"><value>De onde vêm as medições?</value></data>
+  <data name="Değer" xml:space="preserve"><value>Valor</value></data>
+  <data name="Kaynak" xml:space="preserve"><value>Origem</value></data>
+  <data name="Bileşen" xml:space="preserve"><value>Componente</value></data>
+  <data name="İşlemci kullanımı ve frekansı" xml:space="preserve"><value>Uso e frequência do processador</value></data>
+  <data name="Windows performans sayaçları (WMI)" xml:space="preserve"><value>Contadores de desempenho do Windows (WMI)</value></data>
+  <data name="Kendi kodumuz" xml:space="preserve"><value>Código próprio</value></data>
+  <data name="İşlemci sıcaklığı (Tctl/Tdie)" xml:space="preserve"><value>Temperatura do processador (Tctl/Tdie)</value></data>
+  <data name="MSR/SMU kayıtları (" xml:space="preserve"><value>Registradores MSR/SMU (</value></data>
+  <data name="sürücüsü gerekir)" xml:space="preserve"><value>requer driver)</value></data>
+  <data name="Bellek kullanımı ve frekansı" xml:space="preserve"><value>Uso e frequência da memória</value></data>
+  <data name="Windows bellek sayaçları (WMI)" xml:space="preserve"><value>Contadores de memória do Windows (WMI)</value></data>
+  <data name="Ekran kartı kullanımı ve bellek tüketimi" xml:space="preserve"><value>Uso da GPU e consumo de memória</value></data>
+  <data name="Windows GPU performans sayaçları (WMI)" xml:space="preserve"><value>Contadores de desempenho de GPU do Windows (WMI)</value></data>
+  <data name="Ekran kartı sıcaklığı ve bellek frekansı" xml:space="preserve"><value>Temperatura da GPU e frequência de memória</value></data>
+  <data name="D3DKMT çekirdek modu grafik arayüzü" xml:space="preserve"><value>Interface gráfica em modo kernel D3DKMT</value></data>
+  <data name="Windows olay izleme (ETW): DirectX 9/11/12 present olayları" xml:space="preserve"><value>Rastreamento de eventos do Windows (ETW): eventos "present" do DirectX 9/11/12</value></data>
+  <data name="Disk toplam kapasite ve türü (SSD/HDD)" xml:space="preserve"><value>Capacidade total e tipo de disco (SSD/HDD)</value></data>
+  <data name="Windows depolama sayaçları (WMI)" xml:space="preserve"><value>Contadores de armazenamento do Windows (WMI)</value></data>
+  <data name="SMART Ömür yüzdesi ve Güç Açılma Süresi (yedek kaynak)" xml:space="preserve"><value>Porcentagem de vida útil SMART e tempo ligado (fonte alternativa)</value></data>
+  <data name="Windows Depolama Güvenilirlik Sayacı (WMI)" xml:space="preserve"><value>Contador de confiabilidade de armazenamento do Windows (WMI)</value></data>
+  <data name="Grafikler, ortalamalar, karşılaştırma, arayüz" xml:space="preserve"><value>Gráficos, médias, comparação, interface</value></data>
+  <data name="İşlemci güç tüketimi (paket ve çekirdek başına)" xml:space="preserve"><value>Consumo de energia do processador (pacote e por núcleo)</value></data>
+  <data name="Ekran kartı çekirdek frekansı, güç tüketimi, hotspot sıcaklığı" xml:space="preserve"><value>Frequência do núcleo da GPU, consumo de energia, temperatura do hotspot</value></data>
+  <data name="Üreticiye özel sürücü arayüzleri (NVAPI / ADL)" xml:space="preserve"><value>Interfaces de driver específicas do fabricante (NVAPI / ADL)</value></data>
+  <data name="Disk kullanım yüzdesi, sıcaklığı, okuma/yazma hızı" xml:space="preserve"><value>Porcentagem de uso, temperatura, velocidade de leitura/gravação do disco</value></data>
+  <data name="Donanım sensörleri" xml:space="preserve"><value>Sensores de hardware</value></data>
+  <data name="SMART Durum, Ömür (birincil), Güç Açılma Süresi (birincil), Toplam Okuma/Yazma" xml:space="preserve"><value>Status SMART, vida útil (fonte principal), tempo ligado (fonte principal), total lido/gravado</value></data>
+  <data name="Ham SMART/NVMe log verisi" xml:space="preserve"><value>Dados brutos de log SMART/NVMe</value></data>
+  <data name="Kare hızı, Windows'un olay izleme (ETW) altyapısından ön plandaki uygulamanın ekrana sunduğu karelerin sayılmasıyla ölçülür. Bu yöntem ekran kartı üreticisinden bağımsızdır, ama yalnızca DirectX 9/11/12 kullanan uygulamaları kapsar (Vulkan/OpenGL hariç). Çekirdek frekansı, güç tüketimi ve hotspot sıcaklığı satırlarındaki değerler ise yalnızca üreticiye özel sürücü arayüzleri üzerinden okunabilir. Bunları kendimiz de yazabilirdik, ama her ekran kartı modelinde doğru çalıştığını doğrulayamayacağımız için bu işi, yıllardır tüm kartlarda sınanmış olan LibreHardwareMonitorLib'e bıraktık. İşlemci güç tüketimi ise Windows'un ayırdığı çekirdek modu (ring-0) sınırı yüzünden yalnızca" xml:space="preserve"><value>A taxa de quadros é medida contando os quadros que o aplicativo em primeiro plano envia à tela, por meio da infraestrutura de rastreamento de eventos (ETW) do Windows. Esse método independe do fabricante da GPU, mas abrange apenas aplicativos que usam DirectX 9/11/12 (Vulkan/OpenGL excluídos). Os valores de frequência do núcleo, consumo de energia e temperatura do hotspot só podem ser lidos por meio de interfaces de driver específicas do fabricante. Poderíamos ter implementado isso nós mesmos, mas como não podemos garantir o funcionamento correto em cada modelo de GPU, deixamos essa tarefa para a LibreHardwareMonitorLib, testada há anos em diversas placas. O consumo de energia do processador, devido ao limite de modo kernel (ring-0) imposto pelo Windows, só pode ser lido se o driver</value></data>
+  <data name="sürücüsü kuruluysa okunabilir; kurulu değilse bu alan arayüzde" xml:space="preserve"><value>estiver instalado; caso contrário, este campo exibe na interface</value></data>
+  <data name="gösterir." xml:space="preserve"><value>.</value></data>
+  <data name="PawnIO nasıl kurulur?" xml:space="preserve"><value>Como instalar o PawnIO?</value></data>
+  <data name="SMART Ömür yüzdesi ve Güç Açılma Süresi önce DiskInfoToolkit'ten (sürücünün ham SMART/NVMe log verisi) okunmaya çalışılır; bazı denetleyicilerde bu okuma başarısız ya da geçersiz (ör. %100'ü aşan bir Ömür) olabildiğinde Windows'un kendi Depolama Güvenilirlik Sayacı'na (bağımsız bir WMI kaynağı) düşülür. Toplam Okuma/Toplam Yazma için bağımsız bir kaynak yoktur (bu, yalnızca sürücünün kendi SMART/NVMe log'unda tutulan bir sayaçtır); ikisi de okunamazsa arayüzde" xml:space="preserve"><value>A porcentagem de vida útil SMART e o tempo ligado são primeiro obtidos via DiskInfoToolkit (os dados brutos de log SMART/NVMe do disco); em alguns controladores, quando essa leitura falha ou é inválida (por ex. uma vida útil acima de 100%), o sistema recorre ao próprio Contador de Confiabilidade de Armazenamento do Windows (uma fonte WMI independente). Não existe uma fonte independente para total lido/total gravado (isso é apenas um contador mantido no próprio log SMART/NVMe do disco); se nenhum dos dois puder ser lido, a interface exibe</value></data>
+  <data name="Üçüncü taraf bileşenler" xml:space="preserve"><value>Componentes de terceiros</value></data>
+  <data name="Lisans" xml:space="preserve"><value>Licença</value></data>
+  <data name="Kullanım amacı" xml:space="preserve"><value>Finalidade</value></data>
+  <data name="Üreticiye özel ekran kartı değerleri" xml:space="preserve"><value>Valores de GPU específicos do fabricante</value></data>
+  <data name="SMART disk sağlığı verisi" xml:space="preserve"><value>Dados de saúde SMART do disco</value></data>
+  <data name="DiskInfoToolkit'in bağımlılığı" xml:space="preserve"><value>Dependência do DiskInfoToolkit</value></data>
+  <data name="LibreHardwareMonitorLib'in bağımlılığı (RAM SPD bilgisi)" xml:space="preserve"><value>Dependência da LibreHardwareMonitorLib (informações SPD da RAM)</value></data>
+  <data name="Uygulama çatısı ve web sunucusu" xml:space="preserve"><value>Framework do aplicativo e servidor web</value></data>
+  <data name="Tarayıcıya saniyelik canlı veri aktarımı" xml:space="preserve"><value>Transmissão de dados em tempo real ao navegador a cada segundo</value></data>
+  <data name="SQLite erişimi, WMI, uzaktan tanılama altyapısı" xml:space="preserve"><value>Acesso ao SQLite, WMI, infraestrutura de diagnóstico remoto</value></data>
+  <data name="Kare hızı için Windows olay izleme (ETW) verisini okur" xml:space="preserve"><value>Lê dados de rastreamento de eventos do Windows (ETW) para a taxa de quadros</value></data>
+  <data name="Microsoft DIA SDK dağıtım şartları" xml:space="preserve"><value>Termos de distribuição do Microsoft DIA SDK</value></data>
+  <data name="TraceEvent'in iç bileşeni; MIT kapsamında değildir" xml:space="preserve"><value>Componente interno do TraceEvent; não abrangido pela licença MIT</value></data>
+  <data name="LibreHardwareMonitorLib'in geçişli bağımlılıkları" xml:space="preserve"><value>Dependências transitivas da LibreHardwareMonitorLib</value></data>
+  <data name="Tüm kalıcı geçmişin SQLite erişim katmanı" xml:space="preserve"><value>Camada de acesso SQLite para todo o histórico persistente</value></data>
+  <data name="LibreHardwareMonitorLib'in bağımlılığı (HID cihaz erişimi)" xml:space="preserve"><value>Dependência da LibreHardwareMonitorLib (acesso a dispositivos HID)</value></data>
+  <data name="Kamu malı (Public Domain)" xml:space="preserve"><value>Domínio público</value></data>
+  <data name="Kalıcı geçmişin fiziksel veritabanı motoru" xml:space="preserve"><value>Mecanismo de banco de dados físico do histórico persistente</value></data>
+  <data name="Masaüstü penceresinin arayüz motoru" xml:space="preserve"><value>Mecanismo de interface da janela de desktop</value></data>
+  <data name="LibreHardwareMonitorLib ve DiskInfoToolkit'i değiştirmeden, derlenmiş hâlleriyle kullanıyoruz. MPL-2.0 gereği kaynak kodlarına yukarıdaki proje adreslerinden ulaşabilirsiniz. Lisans metinlerinin tamamı uygulamanın yanındaki" xml:space="preserve"><value>Usamos a LibreHardwareMonitorLib e o DiskInfoToolkit sem modificações, em sua forma compilada. De acordo com a MPL-2.0, você pode acessar o código-fonte deles nos endereços de projeto acima. Os textos completos das licenças estão disponíveis ao lado do aplicativo, na pasta</value></data>
+  <data name="dosyasında yer alır." xml:space="preserve"><value>.</value></data>
+  <data name="istisnadır: MIT kapsamındaki TraceEvent paketinin bir iç bileşeni olsa da kendisi Microsoft'un DIA SDK dağıtım şartlarına tabidir, değiştirilmeden ve yalnızca paketin izin verdiği şekilde dağıtılır." xml:space="preserve"><value>é uma exceção: embora seja um componente interno do pacote TraceEvent, licenciado sob MIT, ele próprio está sujeito aos termos de distribuição do Microsoft DIA SDK e é distribuído sem modificações, apenas da forma permitida pelo pacote.</value></data>
+  <data name="Lisans metinlerini aç" xml:space="preserve"><value>Abrir textos de licença</value></data>
+
+  <!-- Details -->
+  <data name="Genel" xml:space="preserve"><value>Geral</value></data>
+  <data name="Depolama &amp; Sistem" xml:space="preserve"><value>Armazenamento e sistema</value></data>
+  <data name="Genel Ortalamalar" xml:space="preserve"><value>Médias gerais</value></data>
+  <data name="İşlemci, ekran kartı, bellek, kare hızı ve ağ hızının genel ortalamaları; çekirdek bazlı dökümü" xml:space="preserve"><value>Médias gerais de CPU, GPU, memória, taxa de quadros e velocidade de rede; você encontra o detalhamento por núcleo na aba</value></data>
+  <data name="sekmesinde bulabilirsiniz." xml:space="preserve"><value>.</value></data>
+  <data name="İşlemci Kullanımı" xml:space="preserve"><value>Uso de CPU</value></data>
+  <data name="İşlemci Frekansı" xml:space="preserve"><value>Frequência da CPU</value></data>
+  <data name="İşlemci Güç Tüketimi" xml:space="preserve"><value>Consumo de energia da CPU</value></data>
+  <data name="İşlemci Sıcaklığı" xml:space="preserve"><value>Temperatura da CPU</value></data>
+  <data name="Ekran Kartı Kullanımı" xml:space="preserve"><value>Uso de GPU</value></data>
+  <data name="Ekran Kartı Frekansı" xml:space="preserve"><value>Frequência da GPU</value></data>
+  <data name="Ekran Kartı Sıcaklığı" xml:space="preserve"><value>Temperatura da GPU</value></data>
+  <data name="Ekran Kartı Güç Tüketimi" xml:space="preserve"><value>Consumo de energia da GPU</value></data>
+  <data name="Bellek Kullanımı" xml:space="preserve"><value>Uso de memória</value></data>
+  <data name="Ağ İndirme Hızı" xml:space="preserve"><value>Velocidade de download da rede</value></data>
+  <data name="Ağ Yükleme Hızı" xml:space="preserve"><value>Velocidade de upload da rede</value></data>
+  <data name="İşlemcinin çip içi sensörleri okunamıyor" xml:space="preserve"><value>Não é possível ler os sensores internos do processador</value></data>
+  <data name="İşlemcinin güç tüketimi, gerçek çip sıcaklığı (Tctl/Tdie) ve donanımsal frekans değerleri yalnızca" xml:space="preserve"><value>O consumo de energia, a temperatura real do chip (Tctl/Tdie) e os valores de frequência em nível de hardware do processador só podem ser lidos se o</value></data>
+  <data name="adlı imzalı çekirdek sürücüsü kuruluysa okunabilir; bu sürücü şu anda sisteminizde kurulu değil. Uygulama bu yüzden frekansı Windows performans sayaçlarından türetiyor (gerçek ama yaklaşık bir değer)." xml:space="preserve"><value>driver de kernel assinado com esse nome estiver instalado; ele não está instalado no seu sistema no momento. Por isso, o aplicativo calcula a frequência a partir dos contadores de desempenho do Windows (um valor real, porém aproximado).</value></data>
+  <data name="ve" xml:space="preserve"><value>e</value></data>
+  <data name="için sürücüsüz güvenilir bir kaynak yok (ACPI termal bölgesi denenmişti ama gerçek çip sıcaklığından onlarca derece sapabildiği görüldüğü için kaldırıldı), bu yüzden ikisi de" xml:space="preserve"><value>não existe uma fonte confiável sem driver (a zona térmica ACPI foi testada, mas removida ao se constatar que podia divergir dezenas de graus da temperatura real do chip); por isso, ambos exibem</value></data>
+  <data name="gösterilir. Tam sensör erişimi isterseniz PawnIO'yu kurup uygulamayı yeniden başlatmanız yeterlidir; adımlar için" xml:space="preserve"><value>em vez disso. Se quiser acesso completo aos sensores, basta instalar o PawnIO e reiniciar o aplicativo; para as etapas, consulte a página</value></data>
+  <data name="sayfasına bakabilirsiniz." xml:space="preserve"><value>.</value></data>
+  <data name="Kullanım" xml:space="preserve"><value>Uso</value></data>
+  <data name="Frekans" xml:space="preserve"><value>Frequência</value></data>
+  <data name="Güç Tüketimi" xml:space="preserve"><value>Consumo de energia</value></data>
+  <data name="Sıcaklık" xml:space="preserve"><value>Temperatura</value></data>
+  <data name="Çekirdekler" xml:space="preserve"><value>Núcleos</value></data>
+  <data name="Satırlar fiziksel çekirdekleri gösterir. Frekans ve güç çekirdek başına ölçülür; kullanım ise o çekirdekte çalışan iş parçacıklarının ortalamasıdır." xml:space="preserve"><value>As linhas mostram os núcleos físicos. Frequência e potência são medidas por núcleo; o uso é a média das threads em execução naquele núcleo.</value></data>
+  <data name="Çekirdek" xml:space="preserve"><value>Núcleo</value></data>
+  <data name="Güç" xml:space="preserve"><value>Potência</value></data>
+  <data name="Ortalamalar" xml:space="preserve"><value>Médias</value></data>
+  <data name="Çekirdek Bazlı Ortalamalar" xml:space="preserve"><value>Médias por núcleo</value></data>
+  <data name="Ekran Kartı bulunamadı" xml:space="preserve"><value>Nenhuma GPU encontrada</value></data>
+  <data name="Sürücü Sürümü" xml:space="preserve"><value>Versão do driver</value></data>
+  <data name="Bilinmiyor" xml:space="preserve"><value>Desconhecido</value></data>
+  <data name="Çekirdek Frekansı" xml:space="preserve"><value>Frequência do núcleo</value></data>
+  <data name="Bellek Frekansı" xml:space="preserve"><value>Frequência da memória</value></data>
+  <data name="Normal Sıcaklık" xml:space="preserve"><value>Temperatura do núcleo</value></data>
+  <data name="Hotspot Sıcaklık" xml:space="preserve"><value>Temperatura do hotspot</value></data>
+  <data name="Video Belleği" xml:space="preserve"><value>Memória de vídeo</value></data>
+  <data name="toplam" xml:space="preserve"><value>total</value></data>
+  <data name="Anlık" xml:space="preserve"><value>Ao vivo</value></data>
+  <data name="Kare hızı, Windows'un kendi olay izleme altyapısı (ETW) üzerinden, o an" xml:space="preserve"><value>A taxa de quadros é medida pela própria infraestrutura de rastreamento de eventos do Windows (ETW), com base no que o</value></data>
+  <data name="ön planda çalışan uygulamanın" xml:space="preserve"><value>aplicativo em primeiro plano</value></data>
+  <data name="ekrana sunduğu karelerden ölçülür ve ekran kartı üreticisinden bağımsızdır (AMD/NVIDIA/Intel fark etmez). Yalnızca" xml:space="preserve"><value>envia à tela naquele momento, e independe do fabricante da GPU (AMD/NVIDIA/Intel não importa). Abrange apenas aplicativos que usam</value></data>
+  <data name="kullanan uygulamaları kapsar; Vulkan/OpenGL tabanlı oyunlar bu ölçüme dahil olmaz. Ön plandaki uygulama kare sunmuyorsa (masaüstündeyken, pencere küçültülmüşken) alan" xml:space="preserve"><value>; jogos baseados em Vulkan/OpenGL não são incluídos nesta medição. Se o aplicativo em primeiro plano não estiver enviando quadros (na área de trabalho, janela minimizada), o campo exibe</value></data>
+  <data name="gösterir. Ortalamalar da yalnızca değer okunabilen saniyeleri kapsar, bu yüzden oyun kapatıldığında geçmiş ortalamalar sıfıra doğru çekilmez." xml:space="preserve"><value>em vez disso. As médias também abrangem apenas os segundos em que um valor pôde ser lido, então as médias anteriores não são puxadas para zero quando um jogo é fechado.</value></data>
+  <data name=", son ~10 saniyedeki en yavaş karelerin ortalamasından hesaplanır ve takılmaları ortalama FPS'ten çok daha net gösterir; en az 30 kare birikmeden (oyun yeni açıldığında birkaç saniye)" xml:space="preserve"><value>são calculados a partir da média dos quadros mais lentos dos últimos ~10 segundos e mostram engasgos muito mais claramente do que o FPS médio; até que pelo menos 30 quadros tenham se acumulado (alguns segundos após o início de um jogo), o campo exibe</value></data>
+  <data name="Genel Sistem Bilgisi" xml:space="preserve"><value>Informações gerais do sistema</value></data>
+  <data name="Bilgisayar Adı" xml:space="preserve"><value>Nome do computador</value></data>
+  <data name="İşletim Sistemi" xml:space="preserve"><value>Sistema operacional</value></data>
+  <data name="Ekran Kartları" xml:space="preserve"><value>Placas de vídeo</value></data>
+  <data name="Sürücü:" xml:space="preserve"><value>Driver:</value></data>
+  <data name="Toplam RAM" xml:space="preserve"><value>RAM total</value></data>
+  <data name="Sistem Açık Kalma Süresi" xml:space="preserve"><value>Tempo ativo do sistema</value></data>
+  <data name="Sürücü" xml:space="preserve"><value>Unidade</value></data>
+  <data name="Dosya Sistemi" xml:space="preserve"><value>Sistema de arquivos</value></data>
+  <data name="Kullanılan" xml:space="preserve"><value>Usado</value></data>
+  <data name="Doluluk" xml:space="preserve"><value>Nível de ocupação</value></data>
+  <data name="SMART Disk Sağlığı" xml:space="preserve"><value>Saúde SMART do disco</value></data>
+  <data name="Yalnızca sürücünün SMART verisi okunabilen diskler burada listelenir. &quot;Ömür&quot; sürücü üreticisinin kendi tahminidir (100 = yeni, 0 = ömrünü tamamlamış); tüm modeller bu değeri raporlamaz." xml:space="preserve"><value>Aqui são listados apenas os discos cujos dados SMART podem ser lidos. "Vida útil" é a estimativa do próprio fabricante da unidade (100 = novo, 0 = fim da vida útil); nem todos os modelos informam esse valor.</value></data>
+  <data name="Durum" xml:space="preserve"><value>Status</value></data>
+  <data name="Ömür" xml:space="preserve"><value>Vida útil</value></data>
+  <data name="Güç Açılma Süresi" xml:space="preserve"><value>Tempo ligado</value></data>
+  <data name="Toplam Okuma" xml:space="preserve"><value>Total lido</value></data>
+  <data name="Toplam Yazma" xml:space="preserve"><value>Total gravado</value></data>
+  <data name="saat" xml:space="preserve"><value>horas</value></data>
+
+  <!-- History -->
+  <data name="Sistem Raporu" xml:space="preserve"><value>Relatório do sistema</value></data>
+  <data name="Kayıtlar" xml:space="preserve"><value>Registros</value></data>
+  <data name="Kayıt Bilgileri" xml:space="preserve"><value>Informações dos registros</value></data>
+  <data name="Kayıtları Görüntüle" xml:space="preserve"><value>Ver registros</value></data>
+  <data name="Analiz ve Trendler" xml:space="preserve"><value>Análise e tendências</value></data>
+  <data name="Isı Haritası" xml:space="preserve"><value>Mapa de calor</value></data>
+  <data name="Süreç ve Sistem Olayları" xml:space="preserve"><value>Processos e eventos do sistema</value></data>
+  <data name="Process Geçmişi" xml:space="preserve"><value>Histórico de processos</value></data>
+  <data name="Sistem Olayı Zaman Çizelgesi" xml:space="preserve"><value>Linha do tempo de eventos do sistema</value></data>
+  <data name="Oyun Geçmişi" xml:space="preserve"><value>Histórico de jogos</value></data>
+  <data name="Güvenlik" xml:space="preserve"><value>Segurança</value></data>
+  <data name="Giriş Denemesi Özeti" xml:space="preserve"><value>Resumo de tentativas de login</value></data>
+  <data name="Giriş Denemeleri" xml:space="preserve"><value>Tentativas de login</value></data>
+  <data name="Genel özet, sağlık puanı trendi ve sistem olaylarını tek sayfada toplayan, yazdırılabilir/PDF'e çevrilebilir bir HTML rapor oluşturur (tarayıcının &quot;Yazdır → PDF olarak kaydet&quot;i ile)." xml:space="preserve"><value>Gera um relatório HTML imprimível/conversível em PDF que reúne a visão geral, a tendência da pontuação de saúde e os eventos do sistema em uma única página (usando o recurso "Imprimir → Salvar como PDF" do navegador).</value></data>
+  <data name="HTML Rapor Oluştur" xml:space="preserve"><value>Gerar relatório HTML</value></data>
+  <data name="Uygulama çalışırken her dakika, o dakikanın ortalama değerleri diske kaydedilir; bu sayede uygulamayı kapatıp açsanız (hatta günler sonra) bile geçmiş kaybolmaz. Kayıtlar en fazla 30 gün saklanır, daha eskisi otomatik silinir." xml:space="preserve"><value>Enquanto o aplicativo está em execução, os valores médios de cada minuto são salvos no disco; assim, o histórico não é perdido mesmo que você feche e reabra o aplicativo (mesmo dias depois). Os registros são mantidos por no máximo 30 dias; os mais antigos são excluídos automaticamente.</value></data>
+  <data name="Henüz hiç kayıt yok. İlk satır, uygulama açıldıktan yaklaşık bir dakika sonra oluşur." xml:space="preserve"><value>Ainda não há registros. A primeira linha aparece cerca de um minuto após a abertura do aplicativo.</value></data>
+  <data name="Kayıt sayısı" xml:space="preserve"><value>Número de registros</value></data>
+  <data name="dakikalık örnek" xml:space="preserve"><value>amostras por minuto</value></data>
+  <data name="Veritabanı boyutu" xml:space="preserve"><value>Tamanho do banco de dados</value></data>
+  <data name="Eski kayıtları temizle" xml:space="preserve"><value>Limpar registros antigos</value></data>
+  <data name="En eski 1 gün" xml:space="preserve"><value>1 dia mais antigo</value></data>
+  <data name="En eski 2 gün" xml:space="preserve"><value>2 dias mais antigos</value></data>
+  <data name="En eski 5 gün" xml:space="preserve"><value>5 dias mais antigos</value></data>
+  <data name="En eski 10 gün" xml:space="preserve"><value>10 dias mais antigos</value></data>
+  <data name="En eski 15 gün" xml:space="preserve"><value>15 dias mais antigos</value></data>
+  <data name="En eski 30 gün" xml:space="preserve"><value>30 dias mais antigos</value></data>
+  <data name="Sil" xml:space="preserve"><value>Excluir</value></data>
+  <data name="Bir tarih aralığı seçip Göster'e basın; o aralıktaki dakikalık kayıtlar aşağıda listelenir. Çok geniş bir aralıkta yalnızca ilk" xml:space="preserve"><value>Selecione um intervalo de datas e clique em Mostrar; os registros minuto a minuto desse intervalo serão listados abaixo. Em um intervalo muito amplo, apenas as primeiras</value></data>
+  <data name="satır gösterilir; daha fazlası için aynı aralığı Dışa Aktar'a basıp indirin. Varsayılan olarak son 1 gün seçilidir." xml:space="preserve"><value>linhas são exibidas; para mais, baixe o mesmo intervalo pelo Exportar. Por padrão, o último 1 dia é selecionado.</value></data>
+  <data name="Başlangıç" xml:space="preserve"><value>Início</value></data>
+  <data name="Bitiş" xml:space="preserve"><value>Fim</value></data>
+  <data name="Göster" xml:space="preserve"><value>Mostrar</value></data>
+  <data name="Biçim" xml:space="preserve"><value>Formato</value></data>
+  <data name="Dışa Aktar" xml:space="preserve"><value>Exportar</value></data>
+  <data name="İnd." xml:space="preserve"><value>Down.</value></data>
+  <data name="Yük." xml:space="preserve"><value>Up.</value></data>
+  <data name="Bir aralık seçip Göster'e basın." xml:space="preserve"><value>Selecione um intervalo e clique em Mostrar.</value></data>
+  <data name="Her günün İşlemci/Ekran Kartı/Bellek ortalamalarına, Ayarlar'daki güncel eşiklerinize göre 0-100 arası bir puan verir (100 = sorunsuz). Kalıcı geçmiş disk sıcaklığı tutmadığı için puan yalnızca bu üçüne dayanır, Panel'deki canlı puandan biraz farklı olabilir." xml:space="preserve"><value>Atribui a cada dia uma pontuação de 0 a 100 com base nas médias de CPU/GPU/memória daquele dia e nos seus limites atuais nas configurações (100 = sem problemas). Como o histórico persistente não armazena a temperatura do disco, a pontuação baseia-se apenas nesses três itens e pode diferir um pouco da pontuação em tempo real do painel.</value></data>
+  <data name="Kalıcı geçmişteki sıcaklık verisini gün × saat bazında gösterir. Örneğin akşamları neden daha sıcak çalıştığını görmek için kullanışlıdır. İlk günlerde veri az olduğundan desen zayıf görünebilir, zamanla anlamlı hâle gelir." xml:space="preserve"><value>Exibe os dados de temperatura do histórico persistente por dia × hora. Útil, por exemplo, para ver por que o sistema fica mais quente à noite. Nos primeiros dias, o padrão pode parecer fraco por haver poucos dados; com o tempo, torna-se mais significativo.</value></data>
+  <data name="&quot;Kaynak Kullanımı&quot; listesinde üst sıralarda görünen her process için dakikalık CPU/RAM kaydı tutulur. Kayıtlar en fazla 30 gün saklanır, daha eskisi otomatik silinir." xml:space="preserve"><value>Um registro de CPU/RAM por minuto é mantido para cada processo que aparece próximo ao topo da lista "Uso de recursos". Os registros são mantidos por no máximo 30 dias; os mais antigos são excluídos automaticamente.</value></data>
+  <data name="Henüz hiç kayıt yok." xml:space="preserve"><value>Ainda não há registros.</value></data>
+  <data name="Bir process, &quot;Kaynak Kullanımı&quot; listesinde üst sıralarda göründüğü her dakika için ayrıca kaydedilir. Bir process seçip zaman içindeki CPU/RAM eğilimini görün (ör. bir sürecin zamanla belleği artırıp artırmadığı)." xml:space="preserve"><value>Cada processo é registrado separadamente a cada minuto em que aparece próximo ao topo da lista "Uso de recursos". Escolha um processo para ver sua tendência de CPU/RAM ao longo do tempo (por ex. se ele está usando cada vez mais memória).</value></data>
+  <data name="Ort. CPU %" xml:space="preserve"><value>CPU % méd.</value></data>
+  <data name="Ort. RAM MB" xml:space="preserve"><value>RAM MB méd.</value></data>
+  <data name="Bir process seçin." xml:space="preserve"><value>Selecione um processo.</value></data>
+  <data name="Windows Olay Günlüğü'nden okunan başlatma/kapatma/uyku/uyanma/güncelleme olayları listelenir. Örneğin bir sıcaklık artışının o gün bir güncelleme sonrası mı başladığını görmek için kullanışlıdır. Bu olaylar kendi veritabanımıza kaydedilmez, Windows'un kendi günlüğünden anlık okunur." xml:space="preserve"><value>São listados os eventos de inicialização/desligamento/suspensão/reativação/atualização lidos do Log de Eventos do Windows. Útil, por exemplo, para ver se um aumento de temperatura começou logo após uma atualização naquele dia. Esses eventos não são salvos em nosso próprio banco de dados; são lidos em tempo real diretamente do log do Windows.</value></data>
+  <data name="Başlatma" xml:space="preserve"><value>Inicialização</value></data>
+  <data name="Kapatma" xml:space="preserve"><value>Desligamento</value></data>
+  <data name="Uykuya Geçiş" xml:space="preserve"><value>Suspensão</value></data>
+  <data name="Uyanma" xml:space="preserve"><value>Reativação</value></data>
+  <data name="Güncelleme" xml:space="preserve"><value>Atualização</value></data>
+  <data name="Kullanıcı İsteğiyle Kapatma/Yeniden Başlatma" xml:space="preserve"><value>Desligamento/reinicialização solicitado pelo usuário</value></data>
+  <data name="Bir oyun en az 30 saniye ön planda kare sunarsa oturumu otomatik kaydedilir. Kayıtlar en fazla 30 gün saklanır, daha eskisi otomatik silinir." xml:space="preserve"><value>Se um jogo enviar quadros em primeiro plano por pelo menos 30 segundos, sua sessão será registrada automaticamente. Os registros são mantidos por no máximo 30 dias; os mais antigos são excluídos automaticamente.</value></data>
+  <data name="Henüz hiç oyun oturumu kaydedilmedi." xml:space="preserve"><value>Ainda não há sessões de jogo registradas.</value></data>
+  <data name="Oturum sayısı" xml:space="preserve"><value>Número de sessões</value></data>
+  <data name="oturum" xml:space="preserve"><value>sessões</value></data>
+  <data name="Bir oyun en az 30 saniye ön planda kare sunarsa oturumu otomatik kaydedilir. Kesintisiz uzun oturumlar en fazla 15 dakikalık parçalara bölünerek kaydedilir. Buradan bir oyunun geçmiş oturumlarındaki ortalama FPS/sıcaklık trendini görebilirsiniz." xml:space="preserve"><value>Se um jogo enviar quadros em primeiro plano por pelo menos 30 segundos, sua sessão será registrada automaticamente. Sessões longas e ininterruptas são divididas em partes de no máximo 15 minutos. Aqui você pode ver a tendência de FPS/temperatura médios de um jogo ao longo de suas sessões anteriores.</value></data>
+  <data name="Oyun" xml:space="preserve"><value>Jogo</value></data>
+  <data name="Süre" xml:space="preserve"><value>Duração</value></data>
+  <data name="Ort. FPS" xml:space="preserve"><value>FPS méd.</value></data>
+  <data name="Ort. CPU °C" xml:space="preserve"><value>CPU °C méd.</value></data>
+  <data name="Ort. GPU °C" xml:space="preserve"><value>GPU °C méd.</value></data>
+  <data name="Henüz kayıtlı oyun oturumu yok." xml:space="preserve"><value>Ainda não há sessões de jogo salvas.</value></data>
+  <data name="Yerel Ağa Açma etkinken PIN giriş sayfasına yapılan tüm denemeler kalıcı olarak kaydedilir; bu sayede uygulamayı kapatıp açsanız bile geçmiş kaybolmaz. Kayıtlar en fazla 30 gün saklanır, daha eskisi otomatik silinir." xml:space="preserve"><value>Enquanto o acesso pela rede local estiver ativado, todas as tentativas na página de login por PIN são registradas permanentemente; assim, o histórico não é perdido mesmo que você feche e reabra o aplicativo. Os registros são mantidos por no máximo 30 dias; os mais antigos são excluídos automaticamente.</value></data>
+  <data name="Henüz hiç giriş denemesi kaydedilmedi." xml:space="preserve"><value>Ainda não há tentativas de login registradas.</value></data>
+  <data name="deneme" xml:space="preserve"><value>tentativas</value></data>
+  <data name="Yerel Ağa Açma etkinken PIN giriş sayfasına (loopback dışından, yani bu bilgisayarın kendisi hariç) yapılan denemelerin kalıcı kaydıdır. Girilen PIN'in kendisi hiçbir zaman saklanmaz, yalnızca IP, zaman ve sonuç (başarılı/başarısız/kilide yol açtı) tutulur. Diğer kalıcı geçmiş verileriyle aynı 30 günlük saklama süresine tabidir." xml:space="preserve"><value>Um registro permanente das tentativas na página de login por PIN (fora do loopback, ou seja, excluindo este próprio computador) enquanto o acesso pela rede local está ativado. O PIN digitado nunca é armazenado; apenas o IP, o horário e o resultado (bem-sucedido/falhou/causou bloqueio) são mantidos. Sujeito ao mesmo período de retenção de 30 dias que os demais dados de histórico persistente.</value></data>
+  <data name="IP Adresi" xml:space="preserve"><value>Endereço IP</value></data>
+  <data name="Sonuç" xml:space="preserve"><value>Resultado</value></data>
+  <data name="TraceEvent paketi içinde" xml:space="preserve"><value>incluído no pacote TraceEvent</value></data>
+
+  <!-- Controller error messages (returned as JSON to JS callers) -->
+  <data name="Geçersiz değer." xml:space="preserve"><value>Valor inválido.</value></data>
+  <data name="bulunamadı." xml:space="preserve"><value>não encontrado(a).</value></data>
+  <data name="Bitiş tarihi başlangıçtan önce olamaz." xml:space="preserve"><value>A data final não pode ser anterior à data inicial.</value></data>
+  <data name="Geçersiz gün sayısı." xml:space="preserve"><value>Número de dias inválido.</value></data>
+  <data name="PIN en az {0} karakter olmalı." xml:space="preserve"><value>O PIN deve ter pelo menos {0} caracteres.</value></data>
+  <data name="PIN en fazla {0} karakter olabilir." xml:space="preserve"><value>O PIN pode ter no máximo {0} caracteres.</value></data>
+  <data name="Yerel ağa açmak için bir PIN belirlemelisiniz." xml:space="preserve"><value>Você deve definir um PIN para ativar o acesso pela rede local.</value></data>
+  <data name="Yürütülebilir dosya yolu bulunamadı." xml:space="preserve"><value>Não foi possível encontrar o caminho do executável.</value></data>
+
+  <!-- Backend enum-like display values (SMART status, sensor source labels) -->
+  <data name="İyi" xml:space="preserve"><value>Boa</value></data>
+  <data name="Kötü" xml:space="preserve"><value>Ruim</value></data>
+  <data name="Donanım sensörü" xml:space="preserve"><value>Sensor de hardware</value></data>
+  <data name="Windows performans sayacı" xml:space="preserve"><value>Contador de desempenho do Windows</value></data>
+  <data name="İşlemci çip sensörü (Tctl/Tdie)" xml:space="preserve"><value>Sensor interno da CPU (Tctl/Tdie)</value></data>
+
+  <!-- Settings -->
+  <data name="Ayarlarda ara…" xml:space="preserve"><value>Pesquisar nas configurações…</value></data>
+  <data name="Ayarlarda ara" xml:space="preserve"><value>Pesquisar nas configurações</value></data>
+  <data name="Özelleştirme" xml:space="preserve"><value>Personalização</value></data>
+  <data name="Hazır Temalar" xml:space="preserve"><value>Temas predefinidos</value></data>
+  <data name="Renkler" xml:space="preserve"><value>Cores</value></data>
+  <data name="Görünüm" xml:space="preserve"><value>Aparência</value></data>
+  <data name="Birim Tercihi" xml:space="preserve"><value>Preferência de unidades</value></data>
+  <data name="Yazı Tipi" xml:space="preserve"><value>Fonte</value></data>
+  <data name="Cam Efekti" xml:space="preserve"><value>Efeito vidro</value></data>
+  <data name="Panel Görünümü" xml:space="preserve"><value>Visualização do painel</value></data>
+  <data name="Açılış Sekmesi" xml:space="preserve"><value>Aba inicial</value></data>
+  <data name="Grafik Tipi" xml:space="preserve"><value>Tipo de gráfico</value></data>
+  <data name="Kart Sıralaması ve Detayları" xml:space="preserve"><value>Ordem dos cartões e detalhes</value></data>
+  <data name="Panel Düzeni" xml:space="preserve"><value>Layout do painel</value></data>
+  <data name="Enerji Maliyeti" xml:space="preserve"><value>Custo de energia</value></data>
+  <data name="Eşikler ve Bildirimler" xml:space="preserve"><value>Limites e notificações</value></data>
+  <data name="Eşik Ayarları" xml:space="preserve"><value>Configurações de limite</value></data>
+  <data name="Sabit Eşikler" xml:space="preserve"><value>Limites fixos</value></data>
+  <data name="Anomali Tespiti" xml:space="preserve"><value>Detecção de anomalias</value></data>
+  <data name="Bellek Sızıntısı Tespiti" xml:space="preserve"><value>Detecção de vazamento de memória</value></data>
+  <data name="Bildirim Kuralları" xml:space="preserve"><value>Regras de notificação</value></data>
+  <data name="Bildirim Sesi" xml:space="preserve"><value>Som de notificação</value></data>
+  <data name="Ağ ve Erişim" xml:space="preserve"><value>Rede e acesso</value></data>
+  <data name="Yerel Ağa Açma" xml:space="preserve"><value>Acesso pela rede local</value></data>
+  <data name="Kısayolları Düzenle" xml:space="preserve"><value>Editar atalhos</value></data>
+  <data name="Yedekleme" xml:space="preserve"><value>Backup</value></data>
+  <data name="Ayarları Dışa/İçe Aktar" xml:space="preserve"><value>Exportar/importar configurações</value></data>
+  <data name="Sistem" xml:space="preserve"><value>Sistema</value></data>
+  <data name="Otomatik Başlatma" xml:space="preserve"><value>Início automático</value></data>
+  <data name="Pencere Kapatma Davranışı" xml:space="preserve"><value>Comportamento ao fechar a janela</value></data>
+  <data name="Eşik Ayarları: Sabit Eşikler" xml:space="preserve"><value>Configurações de limite: Limites fixos</value></data>
+  <data name="Bir değer &quot;Dikkat&quot; eşiğini aştığında Panel'deki ilgili kart sarıya, &quot;Kritik&quot; eşiğini aştığında kırmızıya döner; kritik eşik aynı zamanda (🔔 ile bildirimlere izin verdiyseniz) bildirim de gönderir. İşlemci ve Ekran Kartı için hangi metriğin izleneceğini de seçebilirsiniz. Ayarlar yalnızca bu tarayıcıda saklanır." xml:space="preserve"><value>Quando um valor ultrapassa o limite "Atenção", o cartão correspondente no painel fica amarelo; ao ultrapassar "Crítico", fica vermelho; o limite crítico também envia uma notificação (se você permitiu isso via 🔔). Você também pode escolher qual métrica monitorar para CPU e GPU. As configurações são salvas apenas neste navegador.</value></data>
+  <data name="İşlemci eşiği" xml:space="preserve"><value>Limite de CPU</value></data>
+  <data name="Sıcaklık (°C)" xml:space="preserve"><value>Temperatura (°C)</value></data>
+  <data name="Kullanım (%)" xml:space="preserve"><value>Uso (%)</value></data>
+  <data name="Dikkat" xml:space="preserve"><value>Atenção</value></data>
+  <data name="Kritik" xml:space="preserve"><value>Crítico</value></data>
+  <data name="Ekran kartı eşiği" xml:space="preserve"><value>Limite de GPU</value></data>
+  <data name="Bellek kullanımı (%)" xml:space="preserve"><value>Uso de memória (%)</value></data>
+  <data name="Bu metrik için tek seçenek var" xml:space="preserve"><value>Só há uma opção para esta métrica</value></data>
+  <data name="Disk sıcaklığı (°C)" xml:space="preserve"><value>Temperatura do disco (°C)</value></data>
+  <data name="Eşik Ayarları: Anomali Tespiti" xml:space="preserve"><value>Configurações de limite: Detecção de anomalias</value></data>
+  <data name="Sabit eşiklere ek olarak, bir metrik son ~2 dakikaya göre ani bir sıçrama yaşadığında (eşiği aşmasa bile) Genel Sağlık Özeti'nde &quot;⚡&quot; ile belirtir." xml:space="preserve"><value>Além dos limites fixos, sinaliza uma métrica com "⚡" no Resumo Geral de Saúde quando ela apresenta um salto repentino em relação aos últimos ~2 minutos (mesmo sem ultrapassar o limite).</value></data>
+  <data name="Anomali tespitini etkinleştir" xml:space="preserve"><value>Ativar detecção de anomalias</value></data>
+  <data name="Eşik Ayarları: Bellek Sızıntısı Tespiti" xml:space="preserve"><value>Configurações de limite: Detecção de vazamento de memória</value></data>
+  <data name="Kaynak Kullanımı listesindeki bir süreç, listede göründüğü sürece RAM kullanımı sürekli artıyorsa Genel Sağlık Özeti'nde &quot;⚡&quot; ile belirtir. Anomali tespitinden bağımsız, ayrı bir açma/kapama anahtarıdır." xml:space="preserve"><value>Sinaliza um processo da lista Uso de recursos com "⚡" no Resumo Geral de Saúde se o uso de RAM dele aumentar continuamente enquanto ele permanecer na lista. Independente da detecção de anomalias, com seu próprio interruptor.</value></data>
+  <data name="Bellek sızıntısı tespitini etkinleştir" xml:space="preserve"><value>Ativar detecção de vazamento de memória</value></data>
+  <data name="Bildirimler: Bildirim Kuralları" xml:space="preserve"><value>Notificações: Regras de notificação</value></data>
+  <data name="Bir eşik aşıldığında (🔔 ile izin verdiyseniz) bildirim gönderilir. Eşik aşılı kaldığı sürece ne sıklıkla tekrar bildirim gönderileceğini ve hangi kartlar için bildirim istediğinizi burada seçebilirsiniz. Bu sayfa açık olmasa bile (Detaylar, Geçmiş vb. başka bir sekmedeyken de) bildirimler çalışmaya devam eder." xml:space="preserve"><value>Quando um limite é ultrapassado (se você permitiu isso via 🔔), uma notificação é enviada. Aqui você pode escolher com que frequência repetir a notificação enquanto o limite permanecer ultrapassado, e para quais cartões deseja notificações. As notificações continuam funcionando mesmo que esta página não esteja aberta (por ex. enquanto você está em Detalhes, Histórico etc.).</value></data>
+  <data name="Tekrar sıklığı" xml:space="preserve"><value>Frequência de repetição</value></data>
+  <data name="Yalnızca eşik aşıldığında (tekrar etmesin)" xml:space="preserve"><value>Somente ao ultrapassar o limite (não repetir)</value></data>
+  <data name="Her 5 saniyede bir" xml:space="preserve"><value>A cada 5 segundos</value></data>
+  <data name="Her 10 saniyede bir" xml:space="preserve"><value>A cada 10 segundos</value></data>
+  <data name="Her 30 saniyede bir" xml:space="preserve"><value>A cada 30 segundos</value></data>
+  <data name="Her 1 dakikada bir" xml:space="preserve"><value>A cada 1 minuto</value></data>
+  <data name="Her 5 dakikada bir" xml:space="preserve"><value>A cada 5 minutos</value></data>
+  <data name="Bildirim gönderilecek kartlar" xml:space="preserve"><value>Cartões para notificar</value></data>
+  <data name="Bildirimler: Bildirim Sesi" xml:space="preserve"><value>Notificações: Som de notificação</value></data>
+  <data name="Ses" xml:space="preserve"><value>Som</value></data>
+  <data name="Klasik" xml:space="preserve"><value>Clássico</value></data>
+  <data name="Yumuşak" xml:space="preserve"><value>Suave</value></data>
+  <data name="Dikkat Çekici" xml:space="preserve"><value>Chamativo</value></data>
+  <data name="Sessiz (yalnızca görsel bildirim)" xml:space="preserve"><value>Silencioso (apenas notificação visual)</value></data>
+  <data name="Ses seviyesi" xml:space="preserve"><value>Volume</value></data>
+  <data name="Test Et" xml:space="preserve"><value>Testar</value></data>
+  <data name="İşlemci, ekran kartı, bellek, kare hızı, depolama, ağ, kaynak kullanımı ve sistem özetinin Panel'deki kartlarda ve grafikte kullanılan rengini değiştirin. Değişiklik tüm sayfalara ve grafiğe hemen yansır." xml:space="preserve"><value>Altere a cor usada para CPU, GPU, memória, taxa de quadros, armazenamento, rede, uso de recursos e resumo do sistema nos cartões e no gráfico do painel. As alterações se aplicam imediatamente a todas as páginas e ao gráfico.</value></data>
+  <data name="Varsayılanlara Dön" xml:space="preserve"><value>Restaurar padrões</value></data>
+  <data name="Önizleme" xml:space="preserve"><value>Pré-visualização</value></data>
+  <data name="Tek tıkla hem aksan renklerini hem arka planı bir temaya göre değiştirin. Renkler ve Görünüm bölümlerindeki değerler de otomatik güncellenir, isterseniz üzerine ince ayar yapabilirsiniz." xml:space="preserve"><value>Altere com um clique tanto as cores de destaque quanto o plano de fundo de acordo com um tema. Os valores nas seções Cores e Aparência também são atualizados automaticamente; você pode ajustá-los depois, se quiser.</value></data>
+  <data name="Tema ara…" xml:space="preserve"><value>Pesquisar temas…</value></data>
+  <data name="Tema ara" xml:space="preserve"><value>Pesquisar temas</value></data>
+  <data name="Aramanızla eşleşen tema yok." xml:space="preserve"><value>Nenhum tema corresponde à sua pesquisa.</value></data>
+  <data name="Uygulandı ✓" xml:space="preserve"><value>Aplicado ✓</value></data>
+  <data name="İşlemci ve Ekran Kartı kartlarında değerlerin gösterim sırasını, tüm kartlarda ise hangi ikincil detayların görüneceğini buradan yönetin. Değişiklik Panel'e hemen yansır." xml:space="preserve"><value>Gerencie aqui a ordem de exibição dos valores nos cartões de CPU e GPU, e quais detalhes secundários aparecem em todos os cartões. As alterações se aplicam imediatamente ao painel.</value></data>
+  <data name="Yoğunluk (hazır şablon)" xml:space="preserve"><value>Densidade (modelo predefinido)</value></data>
+  <data name="Kart yoğunluğu" xml:space="preserve"><value>Densidade dos cartões</value></data>
+  <data name="Kompakt" xml:space="preserve"><value>Compacta</value></data>
+  <data name="Detaylı" xml:space="preserve"><value>Detalhada</value></data>
+  <data name="Bir düzeye tıklamak aşağıdaki detay kutucuklarını o düzeye göre toplu ayarlar; &quot;Kompakt&quot; yalnızca ana değerleri bırakır, &quot;Normal&quot;/&quot;Detaylı&quot; hepsini gösterir (aralarındaki fark dolgu/font boyutudur). Kutucukları seçtikten sonra dilediğinizi yine elle açıp kapatabilirsiniz." xml:space="preserve"><value>Clicar em um nível ajusta em lote as caixas de detalhe abaixo de acordo com esse nível; "Compacta" mantém apenas os valores principais, "Normal"/"Detalhada" mostram todos (a diferença entre elas é o preenchimento/tamanho da fonte). Após escolher um nível, você ainda pode marcar/desmarcar caixas individuais manualmente.</value></data>
+  <data name="Diğer Kartların Detayları" xml:space="preserve"><value>Detalhes dos outros cartões</value></data>
+  <data name="Video Belleği, Bellek, Kare Hızı, Depolama, Ağ ve Sistem Özeti kartlarında hangi ikincil bilgilerin gösterileceğini seçin." xml:space="preserve"><value>Escolha quais informações secundárias aparecem nos cartões de Memória de Vídeo, Memória, Taxa de Quadros, Armazenamento, Rede e Resumo do Sistema.</value></data>
+  <data name="Panel'deki kartları sürükleyip bırakarak yeniden sıralayın, istemediğinizi kutucuğundan kapatın. Değişiklik Panel'e hemen yansır." xml:space="preserve"><value>Arraste e solte para reordenar os cartões do painel, e desmarque a caixa para ocultar os que não deseja. As alterações se aplicam imediatamente ao painel.</value></data>
+  <data name="Düzen Profilleri" xml:space="preserve"><value>Perfis de layout</value></data>
+  <data name="Yukarıdaki sıralamayı isimli bir profil olarak kaydedip sonra tek tıkla o profile geri dönebilirsiniz (ör. &quot;İzleme Düzeni&quot; / &quot;Oyun Düzeni&quot;)." xml:space="preserve"><value>Salve a ordem acima como um perfil nomeado e volte a ela com um clique posteriormente (por ex. "Layout de Monitoramento" / "Layout de Jogo").</value></data>
+  <data name="Profil adı, ör. Oyun Düzeni" xml:space="preserve"><value>Nome do perfil, por ex. Layout de Jogo</value></data>
+  <data name="Mevcut Düzeni Kaydet" xml:space="preserve"><value>Salvar layout atual</value></data>
+  <data name="📸 Anlık Görüntü ile oluşturulan PNG'de hangi kartların (İşlemci, Ekran Kartı, Bellek, Kare Hızı, Depolama) ve her kartın içinde hangi değerlerin (sıcaklık, kullanım, güç, frekans vb.) hangi sırayla gireceğini seçin. Kutucuğu işaretli olmayanlar görüntüde yer almaz; her kartın listesindeki ilk etkin değer büyük, kalanlar altında küçük gösterilir." xml:space="preserve"><value>Escolha quais cartões (CPU, GPU, Memória, Taxa de Quadros, Armazenamento) e quais valores dentro de cada cartão (temperatura, uso, potência, frequência etc.), e em que ordem, entram no PNG criado pelo 📸 Instantâneo. Os não marcados não aparecem na imagem; o primeiro valor ativado na lista de cada cartão é exibido grande, os demais menores abaixo.</value></data>
+  <data name="Gösterilecek Kartlar ve Sırası" xml:space="preserve"><value>Cartões a exibir e sua ordem</value></data>
+  <data name="Çözünürlük" xml:space="preserve"><value>Resolução</value></data>
+  <data name="1080p (Varsayılan)" xml:space="preserve"><value>1080p (Padrão)</value></data>
+  <data name="⛶ Ambiyans Modu'nda (Panel sayfasındaki tam ekran saat görünümü) hangi kartların gösterileceğini seçin." xml:space="preserve"><value>Escolha quais cartões aparecem no modo ⛶ Ambiente (a visualização de relógio em tela cheia na página do Painel).</value></data>
+  <data name="Görünüm: Genel" xml:space="preserve"><value>Aparência: Geral</value></data>
+  <data name="Aydınlık ve karanlık mod için arka plan rengini ayrı ayrı özelleştirin. Değişiklik tüm sayfalara hemen yansır ve bu tarayıcıda saklanır." xml:space="preserve"><value>Personalize separadamente a cor de fundo para o modo claro e escuro. As alterações se aplicam imediatamente a todas as páginas e são salvas neste navegador.</value></data>
+  <data name="Gündüz modu arka planı" xml:space="preserve"><value>Plano de fundo do modo claro</value></data>
+  <data name="Gece modu arka planı" xml:space="preserve"><value>Plano de fundo do modo escuro</value></data>
+  <data name="Görünüm: Birim Tercihi" xml:space="preserve"><value>Aparência: Preferência de unidades</value></data>
+  <data name="Panel, Detaylar, Geçmiş ve Karşılaştırma sayfalarındaki tüm sıcaklık/hız/boyut değerlerini etkiler." xml:space="preserve"><value>Afeta todos os valores de temperatura/velocidade/tamanho nas páginas Painel, Detalhes, Histórico e Comparação.</value></data>
+  <data name="Veri hızı" xml:space="preserve"><value>Taxa de dados</value></data>
+  <data name="Boyut" xml:space="preserve"><value>Tamanho</value></data>
+  <data name="Santigrat (°C)" xml:space="preserve"><value>Celsius (°C)</value></data>
+  <data name="Fahrenhayt (°F)" xml:space="preserve"><value>Fahrenheit (°F)</value></data>
+  <data name="Görünüm: Yazı Tipi" xml:space="preserve"><value>Aparência: Fonte</value></data>
+  <data name="Küçük" xml:space="preserve"><value>Pequena</value></data>
+  <data name="Büyük" xml:space="preserve"><value>Grande</value></data>
+  <data name="Yazı tipi ailesi" xml:space="preserve"><value>Família da fonte</value></data>
+  <data name="Sistem varsayılanı" xml:space="preserve"><value>Padrão do sistema</value></data>
+  <data name="Sabit genişlikli (monospace)" xml:space="preserve"><value>Largura fixa (monoespaçada)</value></data>
+  <data name="Görünüm: Cam Efekti" xml:space="preserve"><value>Aparência: Efeito vidro</value></data>
+  <data name="Kartları ve panelleri yarı saydam yapıp arkalarını bulanıklaştırır (glassmorphism)." xml:space="preserve"><value>Torna cartões e painéis semitransparentes e desfoca o que está atrás deles (glassmorphism).</value></data>
+  <data name="Cam efektini etkinleştir" xml:space="preserve"><value>Ativar efeito vidro</value></data>
+  <data name="Görünüm: Panel Görünümü" xml:space="preserve"><value>Aparência: Visualização do painel</value></data>
+  <data name="Düzen" xml:space="preserve"><value>Layout</value></data>
+  <data name="Grid (çok sütunlu)" xml:space="preserve"><value>Grade (várias colunas)</value></data>
+  <data name="Liste (tek sütun)" xml:space="preserve"><value>Lista (coluna única)</value></data>
+  <data name="Görünüm: Açılış Sekmesi" xml:space="preserve"><value>Aparência: Aba inicial</value></data>
+  <data name="Uygulamanın kök adresine (" xml:space="preserve"><value>Escolha qual aba é exibida ao acessar o endereço raiz do aplicativo (</value></data>
+  <data name=") gidildiğinde hangi sekmenin gösterileceğini seçin." xml:space="preserve"><value>).</value></data>
+  <data name="Sekme" xml:space="preserve"><value>Aba</value></data>
+  <data name="Görünüm: Grafik Tipi" xml:space="preserve"><value>Aparência: Tipo de gráfico</value></data>
+  <data name="Panel'in altındaki grafikte her serinin nasıl çizileceğini seçin. Not: birden fazla seri &quot;Bar&quot; seçilirse üst üste biner, en iyi tek seferde bir seri için kullanılır." xml:space="preserve"><value>Escolha como cada série é desenhada no gráfico abaixo do painel. Observação: se várias séries estiverem definidas como "Barra", elas se sobrepõem, portanto funciona melhor com uma série por vez.</value></data>
+  <data name="Çizgi" xml:space="preserve"><value>Linha</value></data>
+  <data name="Alan" xml:space="preserve"><value>Área</value></data>
+  <data name="Bir işlem (oyun) ön plana geldiğinde renkleri/eşikleri otomatik olarak burada tanımladığınız profile geçirir; oyun kapanınca kendi genel ayarlarınıza döner. İşlem adı, Kare Hızı kartında/Detaylar sayfasında gördüğünüz kaynak adıyla aynı olmalı (ör." xml:space="preserve"><value>Quando um processo (jogo) passa a primeiro plano, isso alterna automaticamente as cores/limites para o perfil que você definir aqui; quando o jogo é fechado, volta às suas configurações gerais. O nome do processo deve corresponder ao nome de origem exibido no cartão Taxa de Quadros/na página Detalhes (por ex.</value></data>
+  <data name="), büyük/küçük harf önemli değildir. Oyunun kısa adını yazarsanız (ör. &quot;valorant&quot;), bu bilgisayarda daha önce tam ekran çalışırken görülmüş gerçek işlem adıyla otomatik eşleştirmeyi deneriz." xml:space="preserve"><value>), maiúsculas/minúsculas não importam. Se você digitar o nome curto de um jogo (por ex. "valorant"), tentaremos corresponder automaticamente ao nome de processo real já visto rodando em tela cheia neste computador.</value></data>
+  <data name="Otomatik eşleştirme yalnızca" xml:space="preserve"><value>A correspondência automática funciona apenas para</value></data>
+  <data name="HardwareMonitorByYuinn açıkken en az bir kez tam ekran oynadığınız" xml:space="preserve"><value>jogos que você jogou em tela cheia pelo menos uma vez com o HardwareMonitorByYuinn aberto</value></data>
+  <data name="oyunlar için çalışır. Bir oyunu daha hiç bu şekilde çalıştırmadıysanız kısa adı yazmanız bir şey eşleştirmez; o oyunun tam işlem adını (Kare Hızı kartında/ Detaylar sayfasında görünür) kendiniz yazmanız gerekir." xml:space="preserve"><value>. Se você nunca executou um jogo dessa forma, digitar o nome curto não corresponderá a nada; você precisará digitar o nome de processo completo desse jogo (visível no cartão Taxa de Quadros/página Detalhes).</value></data>
+  <data name="Yeni Profil / Düzenle" xml:space="preserve"><value>Novo perfil / Editar</value></data>
+  <data name="İşlem Adı (birden fazlaysa virgülle ayırın)" xml:space="preserve"><value>Nome do processo (separe por vírgula se houver vários)</value></data>
+  <data name="ör. valorant" xml:space="preserve"><value>por ex. valorant</value></data>
+  <data name="Otomatik Ambiyans Moduna geç" xml:space="preserve"><value>Alternar automaticamente para o modo Ambiente</value></data>
+  <data name="Yok (genel düzen kullanılır)" xml:space="preserve"><value>Nenhum (usa o layout geral)</value></data>
+  <data name="Oyun kapanınca otomatik anlık görüntü al" xml:space="preserve"><value>Tirar um instantâneo automático ao fechar o jogo</value></data>
+  <data name="Bu Profildeki Eşikler" xml:space="preserve"><value>Limites deste perfil</value></data>
+  <data name="Dikkat'i boş bırakırsanız genel Eşik Ayarları'ndaki değeriniz kullanılır." xml:space="preserve"><value>Se você deixar "Atenção" em branco, será usado seu valor das Configurações de Limite gerais.</value></data>
+  <data name="Profili Kaydet" xml:space="preserve"><value>Salvar perfil</value></data>
+  <data name="Yeni Profil" xml:space="preserve"><value>Novo perfil</value></data>
+  <data name="Enerji Tüketimi Maliyeti" xml:space="preserve"><value>Custo de consumo de energia</value></data>
+  <data name="Yalnızca İşlemci ve Ekran Kartı'nın anlık paket güçlerinden hesaplanan bir TAHMİNDİR; anakart, depolama, ekran ve diğer bileşenlerin tüketimini içermez, bu yüzden gerçek toplam sistem tüketiminden düşük çıkar." xml:space="preserve"><value>Isso é uma ESTIMATIVA calculada apenas a partir da potência instantânea do pacote de CPU e GPU; não inclui o consumo da placa-mãe, armazenamento, monitor e demais componentes, portanto fica abaixo do consumo total real do sistema.</value></data>
+  <data name="Enerji maliyeti tahminini göster" xml:space="preserve"><value>Mostrar custo de energia estimado</value></data>
+  <data name="Birim Fiyat (₺/kWh)" xml:space="preserve"><value>Preço unitário (₺/kWh)</value></data>
+  <data name="ör. 2.75" xml:space="preserve"><value>por ex. 2,75</value></data>
+  <data name="Varsayılan olarak bu uygulamaya yalnızca bu bilgisayardan (" xml:space="preserve"><value>Por padrão, este aplicativo é acessível apenas a partir deste computador (</value></data>
+  <data name=") erişilebilir. Bunu açarsanız aynı yerel ağdaki (ev/ofis Wi-Fi'niz gibi) diğer cihazlardan (telefon, tablet) da erişilebilir; bu yüzden bir PIN zorunludur." xml:space="preserve"><value>). Se você ativar isso, outros dispositivos na mesma rede local (como o Wi-Fi da sua casa/escritório), como celulares e tablets, também poderão acessá-lo; por isso, um PIN é obrigatório.</value></data>
+  <data name="Değişiklik ancak uygulamayı yeniden başlattığınızda etkili olur." xml:space="preserve"><value>A alteração só entra em vigor ao reiniciar o aplicativo.</value></data>
+  <data name="Bu bağlantı varsayılan olarak şifrelenmez (HTTPS değil, düz HTTP); PIN ve oturum aynı ağdaki başka biri tarafından teorik olarak dinlenebilir. Yalnızca güvendiğiniz bir ev/ofis ağında açın, halka açık/paylaşımlı Wi-Fi'lerde açmayın. Aşağıdaki &quot;HTTPS kullan&quot; ile bunu şifreleyebilir, ya da hiç uyarı almadan tamamen şifreli bağlanmak için" xml:space="preserve"><value>Esta conexão não é criptografada por padrão (HTTP simples, não HTTPS); o PIN e a sessão poderiam, teoricamente, ser interceptados por outra pessoa na mesma rede. Ative isso apenas em uma rede doméstica/de escritório confiável, nunca em Wi-Fi público/compartilhado. Você pode criptografá-la com "Usar HTTPS" abaixo, ou, para uma conexão totalmente criptografada sem nenhum aviso, configure uma VPN gratuita como</value></data>
+  <data name="ya da ZeroTier gibi ücretsiz bir VPN kurup uygulamayı yalnızca o VPN üzerinden kullanabilirsiniz." xml:space="preserve"><value>ou ZeroTier, e use o aplicativo apenas por meio dessa VPN.</value></data>
+  <data name="Yerel ağdan erişime izin ver" xml:space="preserve"><value>Permitir acesso pela rede local</value></data>
+  <data name="HTTPS kullan (gelişmiş)" xml:space="preserve"><value>Usar HTTPS (avançado)</value></data>
+  <data name="ör. 4821" xml:space="preserve"><value>por ex. 4821</value></data>
+  <data name="Kendinden imzalı bir sertifika kullanılır (gerçek bir sertifika otoritesi özel ağ adresleri için sertifika vermez). Bağlanan her cihazda tarayıcı" xml:space="preserve"><value>É usado um certificado autoassinado (uma autoridade certificadora real não emite certificados para endereços de rede privados). Em cada dispositivo que se conecta, o navegador</value></data>
+  <data name="ilk seferde" xml:space="preserve"><value>na primeira vez</value></data>
+  <data name="&quot;bağlantı güvenli değil&quot; uyarısı gösterir; &quot;Gelişmiş → yine de devam et&quot;e bir kez basmanız yeterli, sonrasında genelde tekrar sormaz. Ev/ofis ağınız (yönlendiriciniz) IP adresinizi değiştirirse sertifikayı" xml:space="preserve"><value>exibe um aviso de "conexão não segura"; basta clicar uma vez em "Avançado → continuar mesmo assim", e geralmente não perguntará novamente depois disso. Se sua rede doméstica/de escritório (roteador) alterar seu endereço IP, você pode</value></data>
+  <data name="yeniden oluşturabilirsiniz" xml:space="preserve"><value>gerar o certificado novamente</value></data>
+  <data name="(bir sonraki yeniden başlatmada)." xml:space="preserve"><value>(na próxima reinicialização).</value></data>
+  <data name="Şimdi Yeniden Başlat" xml:space="preserve"><value>Reiniciar agora</value></data>
+  <data name="Bir kısayolu değiştirmek için &quot;Değiştir&quot;e basıp yeni tuş kombinasyonuna basın; Esc ile vazgeçebilirsiniz. Aynı kombinasyon iki eyleme birden atanamaz. Bir metin kutusu/açılır menü gibi bir alana yazı yazarken kısayollar çalışmaz (yanlışlıkla sayfa değişmesin diye)." xml:space="preserve"><value>Para alterar um atalho, clique em "Alterar" e pressione a nova combinação de teclas; você pode cancelar com Esc. A mesma combinação não pode ser atribuída a duas ações. Os atalhos não funcionam ao digitar em uma caixa de texto/menu suspenso (para que a página não mude acidentalmente).</value></data>
+  <data name="Bu sayfadaki ve Panel'deki tüm tercihleri (eşikler, temalar, panel düzeni, oyun profilleri, bildirim ayarları vb.) tek bir JSON dosyasına kaydedip başka bir tarayıcıya veya bu bilgisayarın yeniden kurulumundan sonra geri yükleyebilirsiniz. Bildirim geçmişi dahil değildir." xml:space="preserve"><value>Você pode salvar todas as preferências desta página e do painel (limites, temas, layout do painel, perfis de jogo, configurações de notificação etc.) em um único arquivo JSON e restaurá-las em outro navegador ou após reinstalar este computador. O histórico de notificações não está incluído.</value></data>
+  <data name="Ağ ve Erişim → Yerel Ağa Açma PIN ayarı da dahil değildir" xml:space="preserve"><value>A configuração de PIN de Rede e acesso → Acesso pela rede local também não está incluída</value></data>
+  <data name="; o, tarayıcıda değil sunucudaki ayrı bir dosyada tutulur, bu yüzden yeniden kurmanız gerekirse onu ayrıca yapılandırmanız gerekir." xml:space="preserve"><value>; ela é mantida em um arquivo separado no servidor, não no navegador, então você precisará configurá-la separadamente se precisar reinstalar.</value></data>
+  <data name="Dışa Aktar (.json indir)" xml:space="preserve"><value>Exportar (baixar .json)</value></data>
+  <data name="İçe Aktar (.json seç)" xml:space="preserve"><value>Importar (escolher .json)</value></data>
+  <data name="Açıksa, Windows'a her giriş yaptığınızda HardwareMonitorByYuinn otomatik başlar. Uygulama yönetici yetkisi gerektirdiğinden (" xml:space="preserve"><value>Se ativado, o HardwareMonitorByYuinn inicia automaticamente sempre que você fizer login no Windows. Como o aplicativo requer privilégios de administrador (</value></data>
+  <data name="), bu kayıt Görev Zamanlayıcı üzerinden &quot;en yüksek yetkiyle&quot; oluşturulur; oturum açarken ayrıca bir UAC onayı istemez." xml:space="preserve"><value>), esta entrada é criada pelo Agendador de Tarefas "com os privilégios mais altos"; não solicitará uma confirmação UAC adicional no login.</value></data>
+  <data name="Windows açılışında otomatik başlat" xml:space="preserve"><value>Iniciar automaticamente com o Windows</value></data>
+  <data name="Başlarken pencereyi gösterme (doğrudan sistem tepsisinde başlat)" xml:space="preserve"><value>Não mostrar a janela ao iniciar (iniciar diretamente na bandeja do sistema)</value></data>
+  <data name="Bu seçenek yalnızca Windows'un kendisinin otomatik başlattığı açılışlarda geçerlidir; uygulamayı kısayoldan elle açtığınızda pencere her zaman normal görünür." xml:space="preserve"><value>Esta opção se aplica apenas às inicializações disparadas automaticamente pelo próprio Windows; ao abrir o aplicativo manualmente por um atalho, a janela sempre aparece normalmente.</value></data>
+  <data name="Kayıtlı başlangıç yolu artık geçerli değil (uygulama taşınmış olabilir); düzeltmek için tekrar kaydedin." xml:space="preserve"><value>O caminho de inicialização salvo não é mais válido (o aplicativo pode ter sido movido); salve novamente para corrigir isso.</value></data>
+  <data name="Pencerenin sağ üstündeki" xml:space="preserve"><value>Determina o que acontece ao clicar no botão</value></data>
+  <data name="düğmesine basınca ne olacağını belirler." xml:space="preserve"><value>no canto superior direito da janela.</value></data>
+  <data name="Sistem tepsisine küçült (uygulama arka planda çalışmaya devam eder)" xml:space="preserve"><value>Minimizar para a bandeja do sistema (o aplicativo continua rodando em segundo plano)</value></data>
+  <data name="Uygulamayı kapat" xml:space="preserve"><value>Fechar o aplicativo</value></data>
+  <data name="Sistem tepsisindeki simgeye sağ tıklayınca" xml:space="preserve"><value>Clicar com o botão direito no ícone da bandeja do sistema exibe as opções</value></data>
+  <data name="Çıkış" xml:space="preserve"><value>Sair</value></data>
+  <data name="seçenekleri bulunur; simgeye çift tıklamak da pencereyi geri getirir." xml:space="preserve"><value>; clicar duas vezes no ícone também restaura a janela.</value></data>
+
+  <!-- Post-audit additions: keys used in views but missing from the initial localization pass -->
+  <data name="Oyun Profilleri" xml:space="preserve"><value>Perfis de jogo</value></data>
+  <data name="Kare Hızı" xml:space="preserve"><value>Taxa de quadros</value></data>
+  <data name="Genel Toplam" xml:space="preserve"><value>Total</value></data>
+  <data name="Disk" xml:space="preserve"><value>Disco</value></data>
+  <data name="Normal" xml:space="preserve"><value>Normal</value></data>
+  <data name="Bar" xml:space="preserve"><value>Barras</value></data>
+  <data name="PIN" xml:space="preserve"><value>PIN</value></data>
+  <data name="Windows Açılışında Otomatik Başlatma" xml:space="preserve"><value>Início automático com o Windows</value></data>
+  <data name="İki tarih aralığı seçip Kalıcı Geçmiş'teki ortalamalarını yan yana karşılaştırın. Örneğin bir sürücü güncellemesinden önceki hafta ile sonraki haftayı karşılaştırabilirsiniz." xml:space="preserve"><value>Selecione dois intervalos de datas e compare lado a lado suas médias do histórico persistente. Por exemplo, você pode comparar a semana anterior a uma atualização de driver com a semana seguinte.</value></data>
+</root>

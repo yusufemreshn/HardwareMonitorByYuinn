@@ -11,7 +11,7 @@ internal sealed record StorageReliabilityInfo(string Name, int? LifePercent, ulo
 /// bağımsız bir ikinci kaynak. <see cref="DiskSmartInfoProvider"/> (DiskInfoToolkit ile ham SMART/NVMe
 /// log sayfasını doğrudan okur) bazı denetleyicilerde bu değerleri okuyamıyor veya geçersiz üretiyor
 /// (bkz. DiskSmartInfoProvider'daki 0-100 aralık doğrulaması); burası ise aynı bilgiyi Windows'un
-/// storage sürücü çatısının zaten normalize ettiği farklı bir yoldan sağlıyor — ikisi aynı anda aynı
+/// storage sürücü çatısının zaten normalize ettiği farklı bir yoldan sağlıyor; ikisi aynı anda aynı
 /// denetleyicide başarısız olma ihtimali tek bir kaynaktan daha düşük. LibreHardwareReader bu sonucu
 /// yalnızca DiskSmartInfoProvider'ın değeri yoksa/geçersizse yedek olarak kullanır. Bu WMI sınıfı da
 /// (Wear alanı) her sürücü/sürücü yazılımı tarafından doldurulmuyor; o durumda burası da null döner.

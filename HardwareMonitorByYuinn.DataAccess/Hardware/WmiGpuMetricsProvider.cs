@@ -49,11 +49,11 @@ internal sealed partial class WmiGpuMetricsProvider(ILogger logger)
     }
 
     /// <summary>
-    /// Kart başına ve süreç başına GPU kullanım yüzdesi — ikisi de aynı sayaç satırlarından (bir
+    /// Kart başına ve süreç başına GPU kullanım yüzdesi; ikisi de aynı sayaç satırlarından (bir
     /// satır hem LUID hem çoğunlukla PID taşır) TEK bir WMI taramasında çıkarılır; ayrı ayrı
     /// sorgulamak saniyede bir gereksiz ikinci bir tarama anlamına gelirdi. Her motor (3D, Copy,
     /// VideoDecode...) ayrı sayılır; bir kartın/sürecin farklı motorlardaki payları toplanmaz, en
-    /// yükseği alınır — Görev Yöneticisi'nin "GPU %" değeri de bu şekilde hesaplanır (motorlar
+    /// yükseği alınır; Görev Yöneticisi'nin "GPU %" değeri de bu şekilde hesaplanır (motorlar
     /// paralel çalıştığı için toplamak yanıltıcı olurdu).
     /// </summary>
     private (Dictionary<string, double> PerAdapter, Dictionary<int, double> PerProcess) ReadEngineUtilization()

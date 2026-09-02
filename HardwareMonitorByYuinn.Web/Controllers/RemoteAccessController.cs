@@ -4,10 +4,12 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using HardwareMonitorByYuinn.DataAccess.History;
+using HardwareMonitorByYuinn.Web.Localization;
 using HardwareMonitorByYuinn.Web.Security;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System.Security.Claims;
 
 namespace HardwareMonitorByYuinn.Web.Controllers;
@@ -15,13 +17,14 @@ namespace HardwareMonitorByYuinn.Web.Controllers;
 /// <summary>
 /// Yerel ağa açma anahtarını yönetir: Ayarlar sayfası için durum/kaydet uç noktaları ve yerel ağdan
 /// gelen ziyaretçiler için PIN giriş sayfası. Sahibinin kendi bilgisayarından (loopback) erişimi
-/// bu denetimden hiçbir zaman geçmez — bkz. Program.cs'deki PIN kapısı ara katmanı.
+/// bu denetimden hiçbir zaman geçmez, bkz. Program.cs'deki PIN kapısı ara katmanı.
 /// </summary>
 public sealed class RemoteAccessController : Controller
 {
     private readonly RemoteAccessStartupSnapshot _startupSnapshot;
     private readonly IHistoryStore _historyStore;
     private readonly IHostApplicationLifetime _lifetime;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
     /// <summary>Bir IP'nin art arda başarısız PIN denemesi sayısı, varsa kilit bitiş zamanı ve son deneme zamanı.</summary>
     private static readonly ConcurrentDictionary<IPAddress, (int Failures, DateTime LockedUntilUtc, DateTime LastAttemptUtc)> LoginAttempts = new();
@@ -33,7 +36,7 @@ public sealed class RemoteAccessController : Controller
     // yalnızca başarılı girişte (TryRemove) ya da burada temizlenir. Sürekli farklı IP'lerden
     // deneme yapan bir tarama/saldırı (ya da DHCP ile sık değişen LAN IP'leri) girdi sayısını
     // sınırsız büyütebilir. Girdi sayısı bu eşiği geçince, bir süredir hiç deneme yapılmamış
-    // (bayat) girdiler süpürülür — ayrı bir arka plan zamanlayıcısına gerek kalmadan, yalnızca
+    // (bayat) girdiler süpürülür; ayrı bir arka plan zamanlayıcısına gerek kalmadan, yalnızca
     // Login çağrıldığında (zaten nadir bir yol) ucuz bir kontrolle.
     private const int PruneThreshold = 200;
     private static readonly TimeSpan StaleAfter = TimeSpan.FromMinutes(15);
@@ -52,11 +55,12 @@ public sealed class RemoteAccessController : Controller
         }
     }
 
-    public RemoteAccessController(RemoteAccessStartupSnapshot startupSnapshot, IHistoryStore historyStore, IHostApplicationLifetime lifetime)
+    public RemoteAccessController(RemoteAccessStartupSnapshot startupSnapshot, IHistoryStore historyStore, IHostApplicationLifetime lifetime, IStringLocalizer<SharedResource> localizer)
     {
         _startupSnapshot = startupSnapshot;
         _historyStore = historyStore;
         _lifetime = lifetime;
+        _localizer = localizer;
     }
 
     [HttpGet]
@@ -83,7 +87,7 @@ public sealed class RemoteAccessController : Controller
         {
             _historyStore.RecordLoginAttempt(callerIp.ToString(), success: false, causedLockout: false, DateTime.UtcNow);
             ViewBag.ReturnUrl = returnUrl;
-            ViewBag.Error = "Çok fazla hatalı deneme. Lütfen biraz sonra tekrar deneyin.";
+            ViewBag.Error = _localizer["Çok fazla hatalı deneme. Lütfen biraz sonra tekrar deneyin."].Value;
             return View();
         }
 
@@ -103,7 +107,7 @@ public sealed class RemoteAccessController : Controller
             }
 
             ViewBag.ReturnUrl = returnUrl;
-            ViewBag.Error = "PIN hatalı.";
+            ViewBag.Error = _localizer["PIN hatalı."].Value;
             return View();
         }
 
@@ -149,7 +153,7 @@ public sealed class RemoteAccessController : Controller
         // "PIN gerekli mi" yalnızca ayar ETKİNKEN anlamlıdır (bkz. Program.cs'deki aynı formül:
         // pinRequired = enabled && PinHash var). Burada yalnızca ham PinHash varlığına bakılırsa,
         // remote access kapalıyken bile eskiden bir PIN kaydedilmiş olması "yeniden başlatma
-        // gerekli" uyarısını SONSUZA DEK göstermeye devam ederdi — çünkü etkin olmayan bir PIN'in
+        // gerekli" uyarısını SONSUZA DEK göstermeye devam ederdi, çünkü etkin olmayan bir PIN'in
         // varlığı, başlangıç anlık görüntüsündeki (etkinliğe bağlı) pinRequired ile hiç eşleşmezdi.
         bool savedPinRequired = saved.Enabled && !string.IsNullOrEmpty(saved.PinHash);
 
@@ -158,7 +162,7 @@ public sealed class RemoteAccessController : Controller
         // atlayıp ham saved.HttpsEnabled'ı doğrudan karşılaştırmak, "Yerel ağdan erişime izin
         // ver"i kapatırken "HTTPS kullan" kutusu işaretli kalmışsa (bkz. Ayarlar sayfasındaki
         // otomatik kapatma), yeniden başlatma sonrasında bile "henüz etkin değil" uyarısının hiç
-        // gitmemesine yol açıyordu — çünkü etkin olmayan bir HTTPS ayarının ham "true" değeri,
+        // gitmemesine yol açıyordu, çünkü etkin olmayan bir HTTPS ayarının ham "true" değeri,
         // başlangıç anlık görüntüsündeki (etkinliğe bağlı, dolayısıyla false) değerle asla eşleşmezdi.
         bool savedEffectiveHttpsEnabled = saved.Enabled && saved.HttpsEnabled;
 
@@ -195,12 +199,12 @@ public sealed class RemoteAccessController : Controller
             string trimmedPin = pin.Trim();
             if (trimmedPin.Length < MinPinLength)
             {
-                return BadRequest(new { error = $"PIN en az {MinPinLength} karakter olmalı." });
+                return BadRequest(new { error = string.Format(_localizer["PIN en az {0} karakter olmalı."].Value, MinPinLength) });
             }
 
             if (trimmedPin.Length > MaxPinLength)
             {
-                return BadRequest(new { error = $"PIN en fazla {MaxPinLength} karakter olabilir." });
+                return BadRequest(new { error = string.Format(_localizer["PIN en fazla {0} karakter olabilir."].Value, MaxPinLength) });
             }
 
             pinSalt = RemoteAccessSettingsStore.GenerateSalt();
@@ -209,7 +213,7 @@ public sealed class RemoteAccessController : Controller
 
         if (enabled && string.IsNullOrEmpty(pinHash))
         {
-            return BadRequest(new { error = "Yerel ağa açmak için bir PIN belirlemelisiniz." });
+            return BadRequest(new { error = _localizer["Yerel ağa açmak için bir PIN belirlemelisiniz."].Value });
         }
 
         RemoteAccessSettingsStore.Save(new RemoteAccessOptions { Enabled = enabled, PinHash = pinHash, PinSalt = pinSalt, HttpsEnabled = httpsEnabled });
@@ -234,7 +238,7 @@ public sealed class RemoteAccessController : Controller
     // gerektirir (elevated bir process'ten sessizce elevated çocuk süreç açmanın standart bir yolu
     // yok). Bu yüzden burada "sessiz" bir yeniden başlatma vaat edilmiyor; kullanıcı arayüzünde de
     // bu açıkça belirtiliyor. Yeni process, ESKİ process'in portu (5250) gerçekten bıraktığından
-    // emin olduktan SONRA başlatılır (ApplicationStopped'a kadar beklenir) — aksi hâlde yeni
+    // emin olduktan SONRA başlatılır (ApplicationStopped'a kadar beklenir); aksi hâlde yeni
     // process'in Kestrel'i "adres kullanımda" hatasıyla hiç açılmadan çökebilirdi.
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -243,7 +247,7 @@ public sealed class RemoteAccessController : Controller
         string? exePath = Environment.ProcessPath;
         if (string.IsNullOrEmpty(exePath))
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { error = "Yürütülebilir dosya yolu bulunamadı." });
+            return StatusCode(StatusCodes.Status500InternalServerError, new { error = _localizer["Yürütülebilir dosya yolu bulunamadı."].Value });
         }
 
         _lifetime.ApplicationStopped.Register(() =>
@@ -252,7 +256,7 @@ public sealed class RemoteAccessController : Controller
             {
                 // Masaüstü penceresi bu sürecin İÇİNDE çalıştığı için (bkz. Program.cs +
                 // Desktop/DesktopShellRunner.cs), tarayıcı-sekmesi modelinin aksine burada
-                // yeniden bağlanacak ayrı/kalıcı bir pencere yok — StopApplication() zaten eski
+                // yeniden bağlanacak ayrı/kalıcı bir pencere yok, StopApplication() zaten eski
                 // pencereyi de kapatır (bkz. DesktopShellRunner'daki hostStopping kaydı). Yeni
                 // süreç normal başlar ve kendi penceresini açar.
                 Process.Start(new ProcessStartInfo(exePath)

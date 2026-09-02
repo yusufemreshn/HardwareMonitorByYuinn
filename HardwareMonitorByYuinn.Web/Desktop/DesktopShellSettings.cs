@@ -4,7 +4,7 @@ namespace HardwareMonitorByYuinn.Web.Desktop;
 
 /// <summary>
 /// Pencere kapat (X) düğmesine basılınca ne olacağını (sistem tepsisine küçült / uygulamayı kapat)
-/// HKCU'da tutar — StartupController'daki Run anahtarı deseniyle aynı: kayıt defteri tek doğru
+/// HKCU'da tutar; StartupController'daki Run anahtarı deseniyle aynı: kayıt defteri tek doğru
 /// kaynaktır, ayrı bir JSON dosyasına gerek yok. Hem DesktopShellController (Ayarlar sayfasının
 /// okuma/yazma uç noktaları) hem ShellForm (kapanma anında gerçek kararı verir) bu sınıfı kullanır.
 /// </summary>

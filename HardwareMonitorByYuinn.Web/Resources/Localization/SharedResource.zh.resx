@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- Nav / Layout -->
+  <data name="Panel" xml:space="preserve"><value>面板</value></data>
+  <data name="Detaylar" xml:space="preserve"><value>详情</value></data>
+  <data name="Karşılaştırma" xml:space="preserve"><value>对比</value></data>
+  <data name="Geçmiş" xml:space="preserve"><value>历史记录</value></data>
+  <data name="Ayarlar" xml:space="preserve"><value>设置</value></data>
+  <data name="Bildirimler" xml:space="preserve"><value>通知</value></data>
+  <data name="Hakkında" xml:space="preserve"><value>关于</value></data>
+  <data name="Programın açık kalma süresi" xml:space="preserve"><value>应用程序运行时间</value></data>
+  <data name="Çalışma Süresi" xml:space="preserve"><value>运行时间</value></data>
+  <data name="Eşik bildirimlerini aç/kapat" xml:space="preserve"><value>开启/关闭阈值通知</value></data>
+  <data name="Tema değiştir" xml:space="preserve"><value>切换主题</value></data>
+
+  <!-- Settings > Language panel -->
+  <data name="Dil" xml:space="preserve"><value>语言</value></data>
+  <data name="Uygulama arayüz dilini seçin." xml:space="preserve"><value>选择应用程序界面语言。</value></data>
+  <data name="Türkçe" xml:space="preserve"><value>土耳其语</value></data>
+  <data name="İngilizce" xml:space="preserve"><value>英语</value></data>
+  <data name="Kaydet" xml:space="preserve"><value>保存</value></data>
+  <data name="Kaydedildi ✓" xml:space="preserve"><value>已保存 ✓</value></data>
+
+  <!-- Dashboard -->
+  <data name="PawnIO sürücüsü kurulu değil" xml:space="preserve"><value>未安装 PawnIO 驱动</value></data>
+  <data name="İşlemcinin güç tüketimi ve çip içi sıcaklığı yalnızca" xml:space="preserve"><value>处理器的功耗和芯片内部温度只有在安装</value></data>
+  <data name="sürücüsü kuruluyken okunabilir. Şu anda sürücü kurulu değil; ikisi de" xml:space="preserve"><value>驱动后才能读取。目前尚未安装该驱动，因此两者均显示为</value></data>
+  <data name="gösterilir." xml:space="preserve"><value>。</value></data>
+  <data name="nasıl kurulur" xml:space="preserve"><value>如何安装</value></data>
+  <data name="İşlemci (CPU)" xml:space="preserve"><value>处理器（CPU）</value></data>
+  <data name="Ekran Kartı (GPU)" xml:space="preserve"><value>显卡（GPU）</value></data>
+  <data name="Video Belleği (VRAM)" xml:space="preserve"><value>显存（VRAM）</value></data>
+  <data name="Bellek (RAM)" xml:space="preserve"><value>内存（RAM）</value></data>
+  <data name="Kare Hızı (FPS)" xml:space="preserve"><value>帧率（FPS）</value></data>
+  <data name="Kare Süresi" xml:space="preserve"><value>帧时间</value></data>
+  <data name="Ölçülemiyor" xml:space="preserve"><value>无法测量</value></data>
+  <data name="Depolama (Disk)" xml:space="preserve"><value>存储（磁盘）</value></data>
+  <data name="Veri bekleniyor…" xml:space="preserve"><value>等待数据…</value></data>
+  <data name="Ağ" xml:space="preserve"><value>网络</value></data>
+  <data name="Bu oturum:" xml:space="preserve"><value>本次会话：</value></data>
+  <data name="Kaynak Kullanımı" xml:space="preserve"><value>资源使用情况</value></data>
+  <data name="Sistem Özeti" xml:space="preserve"><value>系统概览</value></data>
+  <data name="Bellek:" xml:space="preserve"><value>内存：</value></data>
+  <data name="Depolama:" xml:space="preserve"><value>存储：</value></data>
+  <data name="Açık kalma süresi:" xml:space="preserve"><value>运行时间：</value></data>
+  <data name="İşlemci" xml:space="preserve"><value>处理器</value></data>
+  <data name="Ekran Kartı" xml:space="preserve"><value>显卡</value></data>
+  <data name="Bellek" xml:space="preserve"><value>内存</value></data>
+  <data name="İndirme" xml:space="preserve"><value>下载</value></data>
+  <data name="Yükleme" xml:space="preserve"><value>上传</value></data>
+  <data name="Grafik zaman aralığı" xml:space="preserve"><value>图表时间范围</value></data>
+  <data name="dk" xml:space="preserve"><value>分钟</value></data>
+  <data name="sa" xml:space="preserve"><value>小时</value></data>
+  <data name="Ambiyans Modu" xml:space="preserve"><value>氛围模式</value></data>
+  <data name="Anlık Görüntü" xml:space="preserve"><value>快照</value></data>
+  <data name="Anlık görüntüde neyin görüneceğini seçin" xml:space="preserve"><value>选择快照中显示的内容</value></data>
+  <data name="Anlık Görüntü Ayarları" xml:space="preserve"><value>快照设置</value></data>
+  <data name="Bu grafikte her serinin çizgi/alan/bar olarak nasıl çizileceğini seçin" xml:space="preserve"><value>选择此图表中每个数据系列以折线图/面积图/柱状图哪种方式绘制</value></data>
+  <data name="Grafik Ayarları" xml:space="preserve"><value>图表设置</value></data>
+  <data name="Fare tekerleğiyle yakınlaştır/uzaklaştır · çift tıkla → canlıya dön" xml:space="preserve"><value>滚动鼠标滚轮缩放 · 双击返回实时视图</value></data>
+  <data name="Ambiyans modundan çık" xml:space="preserve"><value>退出氛围模式</value></data>
+  <data name="Depolama" xml:space="preserve"><value>存储</value></data>
+
+  <!-- Notifications -->
+  <data name="Bildirim Geçmişi" xml:space="preserve"><value>通知历史</value></data>
+  <data name="Ayarlar sayfasında belirlediğiniz eşiklerden hangisinin ne zaman aşıldığını gösterir. Bir eşik aşıldığında, siz normale dönüp tekrar aşılmadıkça yalnızca bir kez kaydedilir. Bu geçmiş yalnızca bu tarayıcıda saklanır." xml:space="preserve"><value>显示您在设置页面中设定的哪些阈值在何时被超过。阈值被超过后，只会记录一次，直到恢复正常并再次被超过为止。此历史记录仅保存在本浏览器中。</value></data>
+  <data name="Tüm Kayıtlar" xml:space="preserve"><value>所有记录</value></data>
+  <data name="Geçmişi Temizle" xml:space="preserve"><value>清除历史记录</value></data>
+
+  <!-- Error -->
+  <data name="Hata" xml:space="preserve"><value>错误</value></data>
+  <data name="Bir hata oluştu" xml:space="preserve"><value>发生了错误</value></data>
+  <data name="İsteğiniz işlenirken beklenmeyen bir hata meydana geldi." xml:space="preserve"><value>处理您的请求时发生了意外错误。</value></data>
+  <data name="İstek Kimliği:" xml:space="preserve"><value>请求 ID：</value></data>
+  <data name="Panele Dön" xml:space="preserve"><value>返回面板</value></data>
+
+  <!-- About > PawnIO -->
+  <data name="PawnIO Kurulumu" xml:space="preserve"><value>PawnIO 安装</value></data>
+  <data name="PawnIO nedir, neden gerekli?" xml:space="preserve"><value>什么是 PawnIO，为什么需要它？</value></data>
+  <data name="İşlemcinin gerçek güç tüketimini (watt), çip içi sıcaklığını (Tctl/Tdie) ve donanımsal çekirdek frekanslarını okumak, işletim sisteminin normalde izin vermediği düşük seviyeli bir erişim gerektirir. Bu erişimi" xml:space="preserve"><value>读取处理器的实际功耗（瓦特）、芯片内部温度（Tctl/Tdie）以及硬件核心频率，需要操作系统通常不允许的底层访问权限。此访问权限由</value></data>
+  <data name="adlı imzalı, açık kaynaklı bir çekirdek sürücüsü sağlar. Sürücü kurulu değilse uygulama çökmez ya da hata vermez, yalnızca bu üç değeri okuyamaz; bunun yerine frekansı Windows performans sayaçlarından türetir (gerçek ama daha yaklaşık bir değer). Güç tüketimi ve sıcaklık için sürücüsüz güvenilir bir alternatif yok (ACPI termal bölgesi denenmişti ama gerçek çip sıcaklığından onlarca derece sapabildiği için kaldırıldı), bu yüzden ikisi de" xml:space="preserve"><value>这个已签名的开源内核驱动提供。若未安装该驱动，应用不会崩溃或报错，只是无法读取这三个数值；此时会改为根据 Windows 性能计数器推算频率（真实但不够精确的估计值）。功耗和温度目前没有可靠的免驱动替代方案（曾尝试使用 ACPI 温区，但因其读数可能与实际芯片温度相差数十度而被移除），因此两者均显示为</value></data>
+  <data name="Kurulum adımları" xml:space="preserve"><value>安装步骤</value></data>
+  <data name="adresine gidin ve &quot;Download Now&quot; ile kurulumu indirin." xml:space="preserve"><value>并点击 "Download Now" 下载安装程序。</value></data>
+  <data name="İndirilen kurulumu çalıştırın (yönetici onayı isteyecektir). Kurulum sihirbazı bir sürüm seçimi sorarsa &quot;Unrestricted&quot; seçeneğini işaretleyin." xml:space="preserve"><value>运行下载的安装程序（会请求管理员权限）。若安装向导要求选择模式，请选择 "Unrestricted"。</value></data>
+  <data name="Kurulum bittikten sonra HardwareMonitorByYuinn'ü" xml:space="preserve"><value>安装完成后，请完全关闭</value></data>
+  <data name="tamamen kapatıp" xml:space="preserve"><value></value></data>
+  <data name="(görev çubuğundan değil, uygulamanın kendisinden) tekrar açın. Sürücü yalnızca uygulama başlarken bir kez kontrol edilir, açıkken kurulursa fark edilmez." xml:space="preserve"><value>HardwareMonitorByYuinn（从应用本身关闭，而非任务栏）后重新打开。驱动只在应用启动时检查一次；若在应用运行期间安装驱动，不会被检测到。</value></data>
+  <data name="Detaylar → İşlemci" xml:space="preserve"><value>详情 → 处理器</value></data>
+  <data name="sekmesine bakın: bu sayfanın en üstündeki uyarı kutusu kaybolduysa ve güç tüketimi artık" xml:space="preserve"><value>选项卡：如果此页面顶部的提示框已消失，且功耗现在显示的是真实瓦特值，而不是</value></data>
+  <data name="yerine gerçek bir watt değeri gösteriyorsa kurulum başarılı demektir." xml:space="preserve"><value>，则说明安装成功。</value></data>
+  <data name="Sorun giderme" xml:space="preserve"><value>故障排查</value></data>
+  <data name="Kurulumdan sonra uyarı hâlâ görünüyorsa şunları kontrol edin:" xml:space="preserve"><value>如果安装后提示仍然显示，请检查以下几点：</value></data>
+  <data name="Uygulamayı gerçekten tamamen kapatıp yeniden açtığınızdan emin olun (yeniden başlatma," xml:space="preserve"><value>确认您确实完全关闭并重新打开了应用（也可以通过</value></data>
+  <data name="Ayarlar → Ağ ve Erişim → Yerel Ağa Açma" xml:space="preserve"><value>设置 → 网络与访问 → 局域网访问</value></data>
+  <data name="panelindeki &quot;Şimdi Yeniden Başlat&quot; butonuyla da yapılabilir)." xml:space="preserve"><value>面板中的“立即重启”按钮来重启）。</value></data>
+  <data name="Bazı anti-cheat/güvenlik yazılımları (ör. FACEIT Anti-Cheat) çekirdek sürücü kurulumlarını engelleyebilir; böyle bir yazılım kuruluysa geçici olarak kaldırıp tekrar deneyin." xml:space="preserve"><value>某些反作弊/安全软件（例如 FACEIT Anti-Cheat）可能会阻止内核驱动的安装；如果安装了此类软件，请暂时卸载后重试。</value></data>
+  <data name="Bazı anakartlarda/işlemcilerde LibreHardwareMonitor kütüphanesi güç sensörünü PawnIO kurulu olsa bile farklı bir isimle yayınlayabilir; bu durumda uyarı kurulumdan bağımsız bir uyumluluk sınırlamasıdır." xml:space="preserve"><value>在某些主板/处理器上，即使已安装 PawnIO，LibreHardwareMonitor 库也可能以不同名称报告功耗传感器；此时该提示反映的是与安装无关的兼容性限制。</value></data>
+
+  <!-- History > Report -->
+  <data name="HardwareMonitorByYuinn Sistem Raporu" xml:space="preserve"><value>HardwareMonitorByYuinn 系统报告</value></data>
+  <data name="Oluşturulma:" xml:space="preserve"><value>生成时间：</value></data>
+  <data name="Aralık" xml:space="preserve"><value>范围</value></data>
+  <data name="Son 1 gün" xml:space="preserve"><value>最近 1 天</value></data>
+  <data name="Son 7 gün" xml:space="preserve"><value>最近 7 天</value></data>
+  <data name="Son 14 gün" xml:space="preserve"><value>最近 14 天</value></data>
+  <data name="Son 30 gün" xml:space="preserve"><value>最近 30 天</value></data>
+  <data name="Yazdır / PDF Olarak Kaydet" xml:space="preserve"><value>打印 / 另存为 PDF</value></data>
+  <data name="Genel Özet" xml:space="preserve"><value>总览</value></data>
+  <data name="Yükleniyor…" xml:space="preserve"><value>加载中…</value></data>
+  <data name="Sistem Sağlığı Trendi" xml:space="preserve"><value>系统健康趋势</value></data>
+  <data name="Tarih" xml:space="preserve"><value>日期</value></data>
+  <data name="Puan" xml:space="preserve"><value>得分</value></data>
+  <data name="Örnek" xml:space="preserve"><value>样本数</value></data>
+  <data name="Sistem Olayları" xml:space="preserve"><value>系统事件</value></data>
+  <data name="Zaman" xml:space="preserve"><value>时间</value></data>
+  <data name="Tür" xml:space="preserve"><value>类型</value></data>
+  <data name="Açıklama" xml:space="preserve"><value>说明</value></data>
+
+  <!-- RemoteAccess > Login -->
+  <data name="Giriş" xml:space="preserve"><value>登录</value></data>
+  <data name="Bu bilgisayar yerel ağa açık. Devam etmek için PIN girin." xml:space="preserve"><value>此电脑已对局域网开放。请输入 PIN 码以继续。</value></data>
+  <data name="Giriş Yap" xml:space="preserve"><value>登录</value></data>
+  <data name="Çok fazla hatalı deneme. Lütfen biraz sonra tekrar deneyin." xml:space="preserve"><value>错误尝试次数过多，请稍后再试。</value></data>
+  <data name="PIN hatalı." xml:space="preserve"><value>PIN 码错误。</value></data>
+
+  <!-- Comparison -->
+  <data name="Menüyü daralt/genişlet" xml:space="preserve"><value>收起/展开菜单</value></data>
+  <data name="Oturum Karşılaştırma" xml:space="preserve"><value>会话对比</value></data>
+  <data name="Verileri Kaydet" xml:space="preserve"><value>保存数据</value></data>
+  <data name="Zaman Aralığı Karşılaştırma" xml:space="preserve"><value>时间范围对比</value></data>
+  <data name="İki Zaman Aralığını Karşılaştır" xml:space="preserve"><value>对比两个时间范围</value></data>
+  <data name="Bu oturumun tüm ortalama verilerini (1, 2, 5, 10, 15 dakikalık ve genel ortalamalar) bir metin dosyasına kaydedip bilgisayarınıza indirebilirsiniz. Programı tekrar açtığınızda bu dosyayı aşağıdan yükleyerek eski verilerle karşılaştırma yapabilirsiniz." xml:space="preserve"><value>您可以将本次会话的所有平均数据（1、2、5、10、15 分钟平均值及总体平均值）保存为文本文件并下载。下次打开程序时，可在下方上传该文件，与旧数据进行对比。</value></data>
+  <data name="Daha önce kaydettiğiniz bir .txt raporunu seçin; bu oturumla karşılaştırması aşağıdaki tabloda görünür." xml:space="preserve"><value>选择之前保存的 .txt 报告文件，与本次会话的对比结果将显示在下方表格中。</value></data>
+  <data name="Dosya Seç" xml:space="preserve"><value>选择文件</value></data>
+  <data name="Metrik" xml:space="preserve"><value>指标</value></data>
+  <data name="Bu Oturum" xml:space="preserve"><value>本次会话</value></data>
+  <data name="Yüklenen Kayıt" xml:space="preserve"><value>已加载的记录</value></data>
+  <data name="Fark" xml:space="preserve"><value>差值</value></data>
+  <data name="Şu anki oturum verileri yükleniyor..." xml:space="preserve"><value>正在加载当前会话数据…</value></data>
+  <data name="Aralık A: Başlangıç" xml:space="preserve"><value>范围 A：起始</value></data>
+  <data name="Aralık A: Bitiş" xml:space="preserve"><value>范围 A：结束</value></data>
+  <data name="Aralık B: Başlangıç" xml:space="preserve"><value>范围 B：起始</value></data>
+  <data name="Aralık B: Bitiş" xml:space="preserve"><value>范围 B：结束</value></data>
+  <data name="Karşılaştır" xml:space="preserve"><value>对比</value></data>
+  <data name="Aralık A" xml:space="preserve"><value>范围 A</value></data>
+  <data name="Aralık B" xml:space="preserve"><value>范围 B</value></data>
+  <data name="İki aralık seçip Karşılaştır'a basın." xml:space="preserve"><value>选择两个范围后点击“对比”。</value></data>
+
+  <!-- About -->
+  <data name="Bu bilgisayarın işlemci, ekran kartı ve bellek kullanımını gerçek zamanlı gösteren yerel bir izleme uygulamasıdır. Varsayılan olarak yalnızca" xml:space="preserve"><value>这是一个本地监控应用，实时显示本机的处理器、显卡和内存使用情况。默认情况下，它仅运行于</value></data>
+  <data name="adresinde çalışır, yani yalnızca bu bilgisayardan erişilebilir ve hiçbir şekilde internete bağlanmaz. Tüm ölçümler doğrudan bu bilgisayarın donanımından okunur." xml:space="preserve"><value>，也就是说仅本机可以访问，且不会以任何方式连接互联网。所有数据都直接从本机硬件读取。</value></data>
+  <data name="'yı kendiniz etkinleştirirseniz, aynı yerel ağdaki (ev ya da ofis Wi-Fi'niz gibi) diğer cihazlar da bir PIN girerek bu bilgisayardaki veriye erişebilir. Bu trafik şifrelenmez (HTTPS değil, düz HTTP); bu yüzden yalnızca güvendiğiniz bir ağda açmanız önerilir." xml:space="preserve"><value>后，同一局域网内（例如您的家庭或办公室 Wi-Fi）的其他设备也可以通过输入 PIN 码访问本机数据。此流量默认不加密（普通 HTTP，非 HTTPS），因此建议仅在您信任的网络中启用此功能。</value></data>
+  <data name="Bu bilgisayardaki pencere, arayüzü çizmek için Microsoft Edge WebView2'yi (Chromium tabanlı) kullanır. WebView2, yalnızca bu uygulamanın kendi" xml:space="preserve"><value>本机上的窗口使用 Microsoft Edge WebView2（基于 Chromium）来渲染界面。WebView2 仅加载本应用自身的</value></data>
+  <data name="sayfasını yükler; adres çubuğu yoktur, başka bir siteye gidilemez. Bileşenin varsayılan olarak açık gelen Microsoft Defender SmartScreen özelliği bazı teşhis verisini Microsoft'a gönderebilir, bkz." xml:space="preserve"><value>页面；没有地址栏，也无法导航到其他网站。该组件默认开启的 Microsoft Defender SmartScreen 功能可能会向 Microsoft 发送部分诊断数据，详见</value></data>
+  <data name="Microsoft Gizlilik Bildirimi" xml:space="preserve"><value>Microsoft 隐私声明</value></data>
+  <data name="Klavye Kısayolları" xml:space="preserve"><value>键盘快捷键</value></data>
+  <data name="Kısayol" xml:space="preserve"><value>快捷键</value></data>
+  <data name="Etki" xml:space="preserve"><value>作用</value></data>
+  <data name="Anlık Görüntü al (yalnızca Panel sayfasında)" xml:space="preserve"><value>拍摄快照（仅面板页面可用）</value></data>
+  <data name="Bir metin kutusuna veya seçim listesine yazı yazarken rakam tuşları devre dışı kalır, böylece bir eşik değeri girerken sayfa değişmez." xml:space="preserve"><value>在文本框或下拉列表中输入内容时，数字键会被禁用，以避免在输入阈值时页面意外切换。</value></data>
+  <data name="Ölçümler nereden geliyor?" xml:space="preserve"><value>数据来自哪里？</value></data>
+  <data name="Değer" xml:space="preserve"><value>数值</value></data>
+  <data name="Kaynak" xml:space="preserve"><value>来源</value></data>
+  <data name="Bileşen" xml:space="preserve"><value>组件</value></data>
+  <data name="İşlemci kullanımı ve frekansı" xml:space="preserve"><value>处理器使用率与频率</value></data>
+  <data name="Windows performans sayaçları (WMI)" xml:space="preserve"><value>Windows 性能计数器（WMI）</value></data>
+  <data name="Kendi kodumuz" xml:space="preserve"><value>自有代码</value></data>
+  <data name="İşlemci sıcaklığı (Tctl/Tdie)" xml:space="preserve"><value>处理器温度（Tctl/Tdie）</value></data>
+  <data name="MSR/SMU kayıtları (" xml:space="preserve"><value>MSR/SMU 寄存器（</value></data>
+  <data name="sürücüsü gerekir)" xml:space="preserve"><value>需要驱动）</value></data>
+  <data name="Bellek kullanımı ve frekansı" xml:space="preserve"><value>内存使用率与频率</value></data>
+  <data name="Windows bellek sayaçları (WMI)" xml:space="preserve"><value>Windows 内存计数器（WMI）</value></data>
+  <data name="Ekran kartı kullanımı ve bellek tüketimi" xml:space="preserve"><value>显卡使用率与显存占用</value></data>
+  <data name="Windows GPU performans sayaçları (WMI)" xml:space="preserve"><value>Windows GPU 性能计数器（WMI）</value></data>
+  <data name="Ekran kartı sıcaklığı ve bellek frekansı" xml:space="preserve"><value>显卡温度与显存频率</value></data>
+  <data name="D3DKMT çekirdek modu grafik arayüzü" xml:space="preserve"><value>D3DKMT 内核模式图形接口</value></data>
+  <data name="Windows olay izleme (ETW): DirectX 9/11/12 present olayları" xml:space="preserve"><value>Windows 事件追踪（ETW）：DirectX 9/11/12 present 事件</value></data>
+  <data name="Disk toplam kapasite ve türü (SSD/HDD)" xml:space="preserve"><value>磁盘总容量与类型（SSD/HDD）</value></data>
+  <data name="Windows depolama sayaçları (WMI)" xml:space="preserve"><value>Windows 存储计数器（WMI）</value></data>
+  <data name="SMART Ömür yüzdesi ve Güç Açılma Süresi (yedek kaynak)" xml:space="preserve"><value>SMART 寿命百分比与通电时间（备用数据源）</value></data>
+  <data name="Windows Depolama Güvenilirlik Sayacı (WMI)" xml:space="preserve"><value>Windows 存储可靠性计数器（WMI）</value></data>
+  <data name="Grafikler, ortalamalar, karşılaştırma, arayüz" xml:space="preserve"><value>图表、平均值、对比、界面</value></data>
+  <data name="İşlemci güç tüketimi (paket ve çekirdek başına)" xml:space="preserve"><value>处理器功耗（封装及每核心）</value></data>
+  <data name="Ekran kartı çekirdek frekansı, güç tüketimi, hotspot sıcaklığı" xml:space="preserve"><value>显卡核心频率、功耗、热点温度</value></data>
+  <data name="Üreticiye özel sürücü arayüzleri (NVAPI / ADL)" xml:space="preserve"><value>厂商专属驱动接口（NVAPI / ADL）</value></data>
+  <data name="Disk kullanım yüzdesi, sıcaklığı, okuma/yazma hızı" xml:space="preserve"><value>磁盘使用率、温度、读写速度</value></data>
+  <data name="Donanım sensörleri" xml:space="preserve"><value>硬件传感器</value></data>
+  <data name="SMART Durum, Ömür (birincil), Güç Açılma Süresi (birincil), Toplam Okuma/Yazma" xml:space="preserve"><value>SMART 状态、寿命（主要来源）、通电时间（主要来源）、总读写量</value></data>
+  <data name="Ham SMART/NVMe log verisi" xml:space="preserve"><value>原始 SMART/NVMe 日志数据</value></data>
+  <data name="Kare hızı, Windows'un olay izleme (ETW) altyapısından ön plandaki uygulamanın ekrana sunduğu karelerin sayılmasıyla ölçülür. Bu yöntem ekran kartı üreticisinden bağımsızdır, ama yalnızca DirectX 9/11/12 kullanan uygulamaları kapsar (Vulkan/OpenGL hariç). Çekirdek frekansı, güç tüketimi ve hotspot sıcaklığı satırlarındaki değerler ise yalnızca üreticiye özel sürücü arayüzleri üzerinden okunabilir. Bunları kendimiz de yazabilirdik, ama her ekran kartı modelinde doğru çalıştığını doğrulayamayacağımız için bu işi, yıllardır tüm kartlarda sınanmış olan LibreHardwareMonitorLib'e bıraktık. İşlemci güç tüketimi ise Windows'un ayırdığı çekirdek modu (ring-0) sınırı yüzünden yalnızca" xml:space="preserve"><value>帧率的测量方式是通过 Windows 的事件追踪（ETW）基础设施，统计前台应用提交到屏幕的帧数。此方法不依赖显卡厂商，但仅覆盖使用 DirectX 9/11/12 的应用（不含 Vulkan/OpenGL）。核心频率、功耗和热点温度这几行的数值，只能通过厂商专属的驱动接口读取。我们本可以自行实现，但由于无法在每一款显卡型号上验证其正确性，因此将这项工作交给了经过多年、在各种显卡上广泛测试的 LibreHardwareMonitorLib。而处理器功耗由于 Windows 强制的内核模式（ring-0）边界限制，只有在安装了</value></data>
+  <data name="sürücüsü kuruluysa okunabilir; kurulu değilse bu alan arayüzde" xml:space="preserve"><value>驱动时才能读取；若未安装，该字段在界面中会显示为</value></data>
+  <data name="gösterir." xml:space="preserve"><value>。</value></data>
+  <data name="PawnIO nasıl kurulur?" xml:space="preserve"><value>如何安装 PawnIO？</value></data>
+  <data name="SMART Ömür yüzdesi ve Güç Açılma Süresi önce DiskInfoToolkit'ten (sürücünün ham SMART/NVMe log verisi) okunmaya çalışılır; bazı denetleyicilerde bu okuma başarısız ya da geçersiz (ör. %100'ü aşan bir Ömür) olabildiğinde Windows'un kendi Depolama Güvenilirlik Sayacı'na (bağımsız bir WMI kaynağı) düşülür. Toplam Okuma/Toplam Yazma için bağımsız bir kaynak yoktur (bu, yalnızca sürücünün kendi SMART/NVMe log'unda tutulan bir sayaçtır); ikisi de okunamazsa arayüzde" xml:space="preserve"><value>SMART 寿命百分比和通电时间首先尝试通过 DiskInfoToolkit（读取驱动器原始 SMART/NVMe 日志数据）获取；在某些控制器上，若此读取失败或数值无效（例如寿命超过 100%），则会回退到 Windows 自身的存储可靠性计数器（一个独立的 WMI 数据源）。总读取量/总写入量没有独立数据源（这只是驱动器自身 SMART/NVMe 日志中保存的一个计数器）；若两者均无法读取，界面会显示为</value></data>
+  <data name="Üçüncü taraf bileşenler" xml:space="preserve"><value>第三方组件</value></data>
+  <data name="Lisans" xml:space="preserve"><value>许可证</value></data>
+  <data name="Kullanım amacı" xml:space="preserve"><value>用途</value></data>
+  <data name="Üreticiye özel ekran kartı değerleri" xml:space="preserve"><value>厂商专属显卡数值</value></data>
+  <data name="SMART disk sağlığı verisi" xml:space="preserve"><value>SMART 磁盘健康数据</value></data>
+  <data name="DiskInfoToolkit'in bağımlılığı" xml:space="preserve"><value>DiskInfoToolkit 的依赖项</value></data>
+  <data name="LibreHardwareMonitorLib'in bağımlılığı (RAM SPD bilgisi)" xml:space="preserve"><value>LibreHardwareMonitorLib 的依赖项（内存 SPD 信息）</value></data>
+  <data name="Uygulama çatısı ve web sunucusu" xml:space="preserve"><value>应用框架与 Web 服务器</value></data>
+  <data name="Tarayıcıya saniyelik canlı veri aktarımı" xml:space="preserve"><value>向浏览器进行逐秒实时数据传输</value></data>
+  <data name="SQLite erişimi, WMI, uzaktan tanılama altyapısı" xml:space="preserve"><value>SQLite 访问、WMI、远程诊断基础设施</value></data>
+  <data name="Kare hızı için Windows olay izleme (ETW) verisini okur" xml:space="preserve"><value>读取用于帧率统计的 Windows 事件追踪（ETW）数据</value></data>
+  <data name="Microsoft DIA SDK dağıtım şartları" xml:space="preserve"><value>Microsoft DIA SDK 分发条款</value></data>
+  <data name="TraceEvent'in iç bileşeni; MIT kapsamında değildir" xml:space="preserve"><value>TraceEvent 的内部组件；不属于 MIT 许可</value></data>
+  <data name="LibreHardwareMonitorLib'in geçişli bağımlılıkları" xml:space="preserve"><value>LibreHardwareMonitorLib 的传递依赖项</value></data>
+  <data name="Tüm kalıcı geçmişin SQLite erişim katmanı" xml:space="preserve"><value>所有持久化历史记录的 SQLite 访问层</value></data>
+  <data name="LibreHardwareMonitorLib'in bağımlılığı (HID cihaz erişimi)" xml:space="preserve"><value>LibreHardwareMonitorLib 的依赖项（HID 设备访问）</value></data>
+  <data name="Kamu malı (Public Domain)" xml:space="preserve"><value>公共领域（Public Domain）</value></data>
+  <data name="Kalıcı geçmişin fiziksel veritabanı motoru" xml:space="preserve"><value>持久化历史记录的物理数据库引擎</value></data>
+  <data name="Masaüstü penceresinin arayüz motoru" xml:space="preserve"><value>桌面窗口的界面引擎</value></data>
+  <data name="LibreHardwareMonitorLib ve DiskInfoToolkit'i değiştirmeden, derlenmiş hâlleriyle kullanıyoruz. MPL-2.0 gereği kaynak kodlarına yukarıdaki proje adreslerinden ulaşabilirsiniz. Lisans metinlerinin tamamı uygulamanın yanındaki" xml:space="preserve"><value>我们以未经修改的编译版本使用 LibreHardwareMonitorLib 和 DiskInfoToolkit。根据 MPL-2.0 许可，您可以通过上述项目地址获取其源代码。完整的许可证文本位于应用旁边的</value></data>
+  <data name="dosyasında yer alır." xml:space="preserve"><value>文件夹中。</value></data>
+  <data name="istisnadır: MIT kapsamındaki TraceEvent paketinin bir iç bileşeni olsa da kendisi Microsoft'un DIA SDK dağıtım şartlarına tabidir, değiştirilmeden ve yalnızca paketin izin verdiği şekilde dağıtılır." xml:space="preserve"><value>是一个例外：尽管它是 MIT 许可的 TraceEvent 包的内部组件，但其本身受 Microsoft DIA SDK 分发条款约束，仅以该包所允许的方式、未经修改地分发。</value></data>
+  <data name="Lisans metinlerini aç" xml:space="preserve"><value>打开许可证文本</value></data>
+
+  <!-- Details -->
+  <data name="Genel" xml:space="preserve"><value>常规</value></data>
+  <data name="Depolama &amp; Sistem" xml:space="preserve"><value>存储与系统</value></data>
+  <data name="Genel Ortalamalar" xml:space="preserve"><value>总体平均值</value></data>
+  <data name="İşlemci, ekran kartı, bellek, kare hızı ve ağ hızının genel ortalamaları; çekirdek bazlı dökümü" xml:space="preserve"><value>处理器、显卡、内存、帧率及网速的总体平均值；按核心划分的明细可在</value></data>
+  <data name="sekmesinde bulabilirsiniz." xml:space="preserve"><value>选项卡中查看。</value></data>
+  <data name="İşlemci Kullanımı" xml:space="preserve"><value>处理器使用率</value></data>
+  <data name="İşlemci Frekansı" xml:space="preserve"><value>处理器频率</value></data>
+  <data name="İşlemci Güç Tüketimi" xml:space="preserve"><value>处理器功耗</value></data>
+  <data name="İşlemci Sıcaklığı" xml:space="preserve"><value>处理器温度</value></data>
+  <data name="Ekran Kartı Kullanımı" xml:space="preserve"><value>显卡使用率</value></data>
+  <data name="Ekran Kartı Frekansı" xml:space="preserve"><value>显卡频率</value></data>
+  <data name="Ekran Kartı Sıcaklığı" xml:space="preserve"><value>显卡温度</value></data>
+  <data name="Ekran Kartı Güç Tüketimi" xml:space="preserve"><value>显卡功耗</value></data>
+  <data name="Bellek Kullanımı" xml:space="preserve"><value>内存使用率</value></data>
+  <data name="Ağ İndirme Hızı" xml:space="preserve"><value>网络下载速度</value></data>
+  <data name="Ağ Yükleme Hızı" xml:space="preserve"><value>网络上传速度</value></data>
+  <data name="İşlemcinin çip içi sensörleri okunamıyor" xml:space="preserve"><value>无法读取处理器的芯片内部传感器</value></data>
+  <data name="İşlemcinin güç tüketimi, gerçek çip sıcaklığı (Tctl/Tdie) ve donanımsal frekans değerleri yalnızca" xml:space="preserve"><value>处理器的功耗、真实芯片温度（Tctl/Tdie）及硬件频率数值，只有在安装了名为</value></data>
+  <data name="adlı imzalı çekirdek sürücüsü kuruluysa okunabilir; bu sürücü şu anda sisteminizde kurulu değil. Uygulama bu yüzden frekansı Windows performans sayaçlarından türetiyor (gerçek ama yaklaşık bir değer)." xml:space="preserve"><value>的已签名内核驱动后才能读取；您的系统目前尚未安装该驱动。因此应用会改为根据 Windows 性能计数器推算频率（真实但为近似值）。</value></data>
+  <data name="ve" xml:space="preserve"><value>与</value></data>
+  <data name="için sürücüsüz güvenilir bir kaynak yok (ACPI termal bölgesi denenmişti ama gerçek çip sıcaklığından onlarca derece sapabildiği görüldüğü için kaldırıldı), bu yüzden ikisi de" xml:space="preserve"><value>目前没有可靠的免驱动数据来源（曾尝试使用 ACPI 温区，但因发现其读数可能与实际芯片温度相差数十度而被移除），因此两者均显示为</value></data>
+  <data name="gösterilir. Tam sensör erişimi isterseniz PawnIO'yu kurup uygulamayı yeniden başlatmanız yeterlidir; adımlar için" xml:space="preserve"><value>。如果您需要完整的传感器访问权限，只需安装 PawnIO 并重启应用即可；具体步骤请参见</value></data>
+  <data name="sayfasına bakabilirsiniz." xml:space="preserve"><value>页面。</value></data>
+  <data name="Kullanım" xml:space="preserve"><value>使用率</value></data>
+  <data name="Frekans" xml:space="preserve"><value>频率</value></data>
+  <data name="Güç Tüketimi" xml:space="preserve"><value>功耗</value></data>
+  <data name="Sıcaklık" xml:space="preserve"><value>温度</value></data>
+  <data name="Çekirdekler" xml:space="preserve"><value>核心</value></data>
+  <data name="Satırlar fiziksel çekirdekleri gösterir. Frekans ve güç çekirdek başına ölçülür; kullanım ise o çekirdekte çalışan iş parçacıklarının ortalamasıdır." xml:space="preserve"><value>每行代表一个物理核心。频率和功耗按每个核心测量；使用率则是该核心上运行的线程的平均值。</value></data>
+  <data name="Çekirdek" xml:space="preserve"><value>核心</value></data>
+  <data name="Güç" xml:space="preserve"><value>功率</value></data>
+  <data name="Ortalamalar" xml:space="preserve"><value>平均值</value></data>
+  <data name="Çekirdek Bazlı Ortalamalar" xml:space="preserve"><value>各核心平均值</value></data>
+  <data name="Ekran Kartı bulunamadı" xml:space="preserve"><value>未检测到显卡</value></data>
+  <data name="Sürücü Sürümü" xml:space="preserve"><value>驱动版本</value></data>
+  <data name="Bilinmiyor" xml:space="preserve"><value>未知</value></data>
+  <data name="Çekirdek Frekansı" xml:space="preserve"><value>核心频率</value></data>
+  <data name="Bellek Frekansı" xml:space="preserve"><value>显存频率</value></data>
+  <data name="Normal Sıcaklık" xml:space="preserve"><value>核心温度</value></data>
+  <data name="Hotspot Sıcaklık" xml:space="preserve"><value>热点温度</value></data>
+  <data name="Video Belleği" xml:space="preserve"><value>显存</value></data>
+  <data name="toplam" xml:space="preserve"><value>总计</value></data>
+  <data name="Anlık" xml:space="preserve"><value>实时</value></data>
+  <data name="Kare hızı, Windows'un kendi olay izleme altyapısı (ETW) üzerinden, o an" xml:space="preserve"><value>帧率通过 Windows 自身的事件追踪基础设施（ETW）测量，依据</value></data>
+  <data name="ön planda çalışan uygulamanın" xml:space="preserve"><value>当前前台应用</value></data>
+  <data name="ekrana sunduğu karelerden ölçülür ve ekran kartı üreticisinden bağımsızdır (AMD/NVIDIA/Intel fark etmez). Yalnızca" xml:space="preserve"><value>此刻提交到屏幕的帧数，且与显卡厂商无关（AMD/NVIDIA/Intel 均适用）。仅覆盖使用</value></data>
+  <data name="kullanan uygulamaları kapsar; Vulkan/OpenGL tabanlı oyunlar bu ölçüme dahil olmaz. Ön plandaki uygulama kare sunmuyorsa (masaüstündeyken, pencere küçültülmüşken) alan" xml:space="preserve"><value>的应用；基于 Vulkan/OpenGL 的游戏不在此测量范围内。若前台应用未提交帧（例如处于桌面或窗口已最小化时），该字段会显示为</value></data>
+  <data name="gösterir. Ortalamalar da yalnızca değer okunabilen saniyeleri kapsar, bu yüzden oyun kapatıldığında geçmiş ortalamalar sıfıra doğru çekilmez." xml:space="preserve"><value>。平均值也只统计能读取到数值的秒数，因此关闭游戏时不会把之前的平均值拉向零。</value></data>
+  <data name=", son ~10 saniyedeki en yavaş karelerin ortalamasından hesaplanır ve takılmaları ortalama FPS'ten çok daha net gösterir; en az 30 kare birikmeden (oyun yeni açıldığında birkaç saniye)" xml:space="preserve"><value>由最近约 10 秒内最慢的若干帧的平均值计算得出，比平均 FPS 更能清晰反映卡顿；在累积到至少 30 帧之前（游戏刚启动的几秒内），该字段会显示为</value></data>
+  <data name="Genel Sistem Bilgisi" xml:space="preserve"><value>常规系统信息</value></data>
+  <data name="Bilgisayar Adı" xml:space="preserve"><value>计算机名称</value></data>
+  <data name="İşletim Sistemi" xml:space="preserve"><value>操作系统</value></data>
+  <data name="Ekran Kartları" xml:space="preserve"><value>显卡</value></data>
+  <data name="Sürücü:" xml:space="preserve"><value>驱动：</value></data>
+  <data name="Toplam RAM" xml:space="preserve"><value>总内存</value></data>
+  <data name="Sistem Açık Kalma Süresi" xml:space="preserve"><value>系统运行时间</value></data>
+  <data name="Sürücü" xml:space="preserve"><value>驱动器</value></data>
+  <data name="Dosya Sistemi" xml:space="preserve"><value>文件系统</value></data>
+  <data name="Kullanılan" xml:space="preserve"><value>已用</value></data>
+  <data name="Doluluk" xml:space="preserve"><value>占用率</value></data>
+  <data name="SMART Disk Sağlığı" xml:space="preserve"><value>SMART 磁盘健康状况</value></data>
+  <data name="Yalnızca sürücünün SMART verisi okunabilen diskler burada listelenir. &quot;Ömür&quot; sürücü üreticisinin kendi tahminidir (100 = yeni, 0 = ömrünü tamamlamış); tüm modeller bu değeri raporlamaz." xml:space="preserve"><value>此处仅列出可读取 SMART 数据的磁盘。“寿命”是驱动器厂商自身的估计值（100 = 全新，0 = 寿命耗尽）；并非所有型号都会报告此数值。</value></data>
+  <data name="Durum" xml:space="preserve"><value>状态</value></data>
+  <data name="Ömür" xml:space="preserve"><value>寿命</value></data>
+  <data name="Güç Açılma Süresi" xml:space="preserve"><value>通电时间</value></data>
+  <data name="Toplam Okuma" xml:space="preserve"><value>总读取量</value></data>
+  <data name="Toplam Yazma" xml:space="preserve"><value>总写入量</value></data>
+  <data name="saat" xml:space="preserve"><value>小时</value></data>
+
+  <!-- History -->
+  <data name="Sistem Raporu" xml:space="preserve"><value>系统报告</value></data>
+  <data name="Kayıtlar" xml:space="preserve"><value>记录</value></data>
+  <data name="Kayıt Bilgileri" xml:space="preserve"><value>记录信息</value></data>
+  <data name="Kayıtları Görüntüle" xml:space="preserve"><value>查看记录</value></data>
+  <data name="Analiz ve Trendler" xml:space="preserve"><value>分析与趋势</value></data>
+  <data name="Isı Haritası" xml:space="preserve"><value>热力图</value></data>
+  <data name="Süreç ve Sistem Olayları" xml:space="preserve"><value>进程与系统事件</value></data>
+  <data name="Process Geçmişi" xml:space="preserve"><value>进程历史</value></data>
+  <data name="Sistem Olayı Zaman Çizelgesi" xml:space="preserve"><value>系统事件时间线</value></data>
+  <data name="Oyun Geçmişi" xml:space="preserve"><value>游戏历史</value></data>
+  <data name="Güvenlik" xml:space="preserve"><value>安全</value></data>
+  <data name="Giriş Denemesi Özeti" xml:space="preserve"><value>登录尝试概览</value></data>
+  <data name="Giriş Denemeleri" xml:space="preserve"><value>登录尝试记录</value></data>
+  <data name="Genel özet, sağlık puanı trendi ve sistem olaylarını tek sayfada toplayan, yazdırılabilir/PDF'e çevrilebilir bir HTML rapor oluşturur (tarayıcının &quot;Yazdır → PDF olarak kaydet&quot;i ile)." xml:space="preserve"><value>生成一份可打印/转换为 PDF 的 HTML 报告，将总览、健康得分趋势和系统事件汇总在一个页面中（通过浏览器的“打印 → 另存为 PDF”功能实现）。</value></data>
+  <data name="HTML Rapor Oluştur" xml:space="preserve"><value>生成 HTML 报告</value></data>
+  <data name="Uygulama çalışırken her dakika, o dakikanın ortalama değerleri diske kaydedilir; bu sayede uygulamayı kapatıp açsanız (hatta günler sonra) bile geçmiş kaybolmaz. Kayıtlar en fazla 30 gün saklanır, daha eskisi otomatik silinir." xml:space="preserve"><value>应用运行期间，每分钟都会将该分钟的平均值写入磁盘；这样即使您关闭并重新打开应用（甚至几天后），历史记录也不会丢失。记录最多保留 30 天，更早的记录会自动删除。</value></data>
+  <data name="Henüz hiç kayıt yok. İlk satır, uygulama açıldıktan yaklaşık bir dakika sonra oluşur." xml:space="preserve"><value>目前还没有记录。第一行将在应用打开约一分钟后出现。</value></data>
+  <data name="Kayıt sayısı" xml:space="preserve"><value>记录数</value></data>
+  <data name="dakikalık örnek" xml:space="preserve"><value>分钟样本</value></data>
+  <data name="Veritabanı boyutu" xml:space="preserve"><value>数据库大小</value></data>
+  <data name="Eski kayıtları temizle" xml:space="preserve"><value>清除旧记录</value></data>
+  <data name="En eski 1 gün" xml:space="preserve"><value>最早 1 天</value></data>
+  <data name="En eski 2 gün" xml:space="preserve"><value>最早 2 天</value></data>
+  <data name="En eski 5 gün" xml:space="preserve"><value>最早 5 天</value></data>
+  <data name="En eski 10 gün" xml:space="preserve"><value>最早 10 天</value></data>
+  <data name="En eski 15 gün" xml:space="preserve"><value>最早 15 天</value></data>
+  <data name="En eski 30 gün" xml:space="preserve"><value>最早 30 天</value></data>
+  <data name="Sil" xml:space="preserve"><value>删除</value></data>
+  <data name="Bir tarih aralığı seçip Göster'e basın; o aralıktaki dakikalık kayıtlar aşağıda listelenir. Çok geniş bir aralıkta yalnızca ilk" xml:space="preserve"><value>选择一个日期范围后点击“显示”；该范围内的分钟级记录将在下方列出。若范围过大，仅显示前</value></data>
+  <data name="satır gösterilir; daha fazlası için aynı aralığı Dışa Aktar'a basıp indirin. Varsayılan olarak son 1 gün seçilidir." xml:space="preserve"><value>行；如需查看更多，请对同一范围点击“导出”下载。默认选中最近 1 天。</value></data>
+  <data name="Başlangıç" xml:space="preserve"><value>起始</value></data>
+  <data name="Bitiş" xml:space="preserve"><value>结束</value></data>
+  <data name="Göster" xml:space="preserve"><value>显示</value></data>
+  <data name="Biçim" xml:space="preserve"><value>格式</value></data>
+  <data name="Dışa Aktar" xml:space="preserve"><value>导出</value></data>
+  <data name="İnd." xml:space="preserve"><value>下载</value></data>
+  <data name="Yük." xml:space="preserve"><value>上传</value></data>
+  <data name="Bir aralık seçip Göster'e basın." xml:space="preserve"><value>选择一个范围后点击“显示”。</value></data>
+  <data name="Her günün İşlemci/Ekran Kartı/Bellek ortalamalarına, Ayarlar'daki güncel eşiklerinize göre 0-100 arası bir puan verir (100 = sorunsuz). Kalıcı geçmiş disk sıcaklığı tutmadığı için puan yalnızca bu üçüne dayanır, Panel'deki canlı puandan biraz farklı olabilir." xml:space="preserve"><value>根据每天的处理器/显卡/内存平均值，结合您在设置中当前的阈值，给出一个 0-100 的得分（100 = 无异常）。由于持久化历史记录不保存磁盘温度，该得分仅基于这三项指标，可能与面板上的实时得分略有差异。</value></data>
+  <data name="Kalıcı geçmişteki sıcaklık verisini gün × saat bazında gösterir. Örneğin akşamları neden daha sıcak çalıştığını görmek için kullanışlıdır. İlk günlerde veri az olduğundan desen zayıf görünebilir, zamanla anlamlı hâle gelir." xml:space="preserve"><value>按“天 × 小时”展示持久化历史记录中的温度数据。例如可用于查看为什么晚上运行温度更高。最初几天由于数据较少，规律可能不明显，随着时间推移会变得更有意义。</value></data>
+  <data name="&quot;Kaynak Kullanımı&quot; listesinde üst sıralarda görünen her process için dakikalık CPU/RAM kaydı tutulur. Kayıtlar en fazla 30 gün saklanır, daha eskisi otomatik silinir." xml:space="preserve"><value>对于出现在“资源使用情况”列表前列的每个进程，都会保留分钟级的 CPU/内存记录。记录最多保留 30 天，更早的记录会自动删除。</value></data>
+  <data name="Henüz hiç kayıt yok." xml:space="preserve"><value>目前还没有记录。</value></data>
+  <data name="Bir process, &quot;Kaynak Kullanımı&quot; listesinde üst sıralarda göründüğü her dakika için ayrıca kaydedilir. Bir process seçip zaman içindeki CPU/RAM eğilimini görün (ör. bir sürecin zamanla belleği artırıp artırmadığı)." xml:space="preserve"><value>某个进程每次出现在“资源使用情况”列表前列的那一分钟都会被单独记录。选择一个进程即可查看其 CPU/内存随时间变化的趋势（例如该进程的内存占用是否随时间持续增长）。</value></data>
+  <data name="Ort. CPU %" xml:space="preserve"><value>平均 CPU %</value></data>
+  <data name="Ort. RAM MB" xml:space="preserve"><value>平均内存 MB</value></data>
+  <data name="Bir process seçin." xml:space="preserve"><value>请选择一个进程。</value></data>
+  <data name="Windows Olay Günlüğü'nden okunan başlatma/kapatma/uyku/uyanma/güncelleme olayları listelenir. Örneğin bir sıcaklık artışının o gün bir güncelleme sonrası mı başladığını görmek için kullanışlıdır. Bu olaylar kendi veritabanımıza kaydedilmez, Windows'un kendi günlüğünden anlık okunur." xml:space="preserve"><value>列出从 Windows 事件日志中读取的启动/关机/睡眠/唤醒/更新事件。例如可用于查看某次温度升高是否恰好发生在当天的一次更新之后。这些事件不会保存到我们自己的数据库中，而是实时从 Windows 自身的日志中读取。</value></data>
+  <data name="Başlatma" xml:space="preserve"><value>启动</value></data>
+  <data name="Kapatma" xml:space="preserve"><value>关机</value></data>
+  <data name="Uykuya Geçiş" xml:space="preserve"><value>进入睡眠</value></data>
+  <data name="Uyanma" xml:space="preserve"><value>唤醒</value></data>
+  <data name="Güncelleme" xml:space="preserve"><value>更新</value></data>
+  <data name="Kullanıcı İsteğiyle Kapatma/Yeniden Başlatma" xml:space="preserve"><value>用户主动关机/重启</value></data>
+  <data name="Bir oyun en az 30 saniye ön planda kare sunarsa oturumu otomatik kaydedilir. Kayıtlar en fazla 30 gün saklanır, daha eskisi otomatik silinir." xml:space="preserve"><value>若某游戏在前台连续提交帧至少 30 秒，其会话将被自动记录。记录最多保留 30 天，更早的记录会自动删除。</value></data>
+  <data name="Henüz hiç oyun oturumu kaydedilmedi." xml:space="preserve"><value>目前还没有记录任何游戏会话。</value></data>
+  <data name="Oturum sayısı" xml:space="preserve"><value>会话数</value></data>
+  <data name="oturum" xml:space="preserve"><value>次会话</value></data>
+  <data name="Bir oyun en az 30 saniye ön planda kare sunarsa oturumu otomatik kaydedilir. Kesintisiz uzun oturumlar en fazla 15 dakikalık parçalara bölünerek kaydedilir. Buradan bir oyunun geçmiş oturumlarındaki ortalama FPS/sıcaklık trendini görebilirsiniz." xml:space="preserve"><value>若某游戏在前台连续提交帧至少 30 秒，其会话将被自动记录。持续时间较长且未中断的会话会被拆分为最多 15 分钟一段进行记录。在此可以查看某款游戏历史会话中的平均 FPS/温度趋势。</value></data>
+  <data name="Oyun" xml:space="preserve"><value>游戏</value></data>
+  <data name="Süre" xml:space="preserve"><value>时长</value></data>
+  <data name="Ort. FPS" xml:space="preserve"><value>平均 FPS</value></data>
+  <data name="Ort. CPU °C" xml:space="preserve"><value>平均 CPU °C</value></data>
+  <data name="Ort. GPU °C" xml:space="preserve"><value>平均 GPU °C</value></data>
+  <data name="Henüz kayıtlı oyun oturumu yok." xml:space="preserve"><value>目前还没有已保存的游戏会话。</value></data>
+  <data name="Yerel Ağa Açma etkinken PIN giriş sayfasına yapılan tüm denemeler kalıcı olarak kaydedilir; bu sayede uygulamayı kapatıp açsanız bile geçmiş kaybolmaz. Kayıtlar en fazla 30 gün saklanır, daha eskisi otomatik silinir." xml:space="preserve"><value>在“局域网访问”启用期间，所有对 PIN 登录页面的尝试都会被永久记录；这样即使您关闭并重新打开应用，历史记录也不会丢失。记录最多保留 30 天，更早的记录会自动删除。</value></data>
+  <data name="Henüz hiç giriş denemesi kaydedilmedi." xml:space="preserve"><value>目前还没有记录任何登录尝试。</value></data>
+  <data name="deneme" xml:space="preserve"><value>次尝试</value></data>
+  <data name="Yerel Ağa Açma etkinken PIN giriş sayfasına (loopback dışından, yani bu bilgisayarın kendisi hariç) yapılan denemelerin kalıcı kaydıdır. Girilen PIN'in kendisi hiçbir zaman saklanmaz, yalnızca IP, zaman ve sonuç (başarılı/başarısız/kilide yol açtı) tutulur. Diğer kalıcı geçmiş verileriyle aynı 30 günlük saklama süresine tabidir." xml:space="preserve"><value>这是在“局域网访问”启用期间，来自 loopback 之外（即本机自身除外）对 PIN 登录页面的尝试的永久记录。系统绝不会保存输入的 PIN 码本身，只会保留 IP 地址、时间和结果（成功/失败/触发锁定）。与其他持久化历史数据一样，遵循相同的 30 天保留期限。</value></data>
+  <data name="IP Adresi" xml:space="preserve"><value>IP 地址</value></data>
+  <data name="Sonuç" xml:space="preserve"><value>结果</value></data>
+  <data name="TraceEvent paketi içinde" xml:space="preserve"><value>包含于 TraceEvent 包中</value></data>
+
+  <!-- Controller error messages (returned as JSON to JS callers) -->
+  <data name="Geçersiz değer." xml:space="preserve"><value>无效值。</value></data>
+  <data name="bulunamadı." xml:space="preserve"><value>未找到。</value></data>
+  <data name="Bitiş tarihi başlangıçtan önce olamaz." xml:space="preserve"><value>结束日期不能早于起始日期。</value></data>
+  <data name="Geçersiz gün sayısı." xml:space="preserve"><value>天数无效。</value></data>
+  <data name="PIN en az {0} karakter olmalı." xml:space="preserve"><value>PIN 码长度不能少于 {0} 位。</value></data>
+  <data name="PIN en fazla {0} karakter olabilir." xml:space="preserve"><value>PIN 码长度不能超过 {0} 位。</value></data>
+  <data name="Yerel ağa açmak için bir PIN belirlemelisiniz." xml:space="preserve"><value>启用局域网访问前必须设置 PIN 码。</value></data>
+  <data name="Yürütülebilir dosya yolu bulunamadı." xml:space="preserve"><value>未找到可执行文件路径。</value></data>
+
+  <!-- Backend enum-like display values (SMART status, sensor source labels) -->
+  <data name="İyi" xml:space="preserve"><value>良好</value></data>
+  <data name="Kötü" xml:space="preserve"><value>较差</value></data>
+  <data name="Donanım sensörü" xml:space="preserve"><value>硬件传感器</value></data>
+  <data name="Windows performans sayacı" xml:space="preserve"><value>Windows 性能计数器</value></data>
+  <data name="İşlemci çip sensörü (Tctl/Tdie)" xml:space="preserve"><value>处理器芯片传感器（Tctl/Tdie）</value></data>
+
+  <!-- Settings -->
+  <data name="Ayarlarda ara…" xml:space="preserve"><value>搜索设置…</value></data>
+  <data name="Ayarlarda ara" xml:space="preserve"><value>搜索设置</value></data>
+  <data name="Özelleştirme" xml:space="preserve"><value>个性化</value></data>
+  <data name="Hazır Temalar" xml:space="preserve"><value>预设主题</value></data>
+  <data name="Renkler" xml:space="preserve"><value>颜色</value></data>
+  <data name="Görünüm" xml:space="preserve"><value>外观</value></data>
+  <data name="Birim Tercihi" xml:space="preserve"><value>单位偏好</value></data>
+  <data name="Yazı Tipi" xml:space="preserve"><value>字体</value></data>
+  <data name="Cam Efekti" xml:space="preserve"><value>玻璃效果</value></data>
+  <data name="Panel Görünümü" xml:space="preserve"><value>面板视图</value></data>
+  <data name="Açılış Sekmesi" xml:space="preserve"><value>启动选项卡</value></data>
+  <data name="Grafik Tipi" xml:space="preserve"><value>图表类型</value></data>
+  <data name="Kart Sıralaması ve Detayları" xml:space="preserve"><value>卡片顺序与详情</value></data>
+  <data name="Panel Düzeni" xml:space="preserve"><value>面板布局</value></data>
+  <data name="Enerji Maliyeti" xml:space="preserve"><value>能耗成本</value></data>
+  <data name="Eşikler ve Bildirimler" xml:space="preserve"><value>阈值与通知</value></data>
+  <data name="Eşik Ayarları" xml:space="preserve"><value>阈值设置</value></data>
+  <data name="Sabit Eşikler" xml:space="preserve"><value>固定阈值</value></data>
+  <data name="Anomali Tespiti" xml:space="preserve"><value>异常检测</value></data>
+  <data name="Bellek Sızıntısı Tespiti" xml:space="preserve"><value>内存泄漏检测</value></data>
+  <data name="Bildirim Kuralları" xml:space="preserve"><value>通知规则</value></data>
+  <data name="Bildirim Sesi" xml:space="preserve"><value>通知声音</value></data>
+  <data name="Ağ ve Erişim" xml:space="preserve"><value>网络与访问</value></data>
+  <data name="Yerel Ağa Açma" xml:space="preserve"><value>局域网访问</value></data>
+  <data name="Kısayolları Düzenle" xml:space="preserve"><value>编辑快捷键</value></data>
+  <data name="Yedekleme" xml:space="preserve"><value>备份</value></data>
+  <data name="Ayarları Dışa/İçe Aktar" xml:space="preserve"><value>导出/导入设置</value></data>
+  <data name="Sistem" xml:space="preserve"><value>系统</value></data>
+  <data name="Otomatik Başlatma" xml:space="preserve"><value>自动启动</value></data>
+  <data name="Pencere Kapatma Davranışı" xml:space="preserve"><value>窗口关闭行为</value></data>
+  <data name="Eşik Ayarları: Sabit Eşikler" xml:space="preserve"><value>阈值设置：固定阈值</value></data>
+  <data name="Bir değer &quot;Dikkat&quot; eşiğini aştığında Panel'deki ilgili kart sarıya, &quot;Kritik&quot; eşiğini aştığında kırmızıya döner; kritik eşik aynı zamanda (🔔 ile bildirimlere izin verdiyseniz) bildirim de gönderir. İşlemci ve Ekran Kartı için hangi metriğin izleneceğini de seçebilirsiniz. Ayarlar yalnızca bu tarayıcıda saklanır." xml:space="preserve"><value>当数值超过“警告”阈值时，面板上对应的卡片会变为黄色；超过“严重”阈值时会变为红色；严重阈值同时还会发送通知（如果您已通过 🔔 允许通知）。您还可以选择处理器和显卡分别监控哪项指标。这些设置仅保存在本浏览器中。</value></data>
+  <data name="İşlemci eşiği" xml:space="preserve"><value>处理器阈值</value></data>
+  <data name="Sıcaklık (°C)" xml:space="preserve"><value>温度（°C）</value></data>
+  <data name="Kullanım (%)" xml:space="preserve"><value>使用率（%）</value></data>
+  <data name="Dikkat" xml:space="preserve"><value>警告</value></data>
+  <data name="Kritik" xml:space="preserve"><value>严重</value></data>
+  <data name="Ekran kartı eşiği" xml:space="preserve"><value>显卡阈值</value></data>
+  <data name="Bellek kullanımı (%)" xml:space="preserve"><value>内存使用率（%）</value></data>
+  <data name="Bu metrik için tek seçenek var" xml:space="preserve"><value>此指标只有一个可选项</value></data>
+  <data name="Disk sıcaklığı (°C)" xml:space="preserve"><value>磁盘温度（°C）</value></data>
+  <data name="Eşik Ayarları: Anomali Tespiti" xml:space="preserve"><value>阈值设置：异常检测</value></data>
+  <data name="Sabit eşiklere ek olarak, bir metrik son ~2 dakikaya göre ani bir sıçrama yaşadığında (eşiği aşmasa bile) Genel Sağlık Özeti'nde &quot;⚡&quot; ile belirtir." xml:space="preserve"><value>除固定阈值外，当某项指标相较最近约 2 分钟出现突然跳升时（即使未超过阈值），也会在总体健康概览中以“⚡”标出。</value></data>
+  <data name="Anomali tespitini etkinleştir" xml:space="preserve"><value>启用异常检测</value></data>
+  <data name="Eşik Ayarları: Bellek Sızıntısı Tespiti" xml:space="preserve"><value>阈值设置：内存泄漏检测</value></data>
+  <data name="Kaynak Kullanımı listesindeki bir süreç, listede göründüğü sürece RAM kullanımı sürekli artıyorsa Genel Sağlık Özeti'nde &quot;⚡&quot; ile belirtir. Anomali tespitinden bağımsız, ayrı bir açma/kapama anahtarıdır." xml:space="preserve"><value>若“资源使用情况”列表中的某个进程在其停留于列表期间内存使用率持续增长，会在总体健康概览中以“⚡”标出。此功能独立于异常检测，拥有单独的开关。</value></data>
+  <data name="Bellek sızıntısı tespitini etkinleştir" xml:space="preserve"><value>启用内存泄漏检测</value></data>
+  <data name="Bildirimler: Bildirim Kuralları" xml:space="preserve"><value>通知：通知规则</value></data>
+  <data name="Bir eşik aşıldığında (🔔 ile izin verdiyseniz) bildirim gönderilir. Eşik aşılı kaldığı sürece ne sıklıkla tekrar bildirim gönderileceğini ve hangi kartlar için bildirim istediğinizi burada seçebilirsiniz. Bu sayfa açık olmasa bile (Detaylar, Geçmiş vb. başka bir sekmedeyken de) bildirimler çalışmaya devam eder." xml:space="preserve"><value>当阈值被超过时（如果您已通过 🔔 允许），系统会发送通知。您可以在此选择在阈值持续超标期间通知重复发送的频率，以及希望为哪些卡片接收通知。即使此页面未打开（例如您正在“详情”“历史记录”等其他页面），通知功能仍会持续工作。</value></data>
+  <data name="Tekrar sıklığı" xml:space="preserve"><value>重复频率</value></data>
+  <data name="Yalnızca eşik aşıldığında (tekrar etmesin)" xml:space="preserve"><value>仅在超过阈值时通知一次（不重复）</value></data>
+  <data name="Her 5 saniyede bir" xml:space="preserve"><value>每 5 秒一次</value></data>
+  <data name="Her 10 saniyede bir" xml:space="preserve"><value>每 10 秒一次</value></data>
+  <data name="Her 30 saniyede bir" xml:space="preserve"><value>每 30 秒一次</value></data>
+  <data name="Her 1 dakikada bir" xml:space="preserve"><value>每 1 分钟一次</value></data>
+  <data name="Her 5 dakikada bir" xml:space="preserve"><value>每 5 分钟一次</value></data>
+  <data name="Bildirim gönderilecek kartlar" xml:space="preserve"><value>需要通知的卡片</value></data>
+  <data name="Bildirimler: Bildirim Sesi" xml:space="preserve"><value>通知：通知声音</value></data>
+  <data name="Ses" xml:space="preserve"><value>声音</value></data>
+  <data name="Klasik" xml:space="preserve"><value>经典</value></data>
+  <data name="Yumuşak" xml:space="preserve"><value>柔和</value></data>
+  <data name="Dikkat Çekici" xml:space="preserve"><value>醒目</value></data>
+  <data name="Sessiz (yalnızca görsel bildirim)" xml:space="preserve"><value>静音（仅视觉通知）</value></data>
+  <data name="Ses seviyesi" xml:space="preserve"><value>音量</value></data>
+  <data name="Test Et" xml:space="preserve"><value>测试</value></data>
+  <data name="İşlemci, ekran kartı, bellek, kare hızı, depolama, ağ, kaynak kullanımı ve sistem özetinin Panel'deki kartlarda ve grafikte kullanılan rengini değiştirin. Değişiklik tüm sayfalara ve grafiğe hemen yansır." xml:space="preserve"><value>更改处理器、显卡、内存、帧率、存储、网络、资源使用情况和系统概览在面板卡片及图表中使用的颜色。更改会立即应用到所有页面和图表。</value></data>
+  <data name="Varsayılanlara Dön" xml:space="preserve"><value>恢复默认</value></data>
+  <data name="Önizleme" xml:space="preserve"><value>预览</value></data>
+  <data name="Tek tıkla hem aksan renklerini hem arka planı bir temaya göre değiştirin. Renkler ve Görünüm bölümlerindeki değerler de otomatik güncellenir, isterseniz üzerine ince ayar yapabilirsiniz." xml:space="preserve"><value>一键根据某个主题同时更改强调色和背景。颜色和外观部分中的数值也会自动更新，之后您仍可根据需要进行微调。</value></data>
+  <data name="Tema ara…" xml:space="preserve"><value>搜索主题…</value></data>
+  <data name="Tema ara" xml:space="preserve"><value>搜索主题</value></data>
+  <data name="Aramanızla eşleşen tema yok." xml:space="preserve"><value>没有与搜索匹配的主题。</value></data>
+  <data name="Uygulandı ✓" xml:space="preserve"><value>已应用 ✓</value></data>
+  <data name="İşlemci ve Ekran Kartı kartlarında değerlerin gösterim sırasını, tüm kartlarda ise hangi ikincil detayların görüneceğini buradan yönetin. Değişiklik Panel'e hemen yansır." xml:space="preserve"><value>在此管理处理器和显卡卡片中数值的显示顺序，以及所有卡片上显示哪些次要详情。更改会立即应用到面板。</value></data>
+  <data name="Yoğunluk (hazır şablon)" xml:space="preserve"><value>密度（预设模板）</value></data>
+  <data name="Kart yoğunluğu" xml:space="preserve"><value>卡片密度</value></data>
+  <data name="Kompakt" xml:space="preserve"><value>紧凑</value></data>
+  <data name="Detaylı" xml:space="preserve"><value>详细</value></data>
+  <data name="Bir düzeye tıklamak aşağıdaki detay kutucuklarını o düzeye göre toplu ayarlar; &quot;Kompakt&quot; yalnızca ana değerleri bırakır, &quot;Normal&quot;/&quot;Detaylı&quot; hepsini gösterir (aralarındaki fark dolgu/font boyutudur). Kutucukları seçtikten sonra dilediğinizi yine elle açıp kapatabilirsiniz." xml:space="preserve"><value>点击某个级别会根据该级别批量设置下方的详情复选框；“紧凑”仅保留主要数值，“普通”/“详细”会显示全部（两者的区别在于内边距/字体大小）。选择级别后，您仍可手动单独开关各个复选框。</value></data>
+  <data name="Diğer Kartların Detayları" xml:space="preserve"><value>其他卡片的详情</value></data>
+  <data name="Video Belleği, Bellek, Kare Hızı, Depolama, Ağ ve Sistem Özeti kartlarında hangi ikincil bilgilerin gösterileceğini seçin." xml:space="preserve"><value>选择显存、内存、帧率、存储、网络及系统概览卡片上显示哪些次要信息。</value></data>
+  <data name="Panel'deki kartları sürükleyip bırakarak yeniden sıralayın, istemediğinizi kutucuğundan kapatın. Değişiklik Panel'e hemen yansır." xml:space="preserve"><value>通过拖放重新排列面板上的卡片，取消勾选即可隐藏不需要的卡片。更改会立即应用到面板。</value></data>
+  <data name="Düzen Profilleri" xml:space="preserve"><value>布局配置文件</value></data>
+  <data name="Yukarıdaki sıralamayı isimli bir profil olarak kaydedip sonra tek tıkla o profile geri dönebilirsiniz (ör. &quot;İzleme Düzeni&quot; / &quot;Oyun Düzeni&quot;)." xml:space="preserve"><value>将上方的排列方式保存为一个命名配置文件，之后可一键切换回该配置（例如“监控布局”/“游戏布局”）。</value></data>
+  <data name="Profil adı, ör. Oyun Düzeni" xml:space="preserve"><value>配置文件名称，例如“游戏布局”</value></data>
+  <data name="Mevcut Düzeni Kaydet" xml:space="preserve"><value>保存当前布局</value></data>
+  <data name="📸 Anlık Görüntü ile oluşturulan PNG'de hangi kartların (İşlemci, Ekran Kartı, Bellek, Kare Hızı, Depolama) ve her kartın içinde hangi değerlerin (sıcaklık, kullanım, güç, frekans vb.) hangi sırayla gireceğini seçin. Kutucuğu işaretli olmayanlar görüntüde yer almaz; her kartın listesindeki ilk etkin değer büyük, kalanlar altında küçük gösterilir." xml:space="preserve"><value>选择通过 📸 快照生成的 PNG 中包含哪些卡片（处理器、显卡、内存、帧率、存储），以及每张卡片内包含哪些数值（温度、使用率、功率、频率等）及其顺序。未勾选的项不会出现在图像中；每张卡片列表中第一个启用的数值会以大字号显示，其余以小字号显示在下方。</value></data>
+  <data name="Gösterilecek Kartlar ve Sırası" xml:space="preserve"><value>要显示的卡片及其顺序</value></data>
+  <data name="Çözünürlük" xml:space="preserve"><value>分辨率</value></data>
+  <data name="1080p (Varsayılan)" xml:space="preserve"><value>1080p（默认）</value></data>
+  <data name="⛶ Ambiyans Modu'nda (Panel sayfasındaki tam ekran saat görünümü) hangi kartların gösterileceğini seçin." xml:space="preserve"><value>选择在 ⛶ 氛围模式（面板页面的全屏时钟视图）中显示哪些卡片。</value></data>
+  <data name="Görünüm: Genel" xml:space="preserve"><value>外观：常规</value></data>
+  <data name="Aydınlık ve karanlık mod için arka plan rengini ayrı ayrı özelleştirin. Değişiklik tüm sayfalara hemen yansır ve bu tarayıcıda saklanır." xml:space="preserve"><value>分别自定义浅色和深色模式的背景颜色。更改会立即应用到所有页面，并保存在本浏览器中。</value></data>
+  <data name="Gündüz modu arka planı" xml:space="preserve"><value>浅色模式背景</value></data>
+  <data name="Gece modu arka planı" xml:space="preserve"><value>深色模式背景</value></data>
+  <data name="Görünüm: Birim Tercihi" xml:space="preserve"><value>外观：单位偏好</value></data>
+  <data name="Panel, Detaylar, Geçmiş ve Karşılaştırma sayfalarındaki tüm sıcaklık/hız/boyut değerlerini etkiler." xml:space="preserve"><value>影响面板、详情、历史记录和对比页面中所有的温度/速度/大小数值。</value></data>
+  <data name="Veri hızı" xml:space="preserve"><value>数据速率</value></data>
+  <data name="Boyut" xml:space="preserve"><value>大小</value></data>
+  <data name="Santigrat (°C)" xml:space="preserve"><value>摄氏度（°C）</value></data>
+  <data name="Fahrenhayt (°F)" xml:space="preserve"><value>华氏度（°F）</value></data>
+  <data name="Görünüm: Yazı Tipi" xml:space="preserve"><value>外观：字体</value></data>
+  <data name="Küçük" xml:space="preserve"><value>小</value></data>
+  <data name="Büyük" xml:space="preserve"><value>大</value></data>
+  <data name="Yazı tipi ailesi" xml:space="preserve"><value>字体系列</value></data>
+  <data name="Sistem varsayılanı" xml:space="preserve"><value>系统默认</value></data>
+  <data name="Sabit genişlikli (monospace)" xml:space="preserve"><value>等宽字体</value></data>
+  <data name="Görünüm: Cam Efekti" xml:space="preserve"><value>外观：玻璃效果</value></data>
+  <data name="Kartları ve panelleri yarı saydam yapıp arkalarını bulanıklaştırır (glassmorphism)." xml:space="preserve"><value>将卡片和面板变为半透明并对背景进行模糊处理（玻璃拟态效果）。</value></data>
+  <data name="Cam efektini etkinleştir" xml:space="preserve"><value>启用玻璃效果</value></data>
+  <data name="Görünüm: Panel Görünümü" xml:space="preserve"><value>外观：面板视图</value></data>
+  <data name="Düzen" xml:space="preserve"><value>布局</value></data>
+  <data name="Grid (çok sütunlu)" xml:space="preserve"><value>网格（多列）</value></data>
+  <data name="Liste (tek sütun)" xml:space="preserve"><value>列表（单列）</value></data>
+  <data name="Görünüm: Açılış Sekmesi" xml:space="preserve"><value>外观：启动选项卡</value></data>
+  <data name="Uygulamanın kök adresine (" xml:space="preserve"><value>选择访问应用的根地址（</value></data>
+  <data name=") gidildiğinde hangi sekmenin gösterileceğini seçin." xml:space="preserve"><value>）时显示哪个选项卡。</value></data>
+  <data name="Sekme" xml:space="preserve"><value>选项卡</value></data>
+  <data name="Görünüm: Grafik Tipi" xml:space="preserve"><value>外观：图表类型</value></data>
+  <data name="Panel'in altındaki grafikte her serinin nasıl çizileceğini seçin. Not: birden fazla seri &quot;Bar&quot; seçilirse üst üste biner, en iyi tek seferde bir seri için kullanılır." xml:space="preserve"><value>选择面板下方图表中每个数据系列的绘制方式。注意：若多个系列都选择“柱状图”，会相互重叠，因此柱状图最适合一次仅用于一个系列。</value></data>
+  <data name="Çizgi" xml:space="preserve"><value>折线图</value></data>
+  <data name="Alan" xml:space="preserve"><value>面积图</value></data>
+  <data name="Bir işlem (oyun) ön plana geldiğinde renkleri/eşikleri otomatik olarak burada tanımladığınız profile geçirir; oyun kapanınca kendi genel ayarlarınıza döner. İşlem adı, Kare Hızı kartında/Detaylar sayfasında gördüğünüz kaynak adıyla aynı olmalı (ör." xml:space="preserve"><value>当某个进程（游戏）切换到前台时，会自动将颜色/阈值切换为您在此处定义的配置；游戏关闭后会恢复为您的常规设置。进程名称必须与您在帧率卡片/详情页面看到的来源名称一致（例如</value></data>
+  <data name="), büyük/küçük harf önemli değildir. Oyunun kısa adını yazarsanız (ör. &quot;valorant&quot;), bu bilgisayarda daha önce tam ekran çalışırken görülmüş gerçek işlem adıyla otomatik eşleştirmeyi deneriz." xml:space="preserve"><value>），大小写不敏感。若您输入游戏的简称（例如 "valorant"），系统会尝试自动匹配本机之前以全屏方式运行时检测到的真实进程名称。</value></data>
+  <data name="Otomatik eşleştirme yalnızca" xml:space="preserve"><value>自动匹配仅适用于您在打开 HardwareMonitorByYuinn 期间</value></data>
+  <data name="HardwareMonitorByYuinn açıkken en az bir kez tam ekran oynadığınız" xml:space="preserve"><value>至少以全屏方式玩过一次的</value></data>
+  <data name="oyunlar için çalışır. Bir oyunu daha hiç bu şekilde çalıştırmadıysanız kısa adı yazmanız bir şey eşleştirmez; o oyunun tam işlem adını (Kare Hızı kartında/ Detaylar sayfasında görünür) kendiniz yazmanız gerekir." xml:space="preserve"><value>游戏。如果您从未以这种方式运行过某款游戏，输入简称将无法匹配到任何内容；您需要自行输入该游戏的完整进程名称（可在帧率卡片/详情页面查看）。</value></data>
+  <data name="Yeni Profil / Düzenle" xml:space="preserve"><value>新建配置 / 编辑</value></data>
+  <data name="İşlem Adı (birden fazlaysa virgülle ayırın)" xml:space="preserve"><value>进程名称（多个请用逗号分隔）</value></data>
+  <data name="ör. valorant" xml:space="preserve"><value>例如 valorant</value></data>
+  <data name="Otomatik Ambiyans Moduna geç" xml:space="preserve"><value>自动切换到氛围模式</value></data>
+  <data name="Yok (genel düzen kullanılır)" xml:space="preserve"><value>无（使用常规布局）</value></data>
+  <data name="Oyun kapanınca otomatik anlık görüntü al" xml:space="preserve"><value>游戏关闭时自动拍摄快照</value></data>
+  <data name="Bu Profildeki Eşikler" xml:space="preserve"><value>此配置中的阈值</value></data>
+  <data name="Dikkat'i boş bırakırsanız genel Eşik Ayarları'ndaki değeriniz kullanılır." xml:space="preserve"><value>若将“警告”留空，将使用常规阈值设置中的数值。</value></data>
+  <data name="Profili Kaydet" xml:space="preserve"><value>保存配置</value></data>
+  <data name="Yeni Profil" xml:space="preserve"><value>新建配置</value></data>
+  <data name="Enerji Tüketimi Maliyeti" xml:space="preserve"><value>能耗成本</value></data>
+  <data name="Yalnızca İşlemci ve Ekran Kartı'nın anlık paket güçlerinden hesaplanan bir TAHMİNDİR; anakart, depolama, ekran ve diğer bileşenlerin tüketimini içermez, bu yüzden gerçek toplam sistem tüketiminden düşük çıkar." xml:space="preserve"><value>这仅是根据处理器和显卡当前的封装功率计算出的估算值；不包括主板、存储、显示器及其他组件的功耗，因此会低于系统的实际总功耗。</value></data>
+  <data name="Enerji maliyeti tahminini göster" xml:space="preserve"><value>显示估算的能耗成本</value></data>
+  <data name="Birim Fiyat (₺/kWh)" xml:space="preserve"><value>单价（₺/千瓦时）</value></data>
+  <data name="ör. 2.75" xml:space="preserve"><value>例如 2.75</value></data>
+  <data name="Varsayılan olarak bu uygulamaya yalnızca bu bilgisayardan (" xml:space="preserve"><value>默认情况下，此应用仅可从本机（</value></data>
+  <data name=") erişilebilir. Bunu açarsanız aynı yerel ağdaki (ev/ofis Wi-Fi'niz gibi) diğer cihazlardan (telefon, tablet) da erişilebilir; bu yüzden bir PIN zorunludur." xml:space="preserve"><value>）访问。若启用此选项，同一局域网内（例如您的家庭/办公室 Wi-Fi）的其他设备（手机、平板等）也可以访问；因此必须设置 PIN 码。</value></data>
+  <data name="Değişiklik ancak uygulamayı yeniden başlattığınızda etkili olur." xml:space="preserve"><value>更改仅在重启应用后生效。</value></data>
+  <data name="Bu bağlantı varsayılan olarak şifrelenmez (HTTPS değil, düz HTTP); PIN ve oturum aynı ağdaki başka biri tarafından teorik olarak dinlenebilir. Yalnızca güvendiğiniz bir ev/ofis ağında açın, halka açık/paylaşımlı Wi-Fi'lerde açmayın. Aşağıdaki &quot;HTTPS kullan&quot; ile bunu şifreleyebilir, ya da hiç uyarı almadan tamamen şifreli bağlanmak için" xml:space="preserve"><value>此连接默认不加密（普通 HTTP，非 HTTPS）；PIN 码和会话理论上可能被同一网络中的其他人截获。请仅在您信任的家庭/办公网络中启用，切勿在公共/共享 Wi-Fi 中启用。您可以通过下方的“使用 HTTPS”对其加密，或者若想在完全不出现任何警告的情况下建立完全加密的连接，可以搭建一个免费 VPN，例如</value></data>
+  <data name="ya da ZeroTier gibi ücretsiz bir VPN kurup uygulamayı yalnızca o VPN üzerinden kullanabilirsiniz." xml:space="preserve"><value>或 ZeroTier，并仅通过该 VPN 使用本应用。</value></data>
+  <data name="Yerel ağdan erişime izin ver" xml:space="preserve"><value>允许局域网访问</value></data>
+  <data name="HTTPS kullan (gelişmiş)" xml:space="preserve"><value>使用 HTTPS（高级）</value></data>
+  <data name="ör. 4821" xml:space="preserve"><value>例如 4821</value></data>
+  <data name="Kendinden imzalı bir sertifika kullanılır (gerçek bir sertifika otoritesi özel ağ adresleri için sertifika vermez). Bağlanan her cihazda tarayıcı" xml:space="preserve"><value>系统使用自签名证书（真正的证书颁发机构不会为私有网络地址签发证书）。在每台连接的设备上，浏览器会</value></data>
+  <data name="ilk seferde" xml:space="preserve"><value>在首次连接时</value></data>
+  <data name="&quot;bağlantı güvenli değil&quot; uyarısı gösterir; &quot;Gelişmiş → yine de devam et&quot;e bir kez basmanız yeterli, sonrasında genelde tekrar sormaz. Ev/ofis ağınız (yönlendiriciniz) IP adresinizi değiştirirse sertifikayı" xml:space="preserve"><value>显示“连接不安全”的警告；只需点击一次“高级 → 仍要继续”，之后通常不会再次提示。如果您的家庭/办公网络（路由器）更改了 IP 地址，您可以</value></data>
+  <data name="yeniden oluşturabilirsiniz" xml:space="preserve"><value>重新生成证书</value></data>
+  <data name="(bir sonraki yeniden başlatmada)." xml:space="preserve"><value>（在下次重启时生效）。</value></data>
+  <data name="Şimdi Yeniden Başlat" xml:space="preserve"><value>立即重启</value></data>
+  <data name="Bir kısayolu değiştirmek için &quot;Değiştir&quot;e basıp yeni tuş kombinasyonuna basın; Esc ile vazgeçebilirsiniz. Aynı kombinasyon iki eyleme birden atanamaz. Bir metin kutusu/açılır menü gibi bir alana yazı yazarken kısayollar çalışmaz (yanlışlıkla sayfa değişmesin diye)." xml:space="preserve"><value>要更改快捷键，请点击“更改”后按下新的组合键；按 Esc 可取消。同一组合键不能分配给两个操作。在文本框/下拉菜单等区域输入内容时，快捷键不会生效（以防页面意外切换）。</value></data>
+  <data name="Bu sayfadaki ve Panel'deki tüm tercihleri (eşikler, temalar, panel düzeni, oyun profilleri, bildirim ayarları vb.) tek bir JSON dosyasına kaydedip başka bir tarayıcıya veya bu bilgisayarın yeniden kurulumundan sonra geri yükleyebilirsiniz. Bildirim geçmişi dahil değildir." xml:space="preserve"><value>您可以将此页面和面板中的所有偏好设置（阈值、主题、面板布局、游戏配置、通知设置等）保存为一个 JSON 文件，并在其他浏览器或重装本机后恢复。通知历史记录不包含在内。</value></data>
+  <data name="Ağ ve Erişim → Yerel Ağa Açma PIN ayarı da dahil değildir" xml:space="preserve"><value>“网络与访问 → 局域网访问”中的 PIN 设置同样不包含在内</value></data>
+  <data name="; o, tarayıcıda değil sunucudaki ayrı bir dosyada tutulur, bu yüzden yeniden kurmanız gerekirse onu ayrıca yapılandırmanız gerekir." xml:space="preserve"><value>；该设置保存在服务器上的独立文件中，而非浏览器，因此如需重装，您需要单独重新配置它。</value></data>
+  <data name="Dışa Aktar (.json indir)" xml:space="preserve"><value>导出（下载 .json）</value></data>
+  <data name="İçe Aktar (.json seç)" xml:space="preserve"><value>导入（选择 .json）</value></data>
+  <data name="Açıksa, Windows'a her giriş yaptığınızda HardwareMonitorByYuinn otomatik başlar. Uygulama yönetici yetkisi gerektirdiğinden (" xml:space="preserve"><value>启用后，每次登录 Windows 时 HardwareMonitorByYuinn 都会自动启动。由于应用需要管理员权限（</value></data>
+  <data name="), bu kayıt Görev Zamanlayıcı üzerinden &quot;en yüksek yetkiyle&quot; oluşturulur; oturum açarken ayrıca bir UAC onayı istemez." xml:space="preserve"><value>），此条目通过任务计划程序以“最高权限”创建；登录时不会额外弹出 UAC 确认提示。</value></data>
+  <data name="Windows açılışında otomatik başlat" xml:space="preserve"><value>随 Windows 启动自动运行</value></data>
+  <data name="Başlarken pencereyi gösterme (doğrudan sistem tepsisinde başlat)" xml:space="preserve"><value>启动时不显示窗口（直接在系统托盘中启动）</value></data>
+  <data name="Bu seçenek yalnızca Windows'un kendisinin otomatik başlattığı açılışlarda geçerlidir; uygulamayı kısayoldan elle açtığınızda pencere her zaman normal görünür." xml:space="preserve"><value>此选项仅适用于由 Windows 自身自动触发的启动；通过快捷方式手动打开应用时，窗口始终正常显示。</value></data>
+  <data name="Kayıtlı başlangıç yolu artık geçerli değil (uygulama taşınmış olabilir); düzeltmek için tekrar kaydedin." xml:space="preserve"><value>已保存的启动路径已失效（应用可能已被移动）；请重新保存以修复。</value></data>
+  <data name="Pencerenin sağ üstündeki" xml:space="preserve"><value>决定点击窗口右上角的</value></data>
+  <data name="düğmesine basınca ne olacağını belirler." xml:space="preserve"><value>按钮后会发生什么。</value></data>
+  <data name="Sistem tepsisine küçült (uygulama arka planda çalışmaya devam eder)" xml:space="preserve"><value>最小化到系统托盘（应用继续在后台运行）</value></data>
+  <data name="Uygulamayı kapat" xml:space="preserve"><value>关闭应用</value></data>
+  <data name="Sistem tepsisindeki simgeye sağ tıklayınca" xml:space="preserve"><value>右键点击系统托盘图标会显示</value></data>
+  <data name="Çıkış" xml:space="preserve"><value>退出</value></data>
+  <data name="seçenekleri bulunur; simgeye çift tıklamak da pencereyi geri getirir." xml:space="preserve"><value>等选项；双击图标同样可以恢复窗口。</value></data>
+
+  <!-- Post-audit additions: keys used in views but missing from the initial localization pass -->
+  <data name="Oyun Profilleri" xml:space="preserve"><value>游戏配置</value></data>
+  <data name="Kare Hızı" xml:space="preserve"><value>帧率</value></data>
+  <data name="Genel Toplam" xml:space="preserve"><value>总计</value></data>
+  <data name="Disk" xml:space="preserve"><value>磁盘</value></data>
+  <data name="Normal" xml:space="preserve"><value>普通</value></data>
+  <data name="Bar" xml:space="preserve"><value>柱状图</value></data>
+  <data name="PIN" xml:space="preserve"><value>PIN</value></data>
+  <data name="Windows Açılışında Otomatik Başlatma" xml:space="preserve"><value>随 Windows 自动启动</value></data>
+  <data name="İki tarih aralığı seçip Kalıcı Geçmiş'teki ortalamalarını yan yana karşılaştırın. Örneğin bir sürücü güncellemesinden önceki hafta ile sonraki haftayı karşılaştırabilirsiniz." xml:space="preserve"><value>选择两个日期范围，并排比较它们在持久化历史记录中的平均值。例如，您可以比较驱动更新前一周与更新后一周的数据。</value></data>
+</root>

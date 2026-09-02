@@ -3,12 +3,14 @@ using System.Text;
 using System.Text.Json;
 using HardwareMonitorByYuinn.DataAccess.History;
 using HardwareMonitorByYuinn.Entity.History;
+using HardwareMonitorByYuinn.Web.Localization;
 using HardwareMonitorByYuinn.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace HardwareMonitorByYuinn.Web.Controllers;
 
-public sealed class HistoryController(IHistoryStore historyStore, SystemEventReader systemEventReader) : Controller
+public sealed class HistoryController(IHistoryStore historyStore, SystemEventReader systemEventReader, IStringLocalizer<SharedResource> localizer) : Controller
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
@@ -49,7 +51,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
 
     /// <summary>
     /// Yazdırılabilir/PDF'e çevrilebilir (tarayıcının "Yazdır → PDF olarak kaydet"i ile) HTML rapor
-    /// sayfası — harici bir PDF kütüphanesi eklemek yerine (bkz. bağımlılık minimizasyonu kararı).
+    /// sayfası, harici bir PDF kütüphanesi eklemek yerine (bkz. bağımlılık minimizasyonu kararı).
     /// Sayfanın kendisi boş döner; veriler client-side (report.js) zaten var olan
     /// RangeAverage/HealthTrend/SystemEvents endpoint'lerinden çekilir.
     /// </summary>
@@ -77,7 +79,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
     {
         if (to < from)
         {
-            return BadRequest(new { error = "Bitiş tarihi başlangıçtan önce olamaz." });
+            return BadRequest(new { error = localizer["Bitiş tarihi başlangıçtan önce olamaz."].Value });
         }
 
         (DateTime fromUtc, DateTime toUtc) = ParseRangeToUtc(from, to);
@@ -119,7 +121,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
     {
         if (to < from)
         {
-            return BadRequest(new { error = "Bitiş tarihi başlangıçtan önce olamaz." });
+            return BadRequest(new { error = localizer["Bitiş tarihi başlangıçtan önce olamaz."].Value });
         }
 
         (DateTime fromUtc, DateTime toUtc) = ParseRangeToUtc(from, to);
@@ -147,8 +149,8 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
 
     /// <summary>
     /// Karşılaştırma sayfasındaki "İki Zaman Aralığını Karşılaştır" için: seçilen aralıktaki TÜM
-    /// örneklerin (1500 satır sınırı olan `Rows`'un aksine) ortalamasını sunucuda hesaplayıp döner
-    /// — geniş bir aralık (ör. "sürücü güncellemesi öncesi" 2 hafta) binlerce satır olarak tarayıcıya
+    /// örneklerin (1500 satır sınırı olan `Rows`'un aksine) ortalamasını sunucuda hesaplayıp döner;
+    /// böylece geniş bir aralık (ör. "sürücü güncellemesi öncesi" 2 hafta) binlerce satır olarak tarayıcıya
     /// taşınmaz, yalnızca tek bir ortalama satırı döner.
     /// </summary>
     [HttpGet]
@@ -156,7 +158,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
     {
         if (to < from)
         {
-            return BadRequest(new { error = "Bitiş tarihi başlangıçtan önce olamaz." });
+            return BadRequest(new { error = localizer["Bitiş tarihi başlangıçtan önce olamaz."].Value });
         }
 
         (DateTime fromUtc, DateTime toUtc) = ParseRangeToUtc(from, to);
@@ -209,7 +211,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
 
     /// <summary>
     /// Sistem Sağlığı Trendi (Geçmiş sayfası) için günlük ortalamalar. Puanın kendisi burada
-    /// HESAPLANMAZ — eşikler (Ayarlar'da) yalnızca tarayıcıda (localStorage) tutulduğu için puan
+    /// HESAPLANMAZ, çünkü eşikler (Ayarlar'da) yalnızca tarayıcıda (localStorage) tutulduğu için puan
     /// istemci tarafında (history.js) bu ortalamalardan hesaplanır; burada yalnızca binlerce ham
     /// dakikalık satırı (Isı Haritası'ndaki gibi) günlere indirgeyip aktarım boyutunu küçültürüz.
     /// Kalıcı geçmiş disk sıcaklığı tutmadığından (yalnızca CPU/GPU/RAM), puan da bunlarla sınırlıdır.
@@ -243,7 +245,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
     }
 
     /// <summary>
-    /// Sistem Olayı Zaman Çizelgesi — Windows Olay Günlüğü'nden (System log) uyku/uyanma/başlatma/
+    /// Sistem Olayı Zaman Çizelgesi: Windows Olay Günlüğü'nden (System log) uyku/uyanma/başlatma/
     /// kapatma/güncelleme olaylarını okur. SQLite'a kalıcı olarak kaydedilmez, her istekte canlı
     /// okunur (Windows zaten kendi günlüğünde tutuyor).
     /// </summary>
@@ -280,7 +282,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
         IReadOnlyList<ProcessHistorySample> samples = await historyStore.GetProcessHistoryAsync(processName, fromUtc, toUtc, cancellationToken);
 
         // Aralık MaxDisplayRows'u aşarsa en YENİ kayıtları tut (liste zaten eskiden yeniye sıralı
-        // geliyor, en baştakileri atlamak en eskiyi düşürür) — "Rows" uç noktasıyla aynı desen.
+        // geliyor, en baştakileri atlamak en eskiyi düşürür); "Rows" uç noktasıyla aynı desen.
         bool truncated = samples.Count > MaxDisplayRows;
         IEnumerable<ProcessHistorySample> visible = truncated
             ? samples.Skip(samples.Count - MaxDisplayRows)
@@ -297,7 +299,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
     }
 
     /// <summary>
-    /// Yerel ağa açma PIN kapısına yapılan son N giriş denemesi — Ayarlar → Ağ ve Erişim'de
+    /// Yerel ağa açma PIN kapısına yapılan son N giriş denemesi. Ayarlar → Ağ ve Erişim'de
     /// tanımlanan özellik, ama görüntülemesi diğer kalıcı geçmiş verileriyle aynı yerde (Geçmiş
     /// sayfası) daha tutarlı olduğu için buraya eklendi.
     /// </summary>
@@ -318,7 +320,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
         return Json(result);
     }
 
-    /// <summary>Kullanıcının "Kayıt Bilgileri" panellerinden seçebileceği sabit gün seçenekleri —
+    /// <summary>Kullanıcının "Kayıt Bilgileri" panellerinden seçebileceği sabit gün seçenekleri;
     /// dropdown'a değil sunucuya da güvenilir (elle kurgulanmış bir POST isteği bu kümenin dışına
     /// çıkamaz).</summary>
     private static readonly int[] AllowedCleanupDays = [1, 2, 5, 10, 15, 30];
@@ -328,7 +330,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
     public async Task<IActionResult> DeleteOldestSamples(int days, CancellationToken cancellationToken)
     {
         if (!AllowedCleanupDays.Contains(days))
-            return BadRequest(new { error = "Geçersiz gün sayısı." });
+            return BadRequest(new { error = localizer["Geçersiz gün sayısı."].Value });
 
         int deleted = await historyStore.DeleteOldestSamplesAsync(days, cancellationToken);
         return Json(new { deletedCount = deleted });
@@ -339,7 +341,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
     public async Task<IActionResult> DeleteOldestGameSessions(int days, CancellationToken cancellationToken)
     {
         if (!AllowedCleanupDays.Contains(days))
-            return BadRequest(new { error = "Geçersiz gün sayısı." });
+            return BadRequest(new { error = localizer["Geçersiz gün sayısı."].Value });
 
         int deleted = await historyStore.DeleteOldestGameSessionsAsync(days, cancellationToken);
         return Json(new { deletedCount = deleted });
@@ -350,7 +352,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
     public async Task<IActionResult> DeleteOldestProcessSamples(int days, CancellationToken cancellationToken)
     {
         if (!AllowedCleanupDays.Contains(days))
-            return BadRequest(new { error = "Geçersiz gün sayısı." });
+            return BadRequest(new { error = localizer["Geçersiz gün sayısı."].Value });
 
         int deleted = await historyStore.DeleteOldestProcessSamplesAsync(days, cancellationToken);
         return Json(new { deletedCount = deleted });
@@ -361,7 +363,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
     public async Task<IActionResult> DeleteOldestLoginAttempts(int days, CancellationToken cancellationToken)
     {
         if (!AllowedCleanupDays.Contains(days))
-            return BadRequest(new { error = "Geçersiz gün sayısı." });
+            return BadRequest(new { error = localizer["Geçersiz gün sayısı."].Value });
 
         int deleted = await historyStore.DeleteOldestLoginAttemptsAsync(days, cancellationToken);
         return Json(new { deletedCount = deleted });
@@ -407,7 +409,7 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
     // fazla bayttan oluşur, açan programın kod sayfasını yanlış tahmin etmesi hâlinde hem bozuk görünür
     // hem de (daha kötüsü) bu baytlar sahte bir ayıraç gibi okunup satırın geri kalan sütunlarını
     // kaydırabilir. ASCII kullanmak bunu çözer ama tek başına yetmedi: bazı programların CSV içe
-    // aktarma diyaloğunda ";" yanında BOŞLUK da ayıraç olarak işaretli geliyor — başlıklardaki
+    // aktarma diyaloğunda ";" yanında BOŞLUK da ayıraç olarak işaretli geliyor; başlıklardaki
     // "Islemci Kullanim (%)" gibi kelime aralarındaki boşluklar da sütun böldüğü için başlıklar
     // veri hücrelerinden (boşluksuz, tek parça) daha fazla sütuna yayılıp kayıyordu. Bu yüzden
     // başlıklarda alt çizgi kullanılır, hiç boşluk bırakılmaz.

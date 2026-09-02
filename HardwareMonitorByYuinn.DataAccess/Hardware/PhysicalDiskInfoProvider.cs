@@ -7,9 +7,9 @@ internal sealed record PhysicalDiskInfo(string Name, double TotalGb, string Medi
 
 /// <summary>
 /// Fiziksel disklerin toplam kapasitesini ve türünü (SSD/HDD) LibreHardwareMonitor değil, Windows
-/// Depolama Yönetimi WMI sınıfından (<c>MSFT_PhysicalDisk</c>) okur — bu bilgi sensör olarak mevcut
+/// Depolama Yönetimi WMI sınıfından (<c>MSFT_PhysicalDisk</c>) okur, çünkü bu bilgi sensör olarak mevcut
 /// değildir. Sonuç, adına göre bir donanım girdisiyle eşleştirilir (bkz. <see cref="Match"/>).
-/// Kapasite ve tür neredeyse hiç değişmediği için bir süre önbelleğe alınır; ama kalıcı değil —
+/// Kapasite ve tür neredeyse hiç değişmediği için bir süre önbelleğe alınır; ama kalıcı değildir,
 /// uygulama açıkken bir harici disk takılıp çıkarılırsa (bu durumda SystemInfo.Drives her istekte
 /// taze okunduğundan iki kaynak arasında tutarsızlık oluşmasın diye) en geç <see cref="CacheDuration"/>
 /// içinde yeniden sorgulanır.

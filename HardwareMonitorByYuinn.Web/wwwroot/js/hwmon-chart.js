@@ -1,5 +1,5 @@
 /*
- * HardwareMonitorByYuinn — bağımlılıksız çoklu seri zaman grafiği.
+ * HardwareMonitorByYuinn: bağımlılıksız çoklu seri zaman grafiği.
  *
  * Chart.js yerine yazıldı. İhtiyacımız olan kadarını yapar: kayan zaman penceresi,
  * biri yüzde biri serbest ölçekli iki Y ekseni, seri gizle/göster, imleç ipucu,
@@ -26,13 +26,13 @@ window.HwmonChart = (function () {
     }
 
     function formatClock(ms) {
-        return new Date(ms).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+        return new Date(ms).toLocaleTimeString(window.HwmonLocaleTag(), { hour: "2-digit", minute: "2-digit", second: "2-digit" });
     }
 
     function create(canvas, options) {
         var ctx = canvas.getContext("2d");
         // windowMs görünen aralığın uzunluğudur; fare tekerleğiyle yakınlaştırıldığında değişir.
-        // retentionMs ise verinin belleğe alındığı üst sınırdır — yakınlaşınca eski veri silinmez,
+        // retentionMs ise verinin belleğe alındığı üst sınırdır, yakınlaşınca eski veri silinmez,
         // sonradan uzaklaşıldığında hâlâ orada olur.
         var windowMs = options.windowMs;
         var retentionMs = Math.max(options.maxWindowMs || options.windowMs, options.windowMs);
@@ -99,7 +99,7 @@ window.HwmonChart = (function () {
 
         // Her eksenin o anki değer aralığı. "auto" olan üst sınır, yalnızca o an GÖRÜNEN pencere
         // içindeki değerlere göre yuvarlanarak büyür (retentionMs kadar saklanan tüm geçmişe göre
-        // değil) — aksi hâlde yakınlaştırınca çizgi pencereye sığmasına rağmen dikey ölçek
+        // değil), aksi hâlde yakınlaştırınca çizgi pencereye sığmasına rağmen dikey ölçek
         // görünüm dışındaki eski bir tepe noktasına göre sabit kalır ve düz görünür.
         function axisRange(axisKey, nowMs) {
             var axis = axes[axisKey];
@@ -182,10 +182,10 @@ window.HwmonChart = (function () {
             ctx.font = "700 11px 'Segoe UI', system-ui, sans-serif";
             if (isLive()) {
                 ctx.fillStyle = "#4ade80";
-                ctx.fillText("● CANLI", plot.x + plot.w - 4, plot.y + 4);
+                ctx.fillText("● " + t("CANLI"), plot.x + plot.w - 4, plot.y + 4);
             } else {
                 ctx.fillStyle = cssVar("--text-muted");
-                ctx.fillText("⏸ Geçmiş (çift tıkla)", plot.x + plot.w - 4, plot.y + 4);
+                ctx.fillText("⏸ " + t("Geçmiş (çift tıkla)"), plot.x + plot.w - 4, plot.y + 4);
             }
         }
 
@@ -199,7 +199,7 @@ window.HwmonChart = (function () {
         }
 
         // "Bar" tipi: her seri kendi bar genişliğini örnekler arası medyan zaman aralığından
-        // hesaplar. Birden fazla seri aynı anda "bar" seçilirse üst üste biner — bu kasıtlı bir
+        // hesaplar. Birden fazla seri aynı anda "bar" seçilirse üst üste biner, bu kasıtlı bir
         // basitleştirme, bar modu tek seferde bir seriye bakmak için düşünülmüştür.
         function drawBarSeries(s, pts, nowMs, range) {
             var barWidth = 6;
@@ -223,7 +223,7 @@ window.HwmonChart = (function () {
         }
 
         // İki nokta arası bu süreden fazla açılırsa (ör. uygulama o aralıkta kapalıydı, geçmiş
-        // sorgusunda o dilim boştu) aradaki çizgiyi ÇİZMEYİZ — noktaları düz bir çizgiyle birleştirmek
+        // sorgusunda o dilim boştu) aradaki çizgiyi ÇİZMEYİZ, çünkü noktaları düz bir çizgiyle birleştirmek
         // orada veri varmış izlenimi verir ("yamuk" görünüm). Dakikalık geçmiş verisiyle ince
         // (saniyelik) canlı veri aynı seride yan yana durabildiğinden eşik, normal dakikalık
         // aralıktan (60 sn) belirgin şekilde büyük tutulur.
@@ -450,7 +450,7 @@ window.HwmonChart = (function () {
 
         // Zaman aralığı toggle butonları (1dk/5dk/15dk/1sa) için: fare tekerleğiyle yakınlaştırmanın
         // yaptığı gibi pencereyi doğrudan bir değere ayarlar ve canlı takibe döner (viewEndMs sıfırlanır).
-        // retentionMs sabittir (options.maxWindowMs, bkz. dashboard.js) — toggle hiçbir zaman veriyi
+        // retentionMs sabittir (options.maxWindowMs, bkz. dashboard.js); toggle hiçbir zaman veriyi
         // yeniden çekmez/değiştirmez, yalnızca zaten bellekte olan veriye zoom yapar. Eskiden her
         // toggle tıklamasında retention de değişip veri sunucudan farklı bir çözünürlükte yeniden
         // seed ediliyordu; bu, dar bir pencereye (ör. "5 dk") geri dönüldüğünde ince çözünürlüklü

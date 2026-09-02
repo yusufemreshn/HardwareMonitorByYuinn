@@ -1,16 +1,16 @@
 // Geçmiş sayfası da Ayarlar'daki gibi sol kategori/alt-bölüm gezinmesine bölündü (bkz.
-// window.HwmonSectionNav, site.js) — aşağıdaki her IIFE kendi panelinin gizli olup olmamasından
+// window.HwmonSectionNav, site.js); aşağıdaki her IIFE kendi panelinin gizli olup olmamasından
 // bağımsız olarak normal şekilde kurulmaya devam eder ("hidden" yalnızca görünürlüğü değiştirir).
 (function initHistoryNav() {
     "use strict";
     // Sidebar'ın mouse uzaklaşınca otomatik daralması yalnızca "Kayıtları Görüntüle" paneli
-    // açıkken çalışır (kullanıcı isteğiyle) — o panelin geniş tablosu için yer açmak amacıyla
+    // açıkken çalışır (kullanıcı isteğiyle), o panelin geniş tablosu için yer açmak amacıyla
     // eklendi, diğer Geçmiş sekmelerinde/sayfalarda sidebar her zaman tam genişlikte kalır.
     if (window.HwmonSectionNav) window.HwmonSectionNav.init("history-sidebar", "history-content", "history-rows-panel");
 })();
 
 // "Kayıt Bilgileri" (samples) ve Process Geçmişi'nin yeni "Kayıt Bilgileri" panelindeki "eski
-// kayıtları temizle" kontrolleri — paylaşılan uygulama site.js'teki window.HwmonRecordCleanup.
+// kayıtları temizle" kontrolleri, paylaşılan uygulama site.js'teki window.HwmonRecordCleanup.
 (function initCleanupControls() {
     "use strict";
     if (!window.HwmonRecordCleanup) return;
@@ -20,7 +20,7 @@
         buttonId: "history-cleanup-btn",
         tokenSelector: "#history-summary-panel input[name='__RequestVerificationToken']",
         endpoint: "/History/DeleteOldestSamples",
-        nounLabel: "kayıt"
+        nounLabel: t("kayıt")
     });
 
     window.HwmonRecordCleanup.wire({
@@ -28,7 +28,7 @@
         buttonId: "process-history-cleanup-btn",
         tokenSelector: "#process-history-summary-panel input[name='__RequestVerificationToken']",
         endpoint: "/History/DeleteOldestProcessSamples",
-        nounLabel: "kayıt"
+        nounLabel: t("kayıt")
     });
 })();
 
@@ -62,7 +62,7 @@
             var td = document.createElement("td");
             td.colSpan = 13;
             td.className = "stat-sub";
-            td.textContent = "Bu aralıkta kayıt yok.";
+            td.textContent = t("Bu aralıkta kayıt yok.");
             empty.appendChild(td);
             body.appendChild(empty);
             return;
@@ -71,7 +71,7 @@
         // En yeni kayıt en üstte görünsün diye ters sırada basılır (sunucu eskiden yeniye döndürür).
         rows.slice().reverse().forEach(function (r) {
             var tr = document.createElement("tr");
-            tr.appendChild(cell(new Date(r.zaman).toLocaleString("tr-TR")));
+            tr.appendChild(cell(new Date(r.zaman).toLocaleString(window.HwmonLocaleTag())));
             tr.appendChild(cell(fmt(r.cpuUsagePercent, "%", 1)));
             tr.appendChild(cell(fmt(r.cpuClockMhz, "MHz", 0)));
             tr.appendChild(cell(fmt(r.cpuPowerWatts, "W", 1)));
@@ -99,7 +99,7 @@
         var loadingCell = document.createElement("td");
         loadingCell.colSpan = 13;
         loadingCell.className = "stat-sub";
-        loadingCell.textContent = "Yükleniyor…";
+        loadingCell.textContent = t("Yükleniyor…");
         loadingRow.appendChild(loadingCell);
         body.appendChild(loadingRow);
         note.style.display = "none";
@@ -112,7 +112,7 @@
                 renderRows(data.rows);
                 if (data.truncated) {
                     note.style.display = "block";
-                    note.textContent = "Bu aralıkta " + data.totalCount + " kayıt var, yalnızca ilk " + data.rows.length + " tanesi gösteriliyor. Tamamı için Dışa Aktar'ı kullanın.";
+                    note.textContent = t("Bu aralıkta") + " " + data.totalCount + " " + t("kayıt var, yalnızca ilk") + " " + data.rows.length + " " + t("tanesi gösteriliyor. Tamamı için Dışa Aktar'ı kullanın.");
                 }
             })
             .catch(function () {
@@ -123,7 +123,7 @@
                 var errorCell = document.createElement("td");
                 errorCell.colSpan = 13;
                 errorCell.className = "stat-sub";
-                errorCell.textContent = "Kayıtlar okunamadı.";
+                errorCell.textContent = t("Kayıtlar okunamadı.");
                 errorRow.appendChild(errorCell);
                 body.appendChild(errorRow);
             });
@@ -143,11 +143,11 @@
     form.addEventListener("submit", function (e) {
         e.preventDefault();
         if (!fromInput.value || !toInput.value) {
-            showFormError("Başlangıç ve bitiş tarihi gerekli.");
+            showFormError(t("Başlangıç ve bitiş tarihi gerekli."));
             return;
         }
         if (toInput.value < fromInput.value) {
-            showFormError("Bitiş tarihi başlangıçtan önce olamaz.");
+            showFormError(t("Bitiş tarihi başlangıçtan önce olamaz."));
             return;
         }
         load();
@@ -170,10 +170,10 @@
     load();
 })();
 
-// Sistem Sağlığı Trendi — puan burada (sunucuda değil) hesaplanır çünkü eşikler yalnızca
+// Sistem Sağlığı Trendi: puan burada (sunucuda değil) hesaplanır çünkü eşikler yalnızca
 // tarayıcıda (localStorage, HwmonThresholds) tutulur; sunucu yalnızca günlük CPU/GPU/RAM
 // ortalamalarını döndürür (bkz. HistoryController.HealthTrend). Kalıcı geçmiş disk sıcaklığı
-// tutmadığından puan yalnızca CPU/GPU/RAM'e dayanır — Panel'deki canlı puandan (disk/SMART de
+// tutmadığından puan yalnızca CPU/GPU/RAM'e dayanır, bu yüzden Panel'deki canlı puandan (disk/SMART de
 // dahil) bu yüzden biraz farklı olabilir, bu kasıtlı ve dokümante edilmiş bir sınırlama.
 (function initHealthTrend() {
     "use strict";
@@ -182,7 +182,7 @@
     var body = document.getElementById("health-trend-body");
     if (!select || !body || !window.HwmonThresholds) return;
 
-    // Puanlama formülü artık site.js'teki tek kaynakta (HwmonThresholds.computeMetricHealthScore) —
+    // Puanlama formülü artık site.js'teki tek kaynakta (HwmonThresholds.computeMetricHealthScore);
     // eskiden burada, report.js'te ve dashboard.js'te üç kez bağımsız kopyalanmıştı.
     function scoreForDay(day, thresholds) {
         var cpuValue = thresholds.cpu.metric === "usage" ? day.avgCpuUsage : day.avgCpuTemp;
@@ -191,7 +191,7 @@
     }
 
     function render(days) {
-        body.innerHTML = '<tr><td colspan="3" class="stat-sub">Yükleniyor…</td></tr>';
+        body.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Yükleniyor…") + '</td></tr>';
         var thresholds = window.HwmonThresholds.load();
 
         fetch("/History/HealthTrend?days=" + days)
@@ -199,7 +199,7 @@
             .then(function (daily) {
                 body.innerHTML = "";
                 if (daily.length === 0) {
-                    body.innerHTML = '<tr><td colspan="3" class="stat-sub">Bu aralıkta kayıt yok.</td></tr>';
+                    body.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Bu aralıkta kayıt yok.") + '</td></tr>';
                     return;
                 }
 
@@ -209,7 +209,7 @@
 
                     var dateTd = document.createElement("td");
                     var d = new Date(day.date + "T00:00:00");
-                    dateTd.textContent = d.toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric" });
+                    dateTd.textContent = d.toLocaleDateString(window.HwmonLocaleTag(), { day: "2-digit", month: "2-digit", year: "numeric" });
                     tr.appendChild(dateTd);
 
                     var scoreTd = document.createElement("td");
@@ -227,7 +227,7 @@
                 });
             })
             .catch(function () {
-                body.innerHTML = '<tr><td colspan="3" class="stat-sub">Trend okunamadı.</td></tr>';
+                body.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Trend okunamadı.") + '</td></tr>';
             });
     }
 
@@ -235,7 +235,7 @@
     render(Number(select.value));
 })();
 
-// Process Geçmişi — bir process seçilip seçilen aralıktaki dakikalık CPU/RAM ortalamaları
+// Process Geçmişi: bir process seçilip seçilen aralıktaki dakikalık CPU/RAM ortalamaları
 // listelenir (bkz. HistoryController.ProcessNames/ProcessHistory, SqliteHistoryStore
 // process_samples tablosu).
 (function initProcessHistory() {
@@ -252,7 +252,7 @@
     }
 
     // Not: bu dosyanın en üstteki IIFE'sindeki `cell()` yardımcısı bu kapsamdan erişilemez
-    // (ayrı bir fonksiyon kapsamı) — burada kendi kopyası tanımlanır.
+    // (ayrı bir fonksiyon kapsamı), burada kendi kopyası tanımlanır.
     function cell(text) {
         var td = document.createElement("td");
         td.textContent = text;
@@ -262,11 +262,11 @@
     function loadHistory() {
         var name = nameSelect.value;
         if (!name) {
-            body.innerHTML = '<tr><td colspan="3" class="stat-sub">Bir process seçin.</td></tr>';
+            body.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Bir process seçin.") + '</td></tr>';
             return;
         }
 
-        body.innerHTML = '<tr><td colspan="3" class="stat-sub">Yükleniyor…</td></tr>';
+        body.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Yükleniyor…") + '</td></tr>';
         if (note) note.style.display = "none";
         var params = new URLSearchParams({ processName: name, days: daysSelect.value });
 
@@ -276,36 +276,36 @@
                 var rows = data.rows || [];
                 body.innerHTML = "";
                 if (rows.length === 0) {
-                    body.innerHTML = '<tr><td colspan="3" class="stat-sub">Bu aralıkta kayıt yok.</td></tr>';
+                    body.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Bu aralıkta kayıt yok.") + '</td></tr>';
                     return;
                 }
                 // Sunucu, aralık MaxDisplayRows'u aşarsa en YENİ kayıtları döner (bkz.
-                // HistoryController.ProcessHistory) — burada kullanıcıya bunun neden "son N gün"ün
+                // HistoryController.ProcessHistory); burada kullanıcıya bunun neden "son N gün"ün
                 // TAMAMI olmadığını açıklayan bir not göstermek gerekiyor, aksi halde eskiden olduğu
                 // gibi sessizce eksik/yanlış uçtan veri gösterilmiş izlenimi doğardı.
                 if (data.truncated && note) {
                     note.style.display = "block";
-                    note.textContent = "Bu aralıkta " + data.totalCount + " kayıt var, yalnızca en yeni " + rows.length + " tanesi gösteriliyor.";
+                    note.textContent = t("Bu aralıkta") + " " + data.totalCount + " " + t("kayıt var, yalnızca en yeni") + " " + rows.length + " " + t("tanesi gösteriliyor.");
                 }
                 // En yeni en üstte gösterilir (tablo doğal olarak eskiden yeniye geliyordu).
                 rows.slice().reverse().forEach(function (row) {
                     var tr = document.createElement("tr");
                     var d = new Date(row.timeLocal);
-                    tr.appendChild(cell(d.toLocaleString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })));
+                    tr.appendChild(cell(d.toLocaleString(window.HwmonLocaleTag(), { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })));
                     tr.appendChild(cell(fmtNum(row.avgCpuPercent, 1)));
                     tr.appendChild(cell(fmtNum(row.avgRamMb, 0)));
                     body.appendChild(tr);
                 });
             })
             .catch(function () {
-                body.innerHTML = '<tr><td colspan="3" class="stat-sub">Geçmiş okunamadı.</td></tr>';
+                body.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Geçmiş okunamadı.") + '</td></tr>';
             });
     }
 
     fetch("/History/ProcessNames")
         .then(function (r) { return r.json(); })
         .then(function (names) {
-            nameSelect.innerHTML = '<option value="">Bir process seçin…</option>';
+            nameSelect.innerHTML = '<option value="">' + t("Bir process seçin…") + '</option>';
             names.forEach(function (name) {
                 var option = document.createElement("option");
                 option.value = name;
@@ -314,15 +314,15 @@
             });
         })
         .catch(function () {
-            nameSelect.innerHTML = '<option value="">Process listesi okunamadı</option>';
+            nameSelect.innerHTML = '<option value="">' + t("Process listesi okunamadı") + '</option>';
         });
 
     nameSelect.addEventListener("change", loadHistory);
     daysSelect.addEventListener("change", loadHistory);
 })();
 
-// Sistem Olayı Zaman Çizelgesi — Windows Olay Günlüğü'nden okunan olayları listeler (bkz.
-// HistoryController.SystemEvents, SystemEventReader — SQLite'a kaydedilmez, canlı okunur).
+// Sistem Olayı Zaman Çizelgesi: Windows Olay Günlüğü'nden okunan olayları listeler (bkz.
+// HistoryController.SystemEvents, SystemEventReader; SQLite'a kaydedilmez, canlı okunur).
 (function initSystemEvents() {
     "use strict";
 
@@ -336,7 +336,7 @@
         "Güncelleme Yüklendi": "🔄", "Kullanıcı İsteğiyle Kapatma/Yeniden Başlatma": "⏻"
     };
 
-    // Son fetch edilen olaylar burada tutulur — tip filtresi değiştiğinde sunucuya tekrar
+    // Son fetch edilen olaylar burada tutulur, tip filtresi değiştiğinde sunucuya tekrar
     // gitmeden, yalnızca zaten indirilmiş listeyi yeniden süzüp çizeriz.
     var lastEvents = [];
 
@@ -358,21 +358,21 @@
 
         body.innerHTML = "";
         if (filtered.length === 0) {
-            body.innerHTML = '<tr><td colspan="3" class="stat-sub">Bu aralıkta/filtrede olay bulunamadı.</td></tr>';
+            body.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Bu aralıkta/filtrede olay bulunamadı.") + '</td></tr>';
             return;
         }
         filtered.forEach(function (evt) {
             var tr = document.createElement("tr");
             var d = new Date(evt.timestamp);
-            tr.appendChild(cell(d.toLocaleString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })));
-            tr.appendChild(cell((TYPE_ICONS[evt.type] || "•") + " " + evt.type));
+            tr.appendChild(cell(d.toLocaleString(window.HwmonLocaleTag(), { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })));
+            tr.appendChild(cell((TYPE_ICONS[evt.type] || "•") + " " + t(evt.type)));
             tr.appendChild(cell(evt.description));
             body.appendChild(tr);
         });
     }
 
     function render(days) {
-        body.innerHTML = '<tr><td colspan="3" class="stat-sub">Yükleniyor…</td></tr>';
+        body.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Yükleniyor…") + '</td></tr>';
 
         fetch("/History/SystemEvents?days=" + days)
             .then(function (r) { return r.json(); })
@@ -381,7 +381,7 @@
                 renderRows();
             })
             .catch(function () {
-                body.innerHTML = '<tr><td colspan="3" class="stat-sub">Olaylar okunamadı.</td></tr>';
+                body.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Olaylar okunamadı.") + '</td></tr>';
             });
     }
 

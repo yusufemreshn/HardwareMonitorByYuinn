@@ -41,7 +41,7 @@ public sealed class TimeSeriesStore
         RecordValue("gpu.power", t, snapshot.Gpu?.PowerWatts);
 
         // VRAM kullanım yüzdesi eskiden hiç kaydedilmiyordu; grafikteki VRAM serisi yalnızca o anki
-        // tarayıcı sekmesinde SignalR ile biriken canlı noktalara dayanıyordu — sayfa yenilenince
+        // tarayıcı sekmesinde SignalR ile biriken canlı noktalara dayanıyordu; sayfa yenilenince
         // (ya da yeni bir sekme açılınca) geçmiş sıfırlanıyor, kullanıcı yalnızca sekmeyi açtığından
         // beri geçen (bazen 30-40 saniye gibi kısa) kısmı görüyordu. Diğer metrikler gibi burada da
         // kaydedilerek Panel'in ilk yüklemede sunucudan geçmişle "seed" edilmesi (bkz. DashboardController,

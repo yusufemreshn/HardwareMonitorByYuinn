@@ -1,5 +1,7 @@
 using HardwareMonitorByYuinn.Web.Desktop;
+using HardwareMonitorByYuinn.Web.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace HardwareMonitorByYuinn.Web.Controllers;
 
@@ -10,6 +12,13 @@ namespace HardwareMonitorByYuinn.Web.Controllers;
 /// </summary>
 public sealed class DesktopShellController : Controller
 {
+    private readonly IStringLocalizer<SharedResource> _localizer;
+
+    public DesktopShellController(IStringLocalizer<SharedResource> localizer)
+    {
+        _localizer = localizer;
+    }
+
     [HttpGet]
     public IActionResult Status() => Json(new { closeBehavior = DesktopShellSettings.GetCloseBehavior() });
 
@@ -19,7 +28,7 @@ public sealed class DesktopShellController : Controller
     {
         if (closeBehavior != DesktopShellSettings.MinimizeToTray && closeBehavior != DesktopShellSettings.Exit)
         {
-            return BadRequest(new { error = "Geçersiz değer." });
+            return BadRequest(new { error = _localizer["Geçersiz değer."].Value });
         }
 
         DesktopShellSettings.SetCloseBehavior(closeBehavior);

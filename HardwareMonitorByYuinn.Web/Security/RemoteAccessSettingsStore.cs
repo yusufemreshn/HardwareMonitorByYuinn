@@ -44,7 +44,7 @@ public static class RemoteAccessSettingsStore
             // Doğrudan FilePath'e yazmak yerine önce yanına geçici bir dosyaya yazılıp sonra
             // yerine taşınır. Ani kapanma (elektrik kesintisi, taskkill) tam File.WriteAllText
             // sırasında olursa yarım/bozuk bir JSON kalabilir; bir sonraki Load() bunu parse
-            // edemeyip sessizce varsayılana (Enabled=false, PIN yok) düşer — kullanıcı PIN'ini
+            // edemeyip sessizce varsayılana (Enabled=false, PIN yok) düşer; kullanıcı PIN'ini
             // fark etmeden kaybeder. Geçici dosya + Move/Replace, NTFS'te atomik bir yeniden
             // adlandırma olduğundan yarım yazma ihtimalini ortadan kaldırır: kesinti olursa ya
             // eski (tam) dosya ya da hiç değişmemiş hâliyle kalır, asla yarım bir dosya olmaz.
@@ -64,7 +64,7 @@ public static class RemoteAccessSettingsStore
     private const int Pbkdf2Iterations = 210_000;
     private const int Pbkdf2OutputBytes = 32;
 
-    /// <summary>Yeni bir PIN kaydedilirken çağrılır — her PIN için rastgele, tek kullanımlık bir tuz üretir.</summary>
+    /// <summary>Yeni bir PIN kaydedilirken çağrılır; her PIN için rastgele, tek kullanımlık bir tuz üretir.</summary>
     public static string GenerateSalt()
     {
         return Convert.ToHexString(RandomNumberGenerator.GetBytes(16));

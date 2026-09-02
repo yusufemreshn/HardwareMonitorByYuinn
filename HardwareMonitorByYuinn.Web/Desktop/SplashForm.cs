@@ -6,7 +6,7 @@ namespace HardwareMonitorByYuinn.Web.Desktop;
 /// <summary>
 /// Uygulama açılırken (WebView2 ortamı kurulup Kestrel'in sunduğu sayfa yüklenene kadar geçen,
 /// genelde birkaç saniyelik) bekleme süresini görünür kılan çerçevesiz bir bekleme ekranı.
-/// Gerçek ilerlemeyi hızlandırmaz — yalnızca <see cref="SetProgress"/> ile bildirilen kilometre
+/// Gerçek ilerlemeyi hızlandırmaz, yalnızca <see cref="SetProgress"/> ile bildirilen kilometre
 /// taşları arasında yumuşak bir animasyonla "dolan" bir çubuk gösterir, böylece kullanıcı boş bir
 /// ekranla beklemek yerine bir şeylerin olduğunu görür.
 /// </summary>
@@ -51,7 +51,7 @@ internal sealed class SplashForm : Form
 
         var subtitle = new Label
         {
-            Text = "Program başlatılıyor…",
+            Text = Loc.T("Program başlatılıyor…"),
             ForeColor = SubtitleColor,
             Font = new Font("Segoe UI", 9.5f),
             AutoSize = false,
@@ -89,7 +89,7 @@ internal sealed class SplashForm : Form
 
     /// <summary>
     /// Gerçek bir kilometre taşına ulaşıldığını bildirir (0-100). Çubuk buraya anında zıplamaz,
-    /// <see cref="Animate"/> aracılığıyla yumuşakça yaklaşır — ani sıçramalar yerine akıcı bir
+    /// <see cref="Animate"/> aracılığıyla yumuşakça yaklaşır, ani sıçramalar yerine akıcı bir
     /// dolma hissi vermek için.
     /// </summary>
     internal void SetProgress(int percent)
@@ -135,7 +135,7 @@ internal sealed class SplashForm : Form
     {
         if (_displayed >= _target)
         {
-            // Bir sonraki gerçek kilometre taşı gelene kadar tamamen dursun — ama uzun sürerse
+            // Bir sonraki gerçek kilometre taşı gelene kadar tamamen dursun, ama uzun sürerse
             // ekranın "donmuş" görünmemesi için hedefin biraz ilerisine kadar ufak ufak sürünsün.
             double creepCeiling = Math.Min(100, _target + 6);
             if (_displayed < creepCeiling)

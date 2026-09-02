@@ -62,7 +62,7 @@ internal sealed class ProcessPresentCounter
             if (_recentPresents.Count == 0)
                 return null;
 
-            // "Durdu mu" sorusu gerçek zamana göre sorulur — ETW'nin normal teslim gecikmesi
+            // "Durdu mu" sorusu gerçek zamana göre sorulur; ETW'nin normal teslim gecikmesi
             // (ölçülen: ~1-2 saniye) bu eşiğin altında kalır, gerçekten kesilen bir akıştan ayrılır.
             if (nowUtc - _lastPresentUtc > StaleAfter)
                 return null;
@@ -70,7 +70,7 @@ internal sealed class ProcessPresentCounter
             // Pencere "şu an"a göre değil, kuyruktaki en son present'e göre hesaplanır. ETW olayları
             // gerçek zamana göre gecikmeli teslim edilir; pencereyi gerçek "şimdi"ye göre almak, bu
             // gecikme kadar veriyi her seferinde "eski" sayıp siler ve kare hızını olduğundan çok
-            // düşük (hatta sürekli sıfır) gösterirdi — tam da bu hata canlı testte yakalanmıştır.
+            // düşük (hatta sürekli sıfır) gösterirdi; tam da bu hata canlı testte yakalanmıştır.
             TrimOlderThan(_lastPresentUtc - Window);
             return _recentPresents.Count / Window.TotalSeconds;
         }

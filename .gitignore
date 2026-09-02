@@ -32,6 +32,7 @@ logs/
 ## Kullanıcıya özel yerel dosyalar
 .claude/
 *.lock
+.repo-recreation-backup/
 
 ## İşletim sistemi
 Thumbs.db

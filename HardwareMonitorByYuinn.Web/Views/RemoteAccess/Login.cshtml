@@ -4,7 +4,7 @@
     string? error = ViewBag.Error;
 }
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,7 +14,7 @@
             document.documentElement.setAttribute("data-theme", saved === "light" ? "light" : "dark");
         })();
     </script>
-    <title>Giriş - HardwareMonitorByYuinn</title>
+    <title>@Localizer["Giriş"] - HardwareMonitorByYuinn</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <style>
         .login-shell {
@@ -74,7 +74,7 @@
     <div class="login-shell">
         <div class="login-card">
             <div class="login-brand">● HardwareMonitorByYuinn</div>
-            <div class="login-sub">Bu bilgisayar yerel ağa açık. Devam etmek için PIN girin.</div>
+            <div class="login-sub">@Localizer["Bu bilgisayar yerel ağa açık. Devam etmek için PIN girin."]</div>
             <form method="post" asp-controller="RemoteAccess" asp-action="Login">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="returnUrl" value="@returnUrl" />
@@ -83,7 +83,7 @@
                 {
                     <div class="login-error">@error</div>
                 }
-                <button type="submit" class="btn-primary-hwmon">Giriş Yap</button>
+                <button type="submit" class="btn-primary-hwmon">@Localizer["Giriş Yap"]</button>
             </form>
         </div>
     </div>

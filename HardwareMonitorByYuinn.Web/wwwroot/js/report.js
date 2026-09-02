@@ -1,4 +1,4 @@
-// Sistem Raporu (yazdırılabilir/PDF'e çevrilebilir HTML sayfa) — mevcut RangeAverage/HealthTrend/
+// Sistem Raporu (yazdırılabilir/PDF'e çevrilebilir HTML sayfa): mevcut RangeAverage/HealthTrend/
 // SystemEvents endpoint'lerini (Geçmiş sayfasındakiyle aynı) yeniden kullanır, sunucu tarafında
 // yeni bir agregasyon yazılmaz. Harici bir PDF kütüphanesi kullanılmaz; kullanıcı tarayıcının
 // "Yazdır → PDF olarak kaydet" özelliğiyle bu sayfayı PDF'e çevirir.
@@ -35,16 +35,16 @@
             .then(function (r) { return r.json(); })
             .then(function (avg) {
                 if (!avg || avg.sampleCount === 0) {
-                    summaryBody.innerHTML = '<p class="stat-sub">Bu aralıkta kayıt yok.</p>';
+                    summaryBody.innerHTML = '<p class="stat-sub">' + t("Bu aralıkta kayıt yok.") + '</p>';
                     return;
                 }
                 var rows = [
-                    ["İşlemci Kullanımı (ort.)", fmt(avg.avgCpuUsage, "%", 1)],
-                    ["İşlemci Sıcaklığı (ort.)", fmt(avg.avgCpuTemp, "°C", 1)],
-                    ["Ekran Kartı Kullanımı (ort.)", fmt(avg.avgGpuUsage, "%", 1)],
-                    ["Ekran Kartı Sıcaklığı (ort.)", fmt(avg.avgGpuTemp, "°C", 1)],
-                    ["Bellek Kullanımı (ort.)", fmt(avg.avgRamUsage, "%", 1)],
-                    ["Örnek Sayısı", avg.sampleCount + " dakikalık örnek"]
+                    [t("İşlemci Kullanımı (ort.)"), fmt(avg.avgCpuUsage, "%", 1)],
+                    [t("İşlemci Sıcaklığı (ort.)"), fmt(avg.avgCpuTemp, "°C", 1)],
+                    [t("Ekran Kartı Kullanımı (ort.)"), fmt(avg.avgGpuUsage, "%", 1)],
+                    [t("Ekran Kartı Sıcaklığı (ort.)"), fmt(avg.avgGpuTemp, "°C", 1)],
+                    [t("Bellek Kullanımı (ort.)"), fmt(avg.avgRamUsage, "%", 1)],
+                    [t("Örnek Sayısı"), avg.sampleCount + " " + t("dakikalık örnek")]
                 ];
                 summaryBody.innerHTML = "";
                 var table = document.createElement("table");
@@ -62,7 +62,7 @@
                 summaryBody.appendChild(table);
             })
             .catch(function () {
-                summaryBody.innerHTML = '<p class="stat-sub">Özet okunamadı.</p>';
+                summaryBody.innerHTML = '<p class="stat-sub">' + t("Özet okunamadı.") + '</p>';
             });
     }
 
@@ -71,11 +71,11 @@
             .then(function (r) { return r.json(); })
             .then(function (daily) {
                 if (!window.HwmonThresholds || daily.length === 0) {
-                    healthBody.innerHTML = '<tr><td colspan="3" class="stat-sub">Bu aralıkta kayıt yok.</td></tr>';
+                    healthBody.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Bu aralıkta kayıt yok.") + '</td></tr>';
                     return;
                 }
                 var thresholds = window.HwmonThresholds.load();
-                // Puanlama formülü artık site.js'teki tek kaynakta (computeMetricHealthScore) —
+                // Puanlama formülü artık site.js'teki tek kaynakta (computeMetricHealthScore);
                 // eskiden burada, history.js'te ve dashboard.js'te üç kez bağımsız kopyalanmıştı.
                 healthBody.innerHTML = "";
                 daily.forEach(function (day) {
@@ -84,16 +84,16 @@
                     var score = window.HwmonThresholds.computeMetricHealthScore(thresholds, cpuValue, gpuValue, day.avgRamUsage);
                     var d = new Date(day.date + "T00:00:00");
                     var tr = document.createElement("tr");
-                    tr.appendChild(cell(d.toLocaleDateString("tr-TR")));
+                    tr.appendChild(cell(d.toLocaleDateString(window.HwmonLocaleTag())));
                     var scoreCell = cell(score + "/100");
                     scoreCell.style.fontWeight = "700";
                     tr.appendChild(scoreCell);
-                    tr.appendChild(cell(day.sampleCount + " örnek"));
+                    tr.appendChild(cell(day.sampleCount + " " + t("örnek")));
                     healthBody.appendChild(tr);
                 });
             })
             .catch(function () {
-                healthBody.innerHTML = '<tr><td colspan="3" class="stat-sub">Trend okunamadı.</td></tr>';
+                healthBody.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Trend okunamadı.") + '</td></tr>';
             });
     }
 
@@ -102,7 +102,7 @@
             .then(function (r) { return r.json(); })
             .then(function (events) {
                 if (events.length === 0) {
-                    eventsBody.innerHTML = '<tr><td colspan="3" class="stat-sub">Bu aralıkta olay yok.</td></tr>';
+                    eventsBody.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Bu aralıkta olay yok.") + '</td></tr>';
                     return;
                 }
                 // Rapor uzayıp gitmesin diye en fazla ilk 50 olay gösterilir.
@@ -110,21 +110,21 @@
                 events.slice(0, 50).forEach(function (evt) {
                     var d = new Date(evt.timestamp);
                     var tr = document.createElement("tr");
-                    tr.appendChild(cell(d.toLocaleString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })));
-                    tr.appendChild(cell(evt.type));
+                    tr.appendChild(cell(d.toLocaleString(window.HwmonLocaleTag(), { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })));
+                    tr.appendChild(cell(t(evt.type)));
                     tr.appendChild(cell(evt.description));
                     eventsBody.appendChild(tr);
                 });
             })
             .catch(function () {
-                eventsBody.innerHTML = '<tr><td colspan="3" class="stat-sub">Olaylar okunamadı.</td></tr>';
+                eventsBody.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Olaylar okunamadı.") + '</td></tr>';
             });
     }
 
     function loadAll(days) {
-        summaryBody.innerHTML = '<p class="stat-sub">Yükleniyor…</p>';
-        healthBody.innerHTML = '<tr><td colspan="3" class="stat-sub">Yükleniyor…</td></tr>';
-        eventsBody.innerHTML = '<tr><td colspan="3" class="stat-sub">Yükleniyor…</td></tr>';
+        summaryBody.innerHTML = '<p class="stat-sub">' + t("Yükleniyor…") + '</p>';
+        healthBody.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Yükleniyor…") + '</td></tr>';
+        eventsBody.innerHTML = '<tr><td colspan="3" class="stat-sub">' + t("Yükleniyor…") + '</td></tr>';
         loadSummary(days);
         loadHealthTrend(days);
         loadSystemEvents(days);

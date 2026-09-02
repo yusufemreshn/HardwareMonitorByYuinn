@@ -21,7 +21,7 @@ internal sealed record FpsReading(
 /// LibreHardwareMonitor'un "Fullscreen FPS" sensörü bazı ekran kartlarında (özellikle NVIDIA'da)
 /// hiç bulunmuyor ve bulunduğunda bile yalnızca ekrana doğrudan flip yapan (nadir) durumları
 /// yakalıyor; bu yüzden bu ölçümü tamamen terk edip <c>Microsoft-Windows-DXGI</c> sağlayıcısının
-/// "Present" olaylarını dinliyoruz — Intel'in PresentMon aracının da temel aldığı yöntem budur ve
+/// "Present" olaylarını dinliyoruz; Intel'in PresentMon aracının da temel aldığı yöntem budur ve
 /// ekran kartı üreticisinden tamamen bağımsızdır (DirectX 9/11/12 kullanan her uygulamada çalışır;
 /// Vulkan/OpenGL uygulamaları bu olayları üretmediği için kapsam dışıdır).
 /// </summary>
@@ -39,7 +39,7 @@ internal sealed class EtwFpsProvider : IDisposable
     private static readonly TimeSpan PruneInterval = TimeSpan.FromMinutes(2);
 
     // Video oynatırken donanım hızlandırmalı render için DXGI present üreten, ama "oyun" olmayan
-    // bilinen süreçler (medya oynatıcılar, tarayıcılar). Bu bir heuristiğin heuristiği — kesin bir
+    // bilinen süreçler (medya oynatıcılar, tarayıcılar). Bu bir heuristiğin heuristiği; kesin bir
     // çözüm yok, DXGI kullanan her uygulama teknik olarak aynı yoldan geçiyor; bu yalnızca en sık
     // karşılaşılan yanlış-pozitifleri eler (ör. "HD-Player" bir medya oynatıcısının Oyun Geçmişi'nde
     // görünmesi), kapsamlı bir liste değildir.
@@ -56,7 +56,7 @@ internal sealed class EtwFpsProvider : IDisposable
     private readonly TraceEventSession? _session;
     private readonly Thread? _processingThread;
     private int _lastLoggedForegroundPid = -1;
-    // Son raporlanan (gerçekten kare sunan) sürecin PID'i — bkz. GetForegroundFps üzerindeki not.
+    // Son raporlanan (gerçekten kare sunan) sürecin PID'i, bkz. GetForegroundFps üzerindeki not.
     private int? _lastReportedProcessId;
     private DateTime _lastPruneUtc = DateTime.MinValue;
     private bool _disposed;
@@ -141,7 +141,7 @@ internal sealed class EtwFpsProvider : IDisposable
         int? pid = User32.GetForegroundProcessId();
         LogForegroundChangeIfNeeded(pid);
 
-        // Önce o anki gerçek ön plan sürecine bakılır — kendi kare sunma verisi varsa (asıl,
+        // Önce o anki gerçek ön plan sürecine bakılır; kendi kare sunma verisi varsa (asıl,
         // beklenen durum) her zaman o önceliklidir; böylece kullanıcı gerçekten başka (kare sunan)
         // bir uygulamaya geçtiğinde geçiş hemen yansır.
         if (pid is { } processId && !IsExcludedProcess(processId) &&
@@ -155,9 +155,9 @@ internal sealed class EtwFpsProvider : IDisposable
         // Ön plandaki pencerenin kendi present verisi YOKSA (Xbox Game Bar'ın kayıt göstergesi, bir
         // Windows bildirim balonu ya da bir overlay/Discord penceresi odağı bir anlığına çalmış
         // olabilir), bunu hemen gerçek bir uygulama değişikliği saymayız. En son başarıyla raporlanan
-        // sürecin sayacı hâlâ tazeyse (son birkaç saniye içinde present üretmeye devam ediyorsa —
+        // sürecin sayacı hâlâ tazeyse (son birkaç saniye içinde present üretmeye devam ediyorsa,
         // yani oyun aslında arka planda hâlâ render ediyorsa) onu raporlamaya devam ederiz. Bu,
-        // kullanıcı tarafında oyunun "algılandı - kayboldu - tekrar algılandı" şeklinde çırpınmasını
+        // kullanıcı tarafında oyunun "algılandı, kayboldu, tekrar algılandı" şeklinde çırpınmasını
         // (flicker) önler; oyun gerçekten durduğunda/küçültüldüğünde sayaç kendiliğinden bayatlar.
         if (_lastReportedProcessId is { } previousPid &&
             _countersByProcessId.TryGetValue(previousPid, out ProcessPresentCounter? previousCounter) &&

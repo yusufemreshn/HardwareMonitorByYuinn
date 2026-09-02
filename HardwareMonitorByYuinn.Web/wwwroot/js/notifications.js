@@ -7,12 +7,12 @@
     // Sabit sırada gösterilir ki eşik hiç aşılmamış olsa bile listede "0 kez" olarak görünsün;
     // kullanıcı böylece hangi kategorinin hiç sorun çıkarmadığını da görebilir.
     var KEY_ORDER = ["cpu", "gpu", "ram", "storage"];
-    var KEY_LABELS = { cpu: "İşlemci", gpu: "Ekran Kartı", ram: "Bellek", storage: "Depolama" };
+    var KEY_LABELS = { cpu: t("İşlemci"), gpu: t("Ekran Kartı"), ram: t("Bellek"), storage: t("Depolama") };
     var KEY_ACCENT_VARS = { cpu: "--accent-cpu", gpu: "--accent-gpu", ram: "--accent-ram", storage: "--accent-storage" };
 
     function formatTimestamp(iso) {
         var date = new Date(iso);
-        return isNaN(date.getTime()) ? "--" : date.toLocaleString("tr-TR");
+        return isNaN(date.getTime()) ? "--" : date.toLocaleString(window.HwmonLocaleTag());
     }
 
     function renderSummary(list) {
@@ -43,8 +43,8 @@
             detail.className = "stat-sub";
             detail.style.margin = "0";
             detail.textContent = entries.length === 0
-                ? "Hiç aşılmadı"
-                : entries.length + " kez · son " + formatTimestamp(entries[0].timestampIso);
+                ? t("Hiç aşılmadı")
+                : entries.length + " " + t("kez · son") + " " + formatTimestamp(entries[0].timestampIso);
             row.appendChild(detail);
 
             container.appendChild(row);
@@ -64,7 +64,7 @@
         if (list.length === 0) {
             var empty = document.createElement("div");
             empty.className = "stat-sub";
-            empty.textContent = "Henüz bir eşik aşılmadı.";
+            empty.textContent = t("Henüz bir eşik aşılmadı.");
             container.appendChild(empty);
             return;
         }
@@ -110,7 +110,7 @@
             var toggleButton = document.createElement("button");
             toggleButton.type = "button";
             toggleButton.className = "legend-item";
-            toggleButton.textContent = showAll ? "Daha az göster" : "Daha fazla göster (" + (list.length - VISIBLE_LIMIT) + " kayıt daha)";
+            toggleButton.textContent = showAll ? t("Daha az göster") : t("Daha fazla göster") + " (" + (list.length - VISIBLE_LIMIT) + " " + t("kayıt daha") + ")";
             toggleButton.addEventListener("click", function () {
                 showAll = !showAll;
                 renderList(list);

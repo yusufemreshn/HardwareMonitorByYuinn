@@ -1,13 +1,11 @@
 @{
-    ViewData["Title"] = "Bildirimler";
+    ViewData["Title"] = Localizer["Bildirimler"];
 }
 
 <div class="panel">
-    <h2 class="panel-title">Bildirim Geçmişi</h2>
+    <h2 class="panel-title">@Localizer["Bildirim Geçmişi"]</h2>
     <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
-        Ayarlar sayfasında belirlediğiniz eşiklerden hangisinin ne zaman aşıldığını gösterir. Bir eşik
-        aşıldığında, siz normale dönüp tekrar aşılmadıkça yalnızca bir kez kaydedilir. Bu geçmiş
-        yalnızca bu tarayıcıda saklanır.
+        @Localizer["Ayarlar sayfasında belirlediğiniz eşiklerden hangisinin ne zaman aşıldığını gösterir. Bir eşik aşıldığında, siz normale dönüp tekrar aşılmadıkça yalnızca bir kez kaydedilir. Bu geçmiş yalnızca bu tarayıcıda saklanır."]
     </p>
 
     <div class="notification-summary" id="notification-summary"></div>
@@ -16,9 +14,9 @@
 <div class="panel">
     <div class="stat-card-header" style="--accent: var(--accent-danger);">
         <span class="stat-dot"></span>
-        <span>Tüm Kayıtlar</span>
+        <span>@Localizer["Tüm Kayıtlar"]</span>
         <span style="flex:1"></span>
-        <button type="button" id="notification-history-clear" class="legend-item">Geçmişi Temizle</button>
+        <button type="button" id="notification-history-clear" class="legend-item">@Localizer["Geçmişi Temizle"]</button>
     </div>
     <div id="notification-history-list"></div>
 </div>

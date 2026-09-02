@@ -5,7 +5,7 @@ namespace HardwareMonitorByYuinn.Web.Desktop;
 
 /// <summary>
 /// Yalnızca <see cref="HardwareMonitorByYuinn.DataAccess.History.HistoryDatabaseRepair"/> gerçekten bir
-/// sorun bulup onardığı zaman gösterilen ayrı bir ekran (bkz. DesktopShellRunner) — normal açılışta
+/// sorun bulup onardığı zaman gösterilen ayrı bir ekran (bkz. DesktopShellRunner); normal açılışta
 /// (dosyalar sağlamken) bu form hiç oluşturulmaz. SplashForm ile aynı görsel dile sahip, ama kullanıcı
 /// "arka planda ne olduğunu anlamadan bekleme" hissine kapılmasın diye hangi dosyanın nasıl onarıldığını
 /// satır satır gösterir.
@@ -34,7 +34,7 @@ internal sealed class RepairForm : Form
 
         var title = new Label
         {
-            Text = "Veritabanı Onarılıyor",
+            Text = Loc.T("Veritabanı Onarılıyor"),
             ForeColor = TitleColor,
             Font = new Font("Segoe UI", 14f, FontStyle.Bold),
             AutoSize = false,
@@ -45,7 +45,7 @@ internal sealed class RepairForm : Form
 
         _statusLabel = new Label
         {
-            Text = "Geçen seferki beklenmedik kapanmadan kalan bir sorun düzeltiliyor…",
+            Text = Loc.T("Geçen seferki beklenmedik kapanmadan kalan bir sorun düzeltiliyor…"),
             ForeColor = SubtitleColor,
             Font = new Font("Segoe UI", 9.5f),
             AutoSize = false,
@@ -74,7 +74,7 @@ internal sealed class RepairForm : Form
     }
 
     /// <summary>Bir onarım adımını ve genel ilerlemeyi (0-100) gösterir. Çağıran taraf her adımdan sonra
-    /// mesaj pompalamaktan (Application.DoEvents) sorumludur — bu form kendi mesaj döngüsünü çalıştırmaz.</summary>
+    /// mesaj pompalamaktan (Application.DoEvents) sorumludur; bu form kendi mesaj döngüsünü çalıştırmaz.</summary>
     internal void SetStatus(string message, int percent)
     {
         _statusLabel.Text = message;

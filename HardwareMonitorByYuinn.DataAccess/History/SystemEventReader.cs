@@ -6,7 +6,7 @@ public sealed record SystemEventEntry(DateTime Timestamp, string Type, string De
 
 /// <summary>
 /// Sistem Olayı Zaman Çizelgesi (Geçmiş sayfası) için Windows Olay Günlüğü'nden (System log)
-/// uyku/uyanma/başlatma/kapatma/güncelleme olaylarını okur. SQLite'a kalıcı olarak KAYDEDİLMEZ —
+/// uyku/uyanma/başlatma/kapatma/güncelleme olaylarını okur. SQLite'a kalıcı olarak KAYDEDİLMEZ;
 /// Windows zaten bu olayları kendi günlüğünde tutuyor, her istekte doğrudan oradan okunur.
 /// </summary>
 public sealed class SystemEventReader
@@ -21,7 +21,7 @@ public sealed class SystemEventReader
         ("User32", 1074, "Kullanıcı İsteğiyle Kapatma/Yeniden Başlatma")
     ];
 
-    /// <summary>fromUtc/toUtc UTC olmalı — Windows Olay Günlüğü'ndeki @SystemTime her zaman UTC'dir;
+    /// <summary>fromUtc/toUtc UTC olmalı, çünkü Windows Olay Günlüğü'ndeki @SystemTime her zaman UTC'dir;
     /// dönen <see cref="SystemEventEntry.Timestamp"/> ise (EventRecord.TimeCreated) yerel saattir.</summary>
     public IReadOnlyList<SystemEventEntry> Read(DateTime fromUtc, DateTime toUtc)
     {

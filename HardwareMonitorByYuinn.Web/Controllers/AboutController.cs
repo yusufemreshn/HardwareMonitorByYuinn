@@ -1,10 +1,18 @@
+using HardwareMonitorByYuinn.Web.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace HardwareMonitorByYuinn.Web.Controllers;
 
 public sealed class AboutController : Controller
 {
     private const string LicensesFileName = "LICENSES.txt";
+    private readonly IStringLocalizer<SharedResource> _localizer;
+
+    public AboutController(IStringLocalizer<SharedResource> localizer)
+    {
+        _localizer = localizer;
+    }
 
     public IActionResult Index() => View();
 
@@ -19,7 +27,7 @@ public sealed class AboutController : Controller
     {
         string path = Path.Combine(AppContext.BaseDirectory, LicensesFileName);
         if (!System.IO.File.Exists(path))
-            return NotFound($"{LicensesFileName} bulunamadı.");
+            return NotFound($"{LicensesFileName} {_localizer["bulunamadı."].Value}");
 
         return PhysicalFile(path, "text/plain; charset=utf-8");
     }

@@ -3,20 +3,23 @@
     Layout = null;
 }
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+        window.HWMON_LANG = "@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName";
+    </script>
     <script>
         (function () {
             var saved = localStorage.getItem("hwmon-theme");
             document.documentElement.setAttribute("data-theme", saved === "light" ? "light" : "dark");
         })();
     </script>
-    <title>HardwareMonitorByYuinn Sistem Raporu</title>
+    <title>@Localizer["HardwareMonitorByYuinn Sistem Raporu"]</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <style>
-        /* Rapor, uygulamanın nav/health-summary gibi etkileşimli parçalarını kullanmaz — bağımsız,
+        /* Rapor, uygulamanın nav/health-summary gibi etkileşimli parçalarını kullanmaz; bağımsız,
            yazdırmaya/PDF'e uygun sade bir belge olsun diye Layout = null ile ayrı bir HTML'dir. */
         body { max-width: 900px; margin: 0 auto; padding: 32px 24px 64px; }
         .report-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
@@ -32,50 +35,51 @@
 <body>
     <div class="report-header">
         <div>
-            <h1 style="margin:0 0 4px;">HardwareMonitorByYuinn Sistem Raporu</h1>
-            <p class="stat-sub" style="margin:0;">Oluşturulma: @Model.GeneratedAtLocal.ToString("dd.MM.yyyy HH:mm")</p>
+            <h1 style="margin:0 0 4px;">@Localizer["HardwareMonitorByYuinn Sistem Raporu"]</h1>
+            <p class="stat-sub" style="margin:0;">@Localizer["Oluşturulma:"] @Model.GeneratedAtLocal.ToString("dd.MM.yyyy HH:mm")</p>
         </div>
         <div class="report-actions no-print">
-            <label class="threshold-field" style="width:auto;">Aralık
+            <label class="threshold-field" style="width:auto;">@Localizer["Aralık"]
                 <select id="report-days">
-                    <option value="1">Son 1 gün</option>
-                    <option value="7" selected="@(Model.Days == 7)">Son 7 gün</option>
-                    <option value="14" selected="@(Model.Days == 14)">Son 14 gün</option>
-                    <option value="30" selected="@(Model.Days == 30)">Son 30 gün</option>
+                    <option value="1">@Localizer["Son 1 gün"]</option>
+                    <option value="7" selected="@(Model.Days == 7)">@Localizer["Son 7 gün"]</option>
+                    <option value="14" selected="@(Model.Days == 14)">@Localizer["Son 14 gün"]</option>
+                    <option value="30" selected="@(Model.Days == 30)">@Localizer["Son 30 gün"]</option>
                 </select>
             </label>
-            <button type="button" id="report-print-btn" class="btn-primary-hwmon">🖨 Yazdır / PDF Olarak Kaydet</button>
+            <button type="button" id="report-print-btn" class="btn-primary-hwmon">🖨 @Localizer["Yazdır / PDF Olarak Kaydet"]</button>
         </div>
     </div>
 
     <div class="panel">
-        <h2 class="panel-title">Genel Özet</h2>
+        <h2 class="panel-title">@Localizer["Genel Özet"]</h2>
         <div id="report-summary-body">
-            <p class="stat-sub">Yükleniyor…</p>
+            <p class="stat-sub">@Localizer["Yükleniyor…"]</p>
         </div>
     </div>
 
     <div class="panel">
-        <h2 class="panel-title">Sistem Sağlığı Trendi</h2>
+        <h2 class="panel-title">@Localizer["Sistem Sağlığı Trendi"]</h2>
         <div class="table-scroll">
             <table class="data-table">
-                <thead><tr><th>Tarih</th><th>Puan</th><th>Örnek</th></tr></thead>
-                <tbody id="report-health-body"><tr><td colspan="3" class="stat-sub">Yükleniyor…</td></tr></tbody>
+                <thead><tr><th>@Localizer["Tarih"]</th><th>@Localizer["Puan"]</th><th>@Localizer["Örnek"]</th></tr></thead>
+                <tbody id="report-health-body"><tr><td colspan="3" class="stat-sub">@Localizer["Yükleniyor…"]</td></tr></tbody>
             </table>
         </div>
     </div>
 
     <div class="panel">
-        <h2 class="panel-title">Sistem Olayları</h2>
+        <h2 class="panel-title">@Localizer["Sistem Olayları"]</h2>
         <div class="table-scroll">
             <table class="data-table">
-                <thead><tr><th>Zaman</th><th>Tür</th><th>Açıklama</th></tr></thead>
-                <tbody id="report-events-body"><tr><td colspan="3" class="stat-sub">Yükleniyor…</td></tr></tbody>
+                <thead><tr><th>@Localizer["Zaman"]</th><th>@Localizer["Tür"]</th><th>@Localizer["Açıklama"]</th></tr></thead>
+                <tbody id="report-events-body"><tr><td colspan="3" class="stat-sub">@Localizer["Yükleniyor…"]</td></tr></tbody>
             </table>
         </div>
     </div>
 
     <script>window.__reportDays = @Model.Days;</script>
+    <script src="~/js/i18n.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/report.js" asp-append-version="true"></script>
 </body>

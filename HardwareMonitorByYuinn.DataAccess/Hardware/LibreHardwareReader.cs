@@ -295,7 +295,7 @@ public sealed class LibreHardwareReader : IHardwareReader
 
         // PawnIO uyarısının doğru koşulda çıkıp çıkmadığını (kurulu değilken yanlışlıkla
         // bastırılıp bastırılmadığını) günlükten teyit edebilmek için, bu değer ilk hesaplandığında
-        // ham sensör değerleri bir kez loglanır — sorun tekrar bildirilirse log dosyasına bakmak
+        // ham sensör değerleri bir kez loglanır, sorun tekrar bildirilirse log dosyasına bakmak
         // "hangi sensör/isim eşleşti" sorusunu tahmin etmeden kesin olarak yanıtlar.
         if (!_lowLevelDiagnosticsLogged)
         {
@@ -307,7 +307,7 @@ public sealed class LibreHardwareReader : IHardwareReader
 
         // Yük sensörleri (Load) tüm fiziksel çekirdekleri birleşik sırayla numaralandırır, ama
         // Frekans/Voltaj/Sıcaklık sensörleri P-core/E-core hibrit CPU'larda tür başına ayrı
-        // numaralandırma kullanır ("P-Core #1-4", "E-Core #1-8") — bkz. SensorLookup.ResolveCoreIndex.
+        // numaralandırma kullanır ("P-Core #1-4", "E-Core #1-8"), bkz. SensorLookup.ResolveCoreIndex.
         // E-core'ların kaçıncı fiziksel çekirdekten başladığını bilmek için önce P-core sayısı bulunur.
         int pCoreCount = hw.Sensors
             .Select(s => SensorLookup.PCoreIndexRegex().Match(s.Name))
@@ -343,7 +343,7 @@ public sealed class LibreHardwareReader : IHardwareReader
                     // Thread #1"/"#2", ikisi de aynı N fiziksel çekirdek indeksine çözülür) burada
                     // birden fazla okuma birikebilir; fiziksel çekirdeğin gerçek kullanımını yansıtsın
                     // diye ortalanır (aksi hâlde sonuncusu öncekinin üzerine yazıp bir iş parçacığının
-                    // verisi sessizce kaybolurdu — %0 yük de geçerli bir ölçüm olduğundan elenmez).
+                    // verisi sessizce kaybolurdu, %0 yük de geçerli bir ölçüm olduğundan elenmez).
                     coreLoadSums[index] = coreLoadSums.TryGetValue(index, out double sum) ? sum + value : value;
                     coreLoadCounts[index] = coreLoadCounts.TryGetValue(index, out int count) ? count + 1 : 1;
                     break;
@@ -365,7 +365,7 @@ public sealed class LibreHardwareReader : IHardwareReader
         // gösterdiği değere en yakın olan budur. "Core #N (Effective)" ise anlık bir ölçüm değil, tüm
         // örnekleme aralığı (yaklaşık 1 sn) boyunca APERF sayacının süreye bölünmesiyle elde edilen bir
         // ORTALAMADIR; çekirdek o saniyenin çoğunda boşta kalıp kısa patlamalarla yükseliyorsa bu ortalama
-        // her zaman düşük ve "takılı" görünür — CPU-Z'nin anlık/dalgalı gösterimiyle asla örtüşmez. Bu
+        // her zaman düşük ve "takılı" görünür; CPU-Z'nin anlık/dalgalı gösterimiyle asla örtüşmez. Bu
         // yüzden ham veri varsa o tercih edilir; yalnızca hiç ham çekirdek sensörü yoksa etkin olana düşülür.
         IReadOnlyDictionary<int, double> resolvedCoreClocks = coreClocks.Count > 0 ? coreClocks : coreEffectiveClocks;
         string? clockSource = resolvedCoreClocks.Count > 0 || packageClockSensor.HasValue ? ClockSourceHardware : null;
@@ -492,7 +492,7 @@ public sealed class LibreHardwareReader : IHardwareReader
     /// <summary>
     /// AMD entegre grafiklerde (APU) tek bir "GPU Package"/"GPU Power" sensörü yayınlanmaz; bunun
     /// yerine ayrı "GPU Core" ve "GPU SoC" güç kayıtları vardır (bir Ryzen 7840HS/Radeon 780M
-    /// sisteminde ham sensör dökümüyle doğrulandı — ör. Core=7W, SoC=1W). Toplam GPU güç tüketimine
+    /// sisteminde ham sensör dökümüyle doğrulandı, ör. Core=7W, SoC=1W). Toplam GPU güç tüketimine
     /// en yakın değeri vermek için ikisi bulunabildiği kadarıyla toplanır; hiçbiri yoksa null döner.
     /// </summary>
     private static double? ReadAmdApuGpuPowerFallback(IHardware hw)
@@ -517,18 +517,18 @@ public sealed class LibreHardwareReader : IHardwareReader
         double? writeRate = hw.FindValue(SensorType.Throughput, n => n.Contains("Write Rate", StringComparison.OrdinalIgnoreCase));
 
         // Bazı OEM NVMe sürücülerinde LibreHardwareMonitor'ün okuduğu isim bozuk gelir (yalnızca
-        // görünmez kontrol karakterleri/boşluk) — tarayıcıda "kare" (tofu) glyph olarak render edilir
+        // görünmez kontrol karakterleri/boşluk), tarayıcıda "kare" (tofu) glyph olarak render edilir
         // ve isme dayalı SMART/kapasite eşleştirmesi hiç tutmaz (log kanıtı: bkz. CHANGELOG 2026-08-03,
         // "Algılanan donanım" satırında "Storage=" tamamen boş gelmişti). Görünmez karakterler ayıklanır;
         // sonuç hâlâ boşsa WMI'dan (PhysicalDiskInfoProvider, LibreHardwareMonitor'dan bağımsız bir
-        // kaynak) gelen isim -- yalnızca tek fiziksel disk varsa, aksi hâlde hangisi olduğu belirsiz
-        // kalır -- yerine kullanılır.
+        // kaynak) gelen isim (yalnızca tek fiziksel disk varsa güvenilir; aksi hâlde hangisi olduğu
+        // belirsiz kalır) yerine kullanılır.
         string effectiveName = new string(hw.Name.Where(c => !char.IsControl(c)).ToArray()).Trim();
         if (effectiveName.Length == 0)
             effectiveName = physicalDisks.Count == 1 ? physicalDisks[0].Name : "Depolama Aygıtı";
 
         // İsme dayalı eşleşme başarısız olursa ve tam olarak tek aday varsa, o adayın doğru disk
-        // olduğu zaten kesindir (başka olasılık yok) — isim ne kadar bozuk olursa olsun buna düşülür.
+        // olduğu zaten kesindir (başka olasılık yok); isim ne kadar bozuk olursa olsun buna düşülür.
         PhysicalDiskInfo? physicalDisk = PhysicalDiskInfoProvider.Match(physicalDisks, effectiveName)
             ?? (physicalDisks.Count == 1 ? physicalDisks[0] : null);
         DiskSmartInfo? smart = DiskSmartInfoProvider.Match(diskSmartInfo, effectiveName)

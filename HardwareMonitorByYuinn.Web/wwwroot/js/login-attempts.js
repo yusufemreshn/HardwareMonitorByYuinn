@@ -18,13 +18,13 @@
     function resultCell(entry) {
         var td = document.createElement("td");
         if (entry.success) {
-            td.textContent = "Başarılı";
+            td.textContent = t("Başarılı");
             td.style.color = "#4ade80";
         } else if (entry.causedLockout) {
-            td.textContent = "Başarısız (5. denemede kilitlendi)";
+            td.textContent = t("Başarısız (5. denemede kilitlendi)");
             td.style.color = "var(--accent-danger)";
         } else {
-            td.textContent = "Başarısız";
+            td.textContent = t("Başarısız");
             td.style.color = "var(--accent-danger)";
         }
         td.style.fontWeight = "600";
@@ -35,7 +35,7 @@
         .then(function (res) { return res.json(); })
         .then(function (attempts) {
             if (!Array.isArray(attempts) || attempts.length === 0) {
-                emptyRow("Henüz hiç giriş denemesi kaydedilmedi.");
+                emptyRow(t("Henüz hiç giriş denemesi kaydedilmedi."));
                 return;
             }
 
@@ -44,7 +44,7 @@
                 var tr = document.createElement("tr");
 
                 var timeCell = document.createElement("td");
-                timeCell.textContent = new Date(entry.timeLocal).toLocaleString("tr-TR");
+                timeCell.textContent = new Date(entry.timeLocal).toLocaleString(window.HwmonLocaleTag());
                 tr.appendChild(timeCell);
 
                 var ipCell = document.createElement("td");
@@ -56,11 +56,11 @@
             });
         })
         .catch(function () {
-            emptyRow("Giriş denemeleri yüklenemedi.");
+            emptyRow(t("Giriş denemeleri yüklenemedi."));
         });
 })();
 
-// "Giriş Denemesi Özeti" panelindeki "eski kayıtları temizle" kontrolü — paylaşılan uygulama
+// "Giriş Denemesi Özeti" panelindeki "eski kayıtları temizle" kontrolü, paylaşılan uygulama
 // site.js'teki window.HwmonRecordCleanup.
 (function initLoginAttemptsCleanup() {
     "use strict";
@@ -71,6 +71,6 @@
         buttonId: "login-attempts-cleanup-btn",
         tokenSelector: "#history-login-summary-panel input[name='__RequestVerificationToken']",
         endpoint: "/History/DeleteOldestLoginAttempts",
-        nounLabel: "deneme"
+        nounLabel: t("deneme")
     });
 })();

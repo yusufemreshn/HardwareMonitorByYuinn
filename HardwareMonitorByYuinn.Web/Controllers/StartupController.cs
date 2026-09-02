@@ -9,7 +9,7 @@ namespace HardwareMonitorByYuinn.Web.Controllers;
 /// Windows açılışında otomatik başlatmayı Görev Zamanlayıcı (Task Scheduler) üzerinden yönetir.
 /// HKCU\...\Run anahtarı KASITLI OLARAK KULLANILMIYOR: uygulama app.manifest üzerinden her zaman
 /// yönetici yetkisi istiyor (requireAdministrator) ve Windows, Run anahtarına yazılan admin-manifestolu
-/// programları oturum açılışında OTOMATİK YÜKSELTEMEZ — bunun sonucu bir UAC istemi değil, sessiz bir
+/// programları oturum açılışında OTOMATİK YÜKSELTEMEZ; bunun sonucu bir UAC istemi değil, sessiz bir
 /// başlatma iptali: ne pencere açılır, ne hata, ne log. Bu, Microsoft'un belgelediği, atlanamayan bir
 /// davranış. Task Scheduler'da "en yüksek yetkiyle çalıştır" (/RL HIGHEST) + "oturum açılışında"
 /// (/SC ONLOGON) tetikleyicisi ise admin-manifestolu uygulamalar için desteklenen tek otomatik
@@ -21,7 +21,7 @@ public sealed class StartupController : Controller
     private static readonly XNamespace TaskNs = "http://schemas.microsoft.com/windows/2004/02/mit/task";
 
     // Program.cs bu bayrağı args'ta arayıp ShellForm'a "başlarken gizli aç" olarak iletir. Bu tercih
-    // ayrı bir kayıt anahtarında DEĞİL, doğrudan görevin komut satırı argümanı olarak saklanır — böylece
+    // ayrı bir kayıt anahtarında DEĞİL, doğrudan görevin komut satırı argümanı olarak saklanır, böylece
     // manuel kısayolla açılan uygulama her zaman görünür başlar, yalnızca Windows'un kendisinin
     // tetiklediği açılış bu bayrağı taşır. Tek doğru kaynak yine görev tanımının kendisidir.
     private const string MinimizedArg = "--minimized";
@@ -120,7 +120,7 @@ public sealed class StartupController : Controller
             var doc = XDocument.Parse(output);
             // /Create sırasında /TR'ye verdiğimiz değer zaten tırnaklı (boşluklu yollar için); schtasks
             // bu tırnakları XML'deki <Command> içinde de aynen saklıyor, o yüzden karşılaştırmadan önce
-            // soyulması gerekiyor — yoksa tırnaksız exePath ile asla eşleşmez. --minimized argümanı ise
+            // soyulması gerekiyor, yoksa tırnaksız exePath ile asla eşleşmez. --minimized argümanı ise
             // ayrı bir <Arguments> öğesinde tutuluyor.
             registeredPath = doc.Descendants(TaskNs + "Command").FirstOrDefault()?.Value.Trim('"');
             string? arguments = doc.Descendants(TaskNs + "Arguments").FirstOrDefault()?.Value;

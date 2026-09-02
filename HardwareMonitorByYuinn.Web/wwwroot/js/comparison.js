@@ -15,19 +15,19 @@
 
     function metricRows() {
         return [
-            { label: "İşlemci Kullanımı", path: "cpu.usagePercent", unit: "%", digits: 1 },
-            { label: "İşlemci Frekansı", path: "cpu.clockMhz", unit: "MHz", digits: 0 },
-            { label: "İşlemci Güç Tüketimi", path: "cpu.powerWatts", unit: "W", digits: 1 },
-            { label: "İşlemci Sıcaklığı", path: "cpu.temperatureC", unit: "°C", digits: 1 },
-            { label: "Ekran Kartı Kullanımı", path: "gpu.usagePercent", unit: "%", digits: 1 },
-            { label: "Ekran Kartı Frekansı", path: "gpu.coreClockMhz", unit: "MHz", digits: 0 },
-            { label: "Ekran Kartı Normal Sıcaklığı", path: "gpu.coreTemperatureC", unit: "°C", digits: 1 },
-            { label: "Ekran Kartı Hotspot Sıcaklığı", path: "gpu.hotSpotTemperatureC", unit: "°C", digits: 1 },
-            { label: "Ekran Kartı Güç Tüketimi", path: "gpu.powerWatts", unit: "W", digits: 1 },
-            { label: "Bellek Kullanımı", path: "ram.usagePercent", unit: "%", digits: 1 },
-            { label: "Kare Hızı", path: "fps.framesPerSecond", unit: "FPS", digits: 1 },
-            { label: "Kare Hızı %1 Low", path: "fps.low1Percent", unit: "FPS", digits: 1 },
-            { label: "Kare Hızı %0.1 Low", path: "fps.lowPoint1Percent", unit: "FPS", digits: 1 }
+            { label: t("İşlemci Kullanımı"), path: "cpu.usagePercent", unit: "%", digits: 1 },
+            { label: t("İşlemci Frekansı"), path: "cpu.clockMhz", unit: "MHz", digits: 0 },
+            { label: t("İşlemci Güç Tüketimi"), path: "cpu.powerWatts", unit: "W", digits: 1 },
+            { label: t("İşlemci Sıcaklığı"), path: "cpu.temperatureC", unit: "°C", digits: 1 },
+            { label: t("Ekran Kartı Kullanımı"), path: "gpu.usagePercent", unit: "%", digits: 1 },
+            { label: t("Ekran Kartı Frekansı"), path: "gpu.coreClockMhz", unit: "MHz", digits: 0 },
+            { label: t("Ekran Kartı Normal Sıcaklığı"), path: "gpu.coreTemperatureC", unit: "°C", digits: 1 },
+            { label: t("Ekran Kartı Hotspot Sıcaklığı"), path: "gpu.hotSpotTemperatureC", unit: "°C", digits: 1 },
+            { label: t("Ekran Kartı Güç Tüketimi"), path: "gpu.powerWatts", unit: "W", digits: 1 },
+            { label: t("Bellek Kullanımı"), path: "ram.usagePercent", unit: "%", digits: 1 },
+            { label: t("Kare Hızı"), path: "fps.framesPerSecond", unit: "FPS", digits: 1 },
+            { label: t("Kare Hızı %1 Low"), path: "fps.low1Percent", unit: "FPS", digits: 1 },
+            { label: t("Kare Hızı %0.1 Low"), path: "fps.lowPoint1Percent", unit: "FPS", digits: 1 }
         ];
     }
 
@@ -52,7 +52,7 @@
             var loadingCell = document.createElement("td");
             loadingCell.colSpan = 4;
             loadingCell.style.color = "var(--text-muted)";
-            loadingCell.textContent = "Şu anki oturum verileri yükleniyor...";
+            loadingCell.textContent = t("Şu anki oturum verileri yükleniyor...");
             loadingRow.appendChild(loadingCell);
             body.appendChild(loadingRow);
             return;
@@ -80,10 +80,10 @@
         });
 
         document.getElementById("current-session-label").textContent =
-            "Bu Oturum" + (currentReport.machineName ? " (" + currentReport.machineName + ")" : "");
+            t("Bu Oturum") + (currentReport.machineName ? " (" + currentReport.machineName + ")" : "");
         document.getElementById("loaded-session-label").textContent = loadedReport
-            ? "Yüklenen" + (loadedReport.exportedAtUtc ? " (" + new Date(loadedReport.exportedAtUtc).toLocaleString("tr-TR") + ")" : "")
-            : "Yüklenen Kayıt";
+            ? t("Yüklenen") + (loadedReport.exportedAtUtc ? " (" + new Date(loadedReport.exportedAtUtc).toLocaleString(window.HwmonLocaleTag()) + ")" : "")
+            : t("Yüklenen Kayıt");
     }
 
     function refreshCurrent() {
@@ -93,7 +93,7 @@
                 currentReport = data;
                 renderComparison();
             })
-            .catch(function (err) { console.error("Şu anki oturum verileri alınamadı", err); });
+            .catch(function (err) { console.error(t("Şu anki oturum verileri alınamadı"), err); });
     }
 
     refreshCurrent();
@@ -172,9 +172,9 @@
         });
 
         return {
-            machineName: machineName || "Bilinmeyen",
-            cpuName: cpuName || "Bilinmeyen",
-            gpuName: gpuName || "Bilinmeyen",
+            machineName: machineName || t("Bilinmeyen"),
+            cpuName: cpuName || t("Bilinmeyen"),
+            gpuName: gpuName || t("Bilinmeyen"),
             sessionStartedAtUtc: sessionStartedAtUtc,
             exportedAtUtc: exportedAtUtc,
             averages: {
@@ -218,7 +218,7 @@
             }
 
             if (file.size > 200 * 1024) {
-                fileInfo.textContent = "Dosya çok büyük görünüyor, bu bir HardwareMonitorByYuinn raporu olmayabilir.";
+                fileInfo.textContent = t("Dosya çok büyük görünüyor, bu bir HardwareMonitorByYuinn raporu olmayabilir.");
                 return;
             }
 
@@ -226,11 +226,11 @@
             reader.onload = function () {
                 try {
                     loadedReport = parseComparisonText(String(reader.result));
-                    fileInfo.textContent = "Yüklendi: " + file.name;
+                    fileInfo.textContent = t("Yüklendi:") + " " + file.name;
                     renderComparison();
                 } catch (err) {
-                    console.error("Dosya ayrıştırılamadı", err);
-                    fileInfo.textContent = "Dosya okunamadı, geçerli bir HardwareMonitorByYuinn raporu olduğundan emin olun.";
+                    console.error(t("Dosya ayrıştırılamadı"), err);
+                    fileInfo.textContent = t("Dosya okunamadı, geçerli bir HardwareMonitorByYuinn raporu olduğundan emin olun.");
                 }
             };
             reader.readAsText(file);
@@ -238,7 +238,7 @@
     }
 })();
 
-// İki Zaman Aralığını Karşılaştır — Kalıcı Geçmiş'teki (HistoryController.RangeAverage) iki
+// İki Zaman Aralığını Karşılaştır: Kalıcı Geçmiş'teki (HistoryController.RangeAverage) iki
 // aralığın ortalamalarını yan yana gösterir; oyun bazlı olmayan, genel bir karşılaştırma.
 (function initRangeCompare() {
     "use strict";
@@ -248,14 +248,14 @@
     if (!button || !body) return;
 
     var METRICS = [
-        { label: "İşlemci Kullanımı", key: "avgCpuUsage", unit: "%", digits: 1 },
-        { label: "İşlemci Sıcaklığı", key: "avgCpuTemp", unit: "°C", digits: 1 },
-        { label: "İşlemci Güç Tüketimi", key: "avgCpuPower", unit: "W", digits: 1 },
-        { label: "Ekran Kartı Kullanımı", key: "avgGpuUsage", unit: "%", digits: 1 },
-        { label: "Ekran Kartı Sıcaklığı", key: "avgGpuTemp", unit: "°C", digits: 1 },
-        { label: "Ekran Kartı Güç Tüketimi", key: "avgGpuPower", unit: "W", digits: 1 },
-        { label: "Bellek Kullanımı", key: "avgRamUsage", unit: "%", digits: 1 },
-        { label: "Kare Hızı", key: "avgFps", unit: "FPS", digits: 1 }
+        { label: t("İşlemci Kullanımı"), key: "avgCpuUsage", unit: "%", digits: 1 },
+        { label: t("İşlemci Sıcaklığı"), key: "avgCpuTemp", unit: "°C", digits: 1 },
+        { label: t("İşlemci Güç Tüketimi"), key: "avgCpuPower", unit: "W", digits: 1 },
+        { label: t("Ekran Kartı Kullanımı"), key: "avgGpuUsage", unit: "%", digits: 1 },
+        { label: t("Ekran Kartı Sıcaklığı"), key: "avgGpuTemp", unit: "°C", digits: 1 },
+        { label: t("Ekran Kartı Güç Tüketimi"), key: "avgGpuPower", unit: "W", digits: 1 },
+        { label: t("Bellek Kullanımı"), key: "avgRamUsage", unit: "%", digits: 1 },
+        { label: t("Kare Hızı"), key: "avgFps", unit: "FPS", digits: 1 }
     ];
 
     function cell(text) {
@@ -267,7 +267,7 @@
     var fmt = window.HwmonFormat.fmt;
 
     // Bir FARKI (delta) birim dönüştürürken °C→°F'nin +32 ofseti uygulanamaz (5°C'lik bir fark
-    // 9°F'liktir, 41°F değil) — bu yüzden "Fark" sütunu ayrı, ofsetsiz bir dönüştürme kullanır.
+    // 9°F'liktir, 41°F değil), bu yüzden "Fark" sütunu ayrı, ofsetsiz bir dönüştürme kullanır.
     function fmtDiff(diff, unit, digits) {
         if (typeof diff !== "number" || isNaN(diff)) return "--";
         var prefs = window.HwmonUnitPreferences ? window.HwmonUnitPreferences.load() : null;
@@ -292,13 +292,13 @@
         if (!fromA.value || !toA.value || !fromB.value || !toB.value) return;
 
         if (toA.value < fromA.value || toB.value < fromB.value) {
-            body.innerHTML = '<tr><td colspan="4" class="stat-sub">Bitiş tarihi başlangıçtan önce olamaz.</td></tr>';
+            body.innerHTML = '<tr><td colspan="4" class="stat-sub">' + t("Bitiş tarihi başlangıçtan önce olamaz.") + '</td></tr>';
             return;
         }
 
-        body.innerHTML = '<tr><td colspan="4" class="stat-sub">Yükleniyor…</td></tr>';
-        document.getElementById("range-a-label").textContent = "Aralık A (" + fromA.value.replace("T", " ") + ")";
-        document.getElementById("range-b-label").textContent = "Aralık B (" + fromB.value.replace("T", " ") + ")";
+        body.innerHTML = '<tr><td colspan="4" class="stat-sub">' + t("Yükleniyor…") + '</td></tr>';
+        document.getElementById("range-a-label").textContent = t("Aralık A") + " (" + fromA.value.replace("T", " ") + ")";
+        document.getElementById("range-b-label").textContent = t("Aralık B") + " (" + fromB.value.replace("T", " ") + ")";
 
         Promise.all([fetchRangeAverage(fromA, toA), fetchRangeAverage(fromB, toB)])
             .then(function (results) {
@@ -306,7 +306,7 @@
                 body.innerHTML = "";
 
                 if (a.sampleCount === 0 || b.sampleCount === 0) {
-                    body.innerHTML = '<tr><td colspan="4" class="stat-sub">Bir veya iki aralıkta hiç kayıt yok.</td></tr>';
+                    body.innerHTML = '<tr><td colspan="4" class="stat-sub">' + t("Bir veya iki aralıkta hiç kayıt yok.") + '</td></tr>';
                     return;
                 }
 
@@ -330,12 +330,12 @@
                 var noteCell = document.createElement("td");
                 noteCell.colSpan = 4;
                 noteCell.className = "stat-sub";
-                noteCell.textContent = "Aralık A: " + a.sampleCount + " örnek · Aralık B: " + b.sampleCount + " örnek";
+                noteCell.textContent = t("Aralık A") + ": " + a.sampleCount + " " + t("örnek") + " · " + t("Aralık B") + ": " + b.sampleCount + " " + t("örnek");
                 noteRow.appendChild(noteCell);
                 body.appendChild(noteRow);
             })
             .catch(function () {
-                body.innerHTML = '<tr><td colspan="4" class="stat-sub">Karşılaştırma okunamadı.</td></tr>';
+                body.innerHTML = '<tr><td colspan="4" class="stat-sub">' + t("Karşılaştırma okunamadı.") + '</td></tr>';
             });
     });
 })();

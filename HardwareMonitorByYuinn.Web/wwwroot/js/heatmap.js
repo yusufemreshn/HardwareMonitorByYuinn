@@ -12,7 +12,7 @@
     var MIN_TEMP = 30;
     var MAX_TEMP = 90;
 
-    // Tek bir renk tonu (turuncu-kırmızı), yalnızca açıklık ekseninde değişir — "sequential" bir
+    // Tek bir renk tonu (turuncu-kırmızı), yalnızca açıklık ekseninde değişir; "sequential" bir
     // ölçek: gökkuşağı değil, soğuktan sıcağa tek tonun açıktan koyuya gitmesi.
     function tempColor(temp) {
         var clamped = Math.max(MIN_TEMP, Math.min(MAX_TEMP, temp));
@@ -41,7 +41,7 @@
             var emptyRow = document.createElement("tr");
             var emptyCell = document.createElement("td");
             emptyCell.className = "stat-sub";
-            emptyCell.textContent = "Bu aralıkta veri yok.";
+            emptyCell.textContent = t("Bu aralıkta veri yok.");
             emptyRow.appendChild(emptyCell);
             table.appendChild(emptyRow);
             return;
@@ -50,7 +50,7 @@
         var thead = document.createElement("thead");
         var headRow = document.createElement("tr");
         var cornerTh = document.createElement("th");
-        cornerTh.textContent = "Tarih";
+        cornerTh.textContent = t("Tarih");
         headRow.appendChild(cornerTh);
         for (var h = 0; h < 24; h++) {
             var th = document.createElement("th");
@@ -81,7 +81,7 @@
                     cell.title = date + " " + (hour < 10 ? "0" : "") + hour + ":00 · " + temp.toFixed(1) + " °C";
                 } else {
                     cell.style.background = "var(--bg-elevated)";
-                    cell.title = "Veri yok";
+                    cell.title = t("Veri yok");
                 }
                 row.appendChild(cell);
             }

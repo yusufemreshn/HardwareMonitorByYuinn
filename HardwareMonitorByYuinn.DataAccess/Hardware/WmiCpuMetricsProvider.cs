@@ -10,7 +10,7 @@ namespace HardwareMonitorByYuinn.DataAccess.Hardware;
 /// Bu sağlayıcı, hiçbir sürücü gerektirmeyen WMI performans sayaçları üzerinden en azından frekans
 /// için gerçek bir değer üretir. Sıcaklık için sürücüsüz güvenilir bir kaynak yok: ACPI termal
 /// bölgeleri denenmişti ama gerçek Tctl/Tdie'den onlarca derece sapabildiği canlı testte doğrulandı
-/// (bkz. CHANGELOG 2026-08-06) — bu yüzden kaldırıldı, sıcaklık de güç tüketimi gibi PawnIO'ya bağlı.
+/// (bkz. CHANGELOG 2026-08-06), bu yüzden kaldırıldı, sıcaklık de güç tüketimi gibi PawnIO'ya bağlı.
 /// </summary>
 internal sealed class WmiCpuMetricsProvider(ILogger logger)
 {

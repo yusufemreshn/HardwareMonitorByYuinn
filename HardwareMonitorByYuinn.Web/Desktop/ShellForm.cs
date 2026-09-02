@@ -9,7 +9,7 @@ namespace HardwareMonitorByYuinn.Web.Desktop;
 /// <summary>
 /// Uygulamanın masaüstü penceresi: içinde WebView2 ile aynı süreçteki Kestrel'in
 /// sunduğu <c>http://127.0.0.1:5250/</c>'yi gösterir. Yerel ağa açma özelliği hâlâ
-/// düz HTTP üzerinden çalışmaya devam eder (bkz. Program.cs) — bu pencere yalnızca
+/// düz HTTP üzerinden çalışmaya devam eder (bkz. Program.cs); bu pencere yalnızca
 /// sahibinin kendi bilgisayarındaki birincil arayüzü değiştirir.
 /// </summary>
 internal sealed class ShellForm : Form
@@ -19,13 +19,13 @@ internal sealed class ShellForm : Form
     private readonly WebView2 _webView = new() { Dock = DockStyle.Fill };
     private readonly NotifyIcon _trayIcon;
 
-    /// <summary>true olduğunda kapatma her zaman gerçek çıkıştır — tepsi ayarı ne olursa olsun.</summary>
+    /// <summary>true olduğunda kapatma her zaman gerçek çıkıştır, tepsi ayarı ne olursa olsun.</summary>
     private bool _allowExit;
 
     /// <summary>
-    /// startMinimized ile başlarken true — bkz. Activated abonesi. WebView2'nin ilk gezinme/render
+    /// startMinimized ile başlarken true, bkz. Activated abonesi. WebView2'nin ilk gezinme/render
     /// aşamasında OS'tan odak istemesi, altındaki GİZLİ pencereyi de (Windows'un "odaklanan pencere
-    /// görünür olmalı" davranışı yüzünden) kendiliğinden tekrar görünür/etkin kılabiliyor — bu, bir
+    /// görünür olmalı" davranışı yüzünden) kendiliğinden tekrar görünür/etkin kılabiliyor; bu, bir
     /// kod çağrısıyla değil doğrudan WM_ACTIVATE ile oluyor, bu yüzden Load'daki tek seferlik Hide()
     /// bunu önleyemiyor (canlı testte doğrulandı: pencere açılışta gizleniyor ama ~15-20 sn sonra,
     /// sayfa yüklenince kendiliğinden tekrar görünür oluyor). Activated, tetikleyici ne olursa olsun
@@ -40,7 +40,7 @@ internal sealed class ShellForm : Form
         Text = "HardwareMonitorByYuinn";
 
         // Sabit varsayılan (kullanıcı isteğiyle 1280x1280). Ekran boyutuna göre küçültme burada
-        // DEĞİL, aşağıdaki Load olayında yapılır — Screen.PrimaryScreen, elevated (UAC) bir
+        // DEĞİL, aşağıdaki Load olayında yapılır; Screen.PrimaryScreen, elevated (UAC) bir
         // süreçte pencere daha oluşmadan (constructor'da) bazen geçici/yanlış (ör. birkaç
         // piksellik) bir WorkingArea döndürebiliyor; bu, canlı testte pencerenin 160x28 gibi
         // anlamsız bir boyutta açılmasına yol açtı. Handle oluştuktan sonra Screen.FromControl
@@ -49,7 +49,7 @@ internal sealed class ShellForm : Form
         Height = 1280;
         StartPosition = FormStartPosition.CenterScreen;
 
-        // Sayfa henüz yüklenmeden/yeniden boyutlandırmada görünebilecek pencere zemini — JS tarafı
+        // Sayfa henüz yüklenmeden/yeniden boyutlandırmada görünebilecek pencere zemini; JS tarafı
         // gerçek temayı bildirene kadar (bkz. OnWebMessageReceived) varsayılan koyu temayla eşleşir
         // (bkz. _Layout.cshtml'deki "hwmon-theme" varsayılanı), böylece ilk açılışta beyaz bir
         // pencere zemini/kenarlığı çakmaz.
@@ -78,9 +78,9 @@ internal sealed class ShellForm : Form
         }
 
         var trayMenu = new ContextMenuStrip();
-        trayMenu.Items.Add("Göster", null, (_, _) => RestoreFromTray());
+        trayMenu.Items.Add(Loc.T("Göster"), null, (_, _) => RestoreFromTray());
         trayMenu.Items.Add(new ToolStripSeparator());
-        trayMenu.Items.Add("Çıkış", null, (_, _) =>
+        trayMenu.Items.Add(Loc.T("Çıkış"), null, (_, _) =>
         {
             _allowExit = true;
             Close();
@@ -107,7 +107,7 @@ internal sealed class ShellForm : Form
             if (splash is not null)
             {
                 // Sayfa (ve içindeki SignalR/JS başlatma) tamamen yüklenene kadar bekleyip splash'i
-                // ancak o zaman kapatıyoruz — aksi hâlde splash kapanır kapanmaz boş/yarım bir pencere
+                // ancak o zaman kapatıyoruz, aksi hâlde splash kapanır kapanmaz boş/yarım bir pencere
                 // görünürdü, bu da splash'in amacını (bekleme hissini gizlemek) boşa çıkarırdı.
                 void OnNavigationCompleted(object? s, CoreWebView2NavigationCompletedEventArgs e)
                 {
@@ -133,7 +133,7 @@ internal sealed class ShellForm : Form
         if (startMinimized || splash is not null)
         {
             // Hide(), Application.Run'ın pencereyi görünür kılma sürecinin BİR PARÇASI olarak tetiklenen
-            // Load olayı sırasında çağrılıyor — pencere henüz ekrana çizilmeden gizlendiğinden gözle
+            // Load olayı sırasında çağrılıyor; pencere henüz ekrana çizilmeden gizlendiğinden gözle
             // görülür bir açılıp-kapanma (flaş) yaşanmaz. Tepsi simgesi zaten yukarıda Visible=true.
             // startMinimized ise burada sonsuza dek gizli kalır; splash varsa yukarıdaki
             // NavigationCompleted tamamlanınca tekrar gösterilir.
@@ -141,7 +141,7 @@ internal sealed class ShellForm : Form
         }
     }
 
-    // Yalnızca gerçekten gerekliyse (küçük ekranlı bir dizüstü vb.) küçültür — 900x700 altına hiç
+    // Yalnızca gerçekten gerekliyse (küçük ekranlı bir dizüstü vb.) küçültür, 900x700 altına hiç
     // inmez, bu yüzden Screen API'sinin döndürdüğü değer yanlışlıkla anlamsız küçük çıksa bile
     // (bkz. yukarıdaki not) pencere kullanılamaz hâle gelmez.
     private void ShrinkToFitScreenIfNeeded()
@@ -161,7 +161,7 @@ internal sealed class ShellForm : Form
 
     /// <summary>
     /// Host tarafı bir kapanma (ör. RemoteAccessController.Restart'ın çağırdığı StopApplication())
-    /// pencereyi HER ZAMAN gerçekten kapatır — "sistem tepsisine küçült" ayarı burada uygulanmaz,
+    /// pencereyi HER ZAMAN gerçekten kapatır; "sistem tepsisine küçült" ayarı burada uygulanmaz,
     /// aksi hâlde süreç hiç sonlanmaz ve Restart'ın başlattığı yeni süreç mutex'i hâlâ tutulduğu
     /// için sessizce çıkardı.
     /// </summary>

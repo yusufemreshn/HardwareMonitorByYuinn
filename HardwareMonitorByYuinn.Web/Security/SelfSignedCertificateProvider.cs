@@ -9,7 +9,7 @@ namespace HardwareMonitorByYuinn.Web.Security;
 /// takılacak kendinden imzalı sertifikayı üretir/saklar. Gerçek bir sertifika otoritesi (Let's
 /// Encrypt vb.) özel IP adresleri (192.168.x.x gibi) için sertifika vermediğinden, bu proje için
 /// tek pratik yol budur; bağlanan her cihazda tarayıcı ilk seferde "bağlantı güvenli değil"
-/// uyarısı gösterir — bu, Ayarlar sayfasında kullanıcıya açıkça belirtilir.
+/// uyarısı gösterir; bu, Ayarlar sayfasında kullanıcıya açıkça belirtilir.
 ///
 /// Sertifika yeniden başlatmalar arasında (disk üzerinde, remote-access-cert.pfx) kalıcı olmalı;
 /// aksi hâlde her açılışta yeni bir sertifika üretilir ve daha önce cihazında "her zaman güven"
@@ -20,7 +20,7 @@ internal static class SelfSignedCertificateProvider
     private static readonly string CertPath = Path.Combine(AppContext.BaseDirectory, "remote-access-cert.pfx");
 
     // Bu parola dosyayı gerçek bir sırdan korumuyor (.pfx dosyasına erişebilen zaten özel anahtara
-    // da erişmiş olur) — yalnızca X509Certificate2'nin şart koştuğu API'yi karşılıyor.
+    // da erişmiş olur); yalnızca X509Certificate2'nin şart koştuğu API'yi karşılıyor.
     private const string CertPassword = "hwmon-local";
 
     public static X509Certificate2 GetOrCreate()
@@ -29,7 +29,7 @@ internal static class SelfSignedCertificateProvider
     }
 
     /// <summary>
-    /// Ayarlar sayfasındaki "Sertifikayı Yeniden Oluştur" butonu tarafından çağrılır — ör. ev/ofis
+    /// Ayarlar sayfasındaki "Sertifikayı Yeniden Oluştur" butonu tarafından çağrılır, ör. ev/ofis
     /// ağı değişip LAN IP'si değiştiğinde, eski sertifikanın SAN listesindeki IP'ler artık geçersiz
     /// kaldığında (tarayıcı bu durumda basit bir "güvenmiyorum" uyarısından daha sert, atlanması
     /// zor bir "adres uyuşmuyor" hatası gösterebilir). Silme işleminden sonra bir sonraki açılışta

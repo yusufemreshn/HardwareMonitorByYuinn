@@ -7,14 +7,14 @@ namespace HardwareMonitorByYuinn.DataAccess.History;
 /// Uygulama beklenmedik şekilde (ör. bir çökme, elektrik kesintisi, "görevi sonlandır") öldüğünde WAL
 /// dosyaları yarım kalabilir; bu genelde SQLite'ın kendi WAL kurtarma mekanizmasıyla sorunsuz açılır,
 /// ama nadiren (2026-08-27 gecesi canlı olayda gözlemlendiği gibi) eşlik eden "-shm" dosyası WAL ile
-/// tutarsız kalıp her açılışta "disk I/O error" fırlatır — bu, <see cref="SqliteHistoryStore"/>'un
+/// tutarsız kalıp her açılışta "disk I/O error" fırlatır; bu, <see cref="SqliteHistoryStore"/>'un
 /// kurucusunu (dolayısıyla Host.StartAsync'i, dolayısıyla TÜM uygulamayı) çökertir; kullanıcı açılış
 /// ekranının belirip kaybolmasından başka bir şey görmez ve elle müdahale (dosyaları silme) gerekir.
 ///
 /// Bu sınıf, ASP.NET Core host'u hiç kurulmadan ÖNCE (bkz. Desktop/DesktopShellRunner.cs) her .db
 /// dosyasını hızlıca sağlık kontrolünden geçirir; sorun varsa o gece elle uygulanan adımların aynısını
 /// (önce yalnızca "-shm" sil, olmazsa "-wal"ı da sil, o da olmazsa dosyayı kenara ayırıp sıfırdan
-/// başlat) otomatik dener — böylece uygulama kendi kendine ayağa kalkar, tekrar elle müdahaleye gerek
+/// başlat) otomatik dener, böylece uygulama kendi kendine ayağa kalkar, tekrar elle müdahaleye gerek
 /// kalmaz.
 /// </summary>
 public static class HistoryDatabaseRepair
@@ -23,11 +23,16 @@ public static class HistoryDatabaseRepair
 
     /// <summary>
     /// Klasördeki her ".db" dosyasını kontrol eder. Hepsi sağlamsa (olağan durum) <paramref
-    /// name="onProgress"/> HİÇ çağrılmaz — çağıran taraf (bkz. DesktopShellRunner) bunu, bir onarım
+    /// name="onProgress"/> HİÇ çağrılmaz; çağıran taraf (bkz. DesktopShellRunner) bunu, bir onarım
     /// arayüzünü yalnızca gerçekten gerektiğinde göstermek için kullanır. Onarım denenen dosyalar için
     /// dönen listede yer alır; sonuç listesi boşsa hiçbir dosya sorunlu değildi demektir.
     /// </summary>
-    public static IReadOnlyList<StepResult> RepairIfNeeded(string historyDirectory, ILogger? logger = null, Action<string, int>? onProgress = null)
+    public static IReadOnlyList<StepResult> RepairIfNeeded(
+        string historyDirectory,
+        ILogger? logger = null,
+        Action<string, int>? onProgress = null,
+        string repairingMessageTemplate = "{0} bozuk görünüyor, onarılıyor…",
+        string completedMessage = "Tamamlandı")
     {
         var results = new List<StepResult>();
         if (!Directory.Exists(historyDirectory))
@@ -44,14 +49,14 @@ public static class HistoryDatabaseRepair
                 continue;
 
             logger?.LogWarning("{Db} sağlık kontrolünden geçemedi, otomatik onarım deneniyor", name);
-            onProgress?.Invoke($"{name} bozuk görünüyor, onarılıyor…", basePercent);
+            onProgress?.Invoke(string.Format(repairingMessageTemplate, name), basePercent);
 
             string status = TryRepair(dbPath, logger);
             results.Add(new StepResult(name, status));
         }
 
         if (results.Count > 0)
-            onProgress?.Invoke("Tamamlandı", 100);
+            onProgress?.Invoke(completedMessage, 100);
 
         return results;
     }
@@ -94,7 +99,7 @@ public static class HistoryDatabaseRepair
             }
         }
 
-        // Yetmediyse WAL'ın kendisini de atıp son checkpoint'teki hâline dön — bir miktar (WAL'daki
+        // Yetmediyse WAL'ın kendisini de atıp son checkpoint'teki hâline dön; bir miktar (WAL'daki
         // en son yazılmamış dakikalar) veri kaybı olur ama uygulama en azından açılabilir.
         string walPath = dbPath + "-wal";
         if (File.Exists(walPath))
@@ -102,13 +107,13 @@ public static class HistoryDatabaseRepair
             TryDelete(walPath, logger);
             if (IsHealthy(dbPath))
             {
-                logger?.LogWarning("{Db} onarıldı (WAL atıldı, son checkpoint'e dönüldü — yakın zamandaki bazı kayıtlar kaybolmuş olabilir)", Path.GetFileName(dbPath));
+                logger?.LogWarning("{Db} onarıldı (WAL atıldı, son checkpoint'e dönüldü; yakın zamandaki bazı kayıtlar kaybolmuş olabilir)", Path.GetFileName(dbPath));
                 return "Onarıldı (yakın kayıtlar kaybolmuş olabilir)";
             }
         }
 
         // Dosyanın kendisi de bozuksa kurtarma yolu yok; kenara ayırıp uygulamanın sıfırdan boş bir
-        // dosya oluşturmasına izin ver — en azından uygulama bir daha hiç açılamaz duruma düşmesin.
+        // dosya oluşturmasına izin ver, en azından uygulama bir daha hiç açılamaz duruma düşmesin.
         SqliteConnection.ClearAllPools();
         string backupPath = $"{dbPath}.corrupted-{DateTime.Now:yyyyMMddHHmmss}";
         TryMove(dbPath, backupPath, logger);

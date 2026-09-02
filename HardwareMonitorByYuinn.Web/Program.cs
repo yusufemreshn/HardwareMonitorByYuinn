@@ -1,6 +1,8 @@
+using System.Globalization;
 using System.Net;
 using HardwareMonitorByYuinn.Business;
 using HardwareMonitorByYuinn.Web.Hubs;
+using HardwareMonitorByYuinn.Web.Localization;
 using HardwareMonitorByYuinn.Web.Logging;
 using HardwareMonitorByYuinn.Web.Security;
 using HardwareMonitorByYuinn.Web.Services;
@@ -28,7 +30,7 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 });
 
 // Açılış ekranı (splash), aşağıdaki builder/DI kurulumu ve Kestrel'in başlaması SÜRERKEN paralel bir
-// STA iş parçacığında HEMEN gösterilir — kullanıcı exe'yi çalıştırdığında (UAC onayından hemen sonra)
+// STA iş parçacığında HEMEN gösterilir, kullanıcı exe'yi çalıştırdığında (UAC onayından hemen sonra)
 // olabildiğince erken bir ekran görsün diye. Eskiden splash, tüm bu kurulum bittikten SONRA
 // (DesktopShellRunner.Run çağrısıyla) oluşturuluyordu; builder.Build()/middleware/Kestrel kurulumunun
 // kendisi (özellikle bu uygulamanın PublishReadyToRun=false tek dosyalık derlemesinde JIT maliyeti
@@ -61,7 +63,7 @@ builder.Services.AddSingleton(new RemoteAccessStartupSnapshot(remoteAccessEnable
 
 // "HTTPS kullan" açıksa LAN erişimi yalnızca şifreli 5251'den (kendinden imzalı sertifika, bkz.
 // SelfSignedCertificateProvider) sunulur; sahibi kendi bilgisayarından yine düz HTTP ile 5250'den
-// (yalnızca loopback, hiçbir zaman ağa açılmaz) erişmeye devam eder — özel bir IP adresi için
+// (yalnızca loopback, hiçbir zaman ağa açılmaz) erişmeye devam eder; özel bir IP adresi için
 // gerçek bir sertifika otoritesinden (Let's Encrypt vb.) sertifika almak mümkün olmadığından bu,
 // "hiç şifreleme yok" ile "gerçek bir CA" arasındaki tek pratik orta yol. HTTPS kapalıysa eskisi
 // gibi tek adresten (127.0.0.1 ya da 0.0.0.0) düz HTTP.
@@ -87,7 +89,7 @@ if (remoteAccessEnabled)
     builder.Configuration["AllowedHosts"] = "*";
 }
 
-// .NET'in varsayılan kapanma süresi 30 saniyedir — bir arka plan servisi (ör. donanım okuma
+// .NET'in varsayılan kapanma süresi 30 saniyedir; bir arka plan servisi (ör. donanım okuma
 // döngüsü) iptal isteğini hemen fark etmezse (o an sürmekte olan senkron bir WMI/donanım
 // sorgusunun ortasındaysa) host, "Yeniden Başlat"ın yeni süreci başlattığı ApplicationStopped'ı bu
 // süre boyunca hiç tetiklemeyip bekletir. Bu uygulamada kapanırken tamamlanması ZORUNLU bir iş yok
@@ -97,7 +99,20 @@ builder.Services.Configure<HostOptions>(options => options.ShutdownTimeout = Tim
 
 const string LocalOnlyCorsPolicy = "LocalOnly";
 
-builder.Services.AddControllersWithViews();
+// Tek kullanıcılı, tek süreçli yerel bir uygulama olduğundan istek başına kültür müzakeresine
+// (cookie/header) gerek yok, çünkü HKCU'da saklanan tercih (bkz. LanguageSettings) süreç genelinde TEK
+// bir varsayılan kültür olarak ayarlanır. DefaultThreadCurrentUICulture, henüz kendi thread'ine özgü
+// bir kültür ATANMAMIŞ her thread'de (ki RequestLocalization middleware kullanılmadığından hiçbiri
+// atamaz) her okunduğunda canlı olarak devreye girer; bu yüzden SettingsController.SetLanguage bunu
+// çalışma zamanında değiştirdiğinde bir sonraki istek hemen yeni dilde render edilir, süreç yeniden
+// başlatmaya gerek kalmaz.
+CultureInfo startupCulture = LanguageSettings.GetCultureInfo(LanguageSettings.GetLanguage());
+CultureInfo.DefaultThreadCurrentCulture = startupCulture;
+CultureInfo.DefaultThreadCurrentUICulture = startupCulture;
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization();
 builder.Services.AddSignalR();
 builder.Services.AddBusinessServices();
 builder.Services.AddHostedService<BroadcastBackgroundService>();
@@ -142,7 +157,7 @@ builder.Services.AddCors(options =>
             }
 
             // Yalnızca uygulamanın KENDİ portundan (5250) gelen loopback origin'lere güvenilir.
-            // Eskiden herhangi bir loopback origin kabul ediliyordu — bu, aynı bilgisayarda çalışan
+            // Eskiden herhangi bir loopback origin kabul ediliyordu; bu, aynı bilgisayarda çalışan
             // BAŞKA bir yerel web sunucusunun/uygulamanın (farklı bir portta) PIN olmadan
             // ws://127.0.0.1:5250/hubs/hardware'e bağlanıp canlı CPU/GPU/RAM/process-adı verisini
             // toplayabilmesine izin veriyordu.
@@ -164,10 +179,10 @@ var app = builder.Build();
 
 // "Yeniden Başlat" (RemoteAccessController.Restart), BU süreç henüz tam kapanmadan (ApplicationStopped
 // sırasında) yeni bir örneği başlatır. Adlandırılmış Mutex nesnesi işletim sisteminde process
-// tamamen kapanana/handle'ı kapanana kadar var olmaya devam eder — üstteki `using var` disposal'ı
+// tamamen kapanana/handle'ı kapanana kadar var olmaya devam eder; ancak üstteki `using var` disposal'ı
 // yalnızca en dışta app.Run() döndükten SONRA çalışır, yani yeni süreç başladığında eski süreç hâlâ
 // tam olarak sonlanmamış olabilir ve yeni süreç mutex'i "zaten var" (createdNew=false) görüp hemen
-// sessizce çıkardı — restart hiçbir hata/log bırakmadan başarısız olurdu. Mutex burada yalnızca bir
+// sessizce çıkardı; bu yüzden restart hiçbir hata/log bırakmadan başarısız olurdu. Mutex burada yalnızca bir
 // "var/yok" işaretçisi olarak kullanıldığından (hiç WaitOne/ReleaseMutex ile kilitlenmiyor), Dispose
 // çağrısı iş parçacığı sahipliği gerektirmez; kapanma sürecinin EN BAŞINDA (ApplicationStopping,
 // Process.Start'ın çalıştığı ApplicationStopped'dan önce gelir) erkenden serbest bırakılır.
@@ -180,7 +195,7 @@ app.Lifetime.ApplicationStopping.Register(() =>
 // ASPNETCORE_ENVIRONMENT=Development ile geliyor (Visual Studio/`dotnet run` varsayılanı). Bu
 // dosya (launchSettings.json) yalnızca kaynaktan `dotnet run`/IDE ile başlatıldığında etkilidir;
 // derlenmiş .exe'yi doğrudan çalıştırdığınızda (bu uygulamanın normal kullanım şekli) hiç
-// okunmaz, varsayılan olarak Production'da çalışır — bu yüzden IsDevelopment() aşağıda normal
+// okunmaz, varsayılan olarak Production'da çalışır; bu yüzden IsDevelopment() aşağıda normal
 // kullanımda hep false döner ve DeveloperExceptionPage hiç devreye girmez. Yine de ileride bir
 // kurulum betiği/kısayolu bu profil üzerinden başlatılırsa stack trace/dosya yolu ifşası riski
 // doğar; JSON yorum desteklemediği için bu uyarı doğrudan launchSettings.json'a değil buraya
@@ -195,7 +210,7 @@ app.Use(async (context, next) =>
     context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
     context.Response.Headers.Append("X-Frame-Options", "DENY");
     context.Response.Headers.Append("Referrer-Policy", "no-referrer");
-    // 'unsafe-inline' script/style için hâlâ gerekli — Razor görünümlerinde (ör. _Layout.cshtml'deki
+    // 'unsafe-inline' script/style için hâlâ gerekli, çünkü Razor görünümlerinde (ör. _Layout.cshtml'deki
     // tema/açılış-sekmesi betikleri) nonce'suz satır içi <script>/<style> kullanılıyor; bunu nonce
     // tabanlı daha sıkı bir politikaya çevirmek her görünümü tek tek değiştirmeyi gerektirir, bu
     // yüzden şimdilik kapsam dışı bırakıldı. Yine de gerçekçi asıl tehdit olan "üçüncü taraf bir
@@ -263,9 +278,9 @@ app.MapHub<HardwareHub>("/hubs/hardware").RequireCors(LocalOnlyCorsPolicy);
 // kullanımında (Production) arayüz artık sistem tarayıcısında bir sekme yerine kendi WebView2
 // penceresinde açılır (bkz. Desktop/DesktopShellRunner.cs). Kestrel bu pencereyle AYNI süreçte
 // arka planda (RunAsync) çalışmaya devam eder; LAN'a açma özelliği hâlâ düz HTTP üzerinden,
-// başka cihazların tarayıcısından erişilebilir şekilde çalışır — yalnızca sahibinin birincil
+// başka cihazların tarayıcısından erişilebilir şekilde çalışır; yalnızca sahibinin birincil
 // arayüzü değişti. Pencere kapanınca (Application.Run'ın doğal davranışı) StopAsync ile host da
-// düzgünce kapanır; ayrı bir "tepsiye küçült" davranışı YOK (bilerek — kullanıcı isteğiyle sistem
+// düzgünce kapanır; ayrı bir "tepsiye küçült" davranışı YOK (bilerek, kullanıcı isteğiyle sistem
 // tepsisi simgesi kapsam dışı bırakılmıştı, bkz. docs/ROADMAP.md "İkinci Dalga" kapsam dışı listesi).
 if (app.Environment.IsDevelopment())
 {
@@ -275,7 +290,7 @@ else if (startMinimized)
 {
     // Windows açılışında otomatik başlatma (bkz. StartupController.cs) kullanıcı isteğine göre görev
     // komut satırına "--minimized" ekleyebilir; bu, uygulama Görev Zamanlayıcı tarafından tetiklendiğinde
-    // pencereyi (ve splash'ı) hiç göstermeden doğrudan sistem tepsisinde başlatır — bu yüzden yukarıda
+    // pencereyi (ve splash'ı) hiç göstermeden doğrudan sistem tepsisinde başlatır; bu yüzden yukarıda
     // `earlyShell` hiç oluşturulmadı, burada eski basit `Run` çağrısı kullanılıyor.
     Task runTask = app.RunAsync();
     HardwareMonitorByYuinn.Web.Desktop.DesktopShellRunner.Run("http://127.0.0.1:5250/", app.Lifetime.ApplicationStopping, startMinimized: true);

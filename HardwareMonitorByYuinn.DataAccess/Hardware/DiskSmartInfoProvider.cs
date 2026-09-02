@@ -14,7 +14,7 @@ internal sealed record DiskSmartInfo(
 
 /// <summary>
 /// SMART sağlık verisini (genel durum, kalan ömür, güç açılma saati, toplam okuma/yazma) LibreHardwareMonitor
-/// değil, DiskInfoToolkit üzerinden okur — LibreHardwareMonitor bu verileri sensör olarak sunmuyor.
+/// değil, DiskInfoToolkit üzerinden okur; LibreHardwareMonitor bu verileri sensör olarak sunmuyor.
 /// Ham SMART sorgusu diğer sensörlere göre daha pahalı olduğundan <see cref="CacheDuration"/> boyunca
 /// önbelleğe alınır. Sonuç, adına göre bir donanım girdisiyle eşleştirilir (bkz. <see cref="Match"/>),
 /// <see cref="PhysicalDiskInfoProvider"/> ile aynı normalize-ve-kapsama mantığıyla.
@@ -40,7 +40,7 @@ internal sealed class DiskSmartInfoProvider(ILogger logger)
             try
             {
                 // İlk çağrıda disk listesi taranır; sonraki çağrılarda yalnızca mevcut disklerin
-                // (Storage.Update ile) SMART verisi tazelenir — donanım değişikliği (disk takma/çıkarma)
+                // (Storage.Update ile) SMART verisi tazelenir, donanım değişikliği (disk takma/çıkarma)
                 // beklenmediğinden her turda yeniden taramaya gerek yok.
                 if (!_reloaded)
                 {
@@ -80,7 +80,7 @@ internal sealed class DiskSmartInfoProvider(ILogger logger)
                     // Bazı NVMe denetleyicilerinde (gözlemlenen örnek: Micron OEM sürücüler) genişletilmiş
                     // SMART/Health Info Log sayfası okunamadığında DiskInfoToolkit hata fırlatmak yerine
                     // sözleşmeyi (Ömür: 0-100 arası, bkz. StorageSnapshot.SmartLifePercent) ihlal eden bir
-                    // değer üretebiliyor (ör. %101) — muhtemelen okunamayan ham baytın (0xFF dolgu) işaretli
+                    // değer üretebiliyor (ör. %101); muhtemelen okunamayan ham baytın (0xFF dolgu) işaretli
                     // sayı olarak yorumlanmasından kaynaklanıyor. Bu durumda aynı log sayfasından gelen diğer
                     // alanlar (Toplam Okuma/Yazma, Güç Açılma Süresi) da güvenilmez sayılır ve hepsi null'a
                     // çekilir; arayüzde yanlış "%101 ömür / 0 GB okuma-yazma" (işletim sistemi çalışan bir
@@ -89,7 +89,7 @@ internal sealed class DiskSmartInfoProvider(ILogger logger)
                     if (lifePercent is < 0 or > 100)
                     {
                         _logger.LogWarning(
-                            "{Disk} için SMART Ömür değeri geçerli aralık dışında (%{Life}) — genişletilmiş SMART alanları güvenilmez sayılıp yok sayılıyor",
+                            "{Disk} için SMART Ömür değeri geçerli aralık dışında (%{Life}), bu yüzden genişletilmiş SMART alanları güvenilmez sayılıp yok sayılıyor",
                             storage.Model, lifePercent);
                         lifePercent = null;
                         powerOnHours = null;

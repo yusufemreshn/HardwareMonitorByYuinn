@@ -1,9 +1,9 @@
-// Bildirim geçmişi — bir eşik "normal -> aşım" geçişi yaptığında (dashboard.js'teki
+// Bildirim geçmişi, bir eşik "normal -> aşım" geçişi yaptığında (dashboard.js'teki
 // notifyOnRisingEdge) buraya bir kayıt düşülür; tarayıcı bildirim izni verilmemiş olsa bile kayıt
 // tutulur, çünkü "hangi eşik ne zaman kaç kez aşıldı" sorusu bildirim izninden bağımsızdır.
 // Neden localStorage'da (SqliteHistoryStore'daki kalıcı process/oyun geçmişi gibi sunucuda değil):
 // bu veri tamamen istemci tarafında hesaplanan eşik/bildirim mantığının (HwmonThresholds,
-// HwmonNotifySettings — ikisi de localStorage) bir sonucu, sunucunun bundan haberi yok; bu yüzden
+// HwmonNotifySettings, ikisi de localStorage) bir sonucu, sunucunun bundan haberi yok; bu yüzden
 // kalıcı geçmişin aksine ayrı bir sunucu/DB round-trip'i gerektirmeden aynı katmanda tutulur.
 window.HwmonNotificationHistory = (function () {
     "use strict";
@@ -50,7 +50,7 @@ window.HwmonNotificationHistory = (function () {
     return { load: load, record: record, clear: clear, storageKey: STORAGE_KEY };
 })();
 
-// Paylaşılan SignalR bağlantısı — daha önce dashboard.js/details.js VE threshold-notifier.js
+// Paylaşılan SignalR bağlantısı, daha önce dashboard.js/details.js VE threshold-notifier.js
 // (her sayfada, _Layout.cshtml üzerinden yüklenir) her biri kendi bağlantısını açıyordu; Panel/
 // Detaylar'da bu, aynı sayfada iki ayrı negotiate + iki WebSocket + her yayının iki kez alınması
 // demekti (birden fazla sekmede daha da katlanıyordu). Artık tüm sayfalar aynı tek bağlantıyı
@@ -93,13 +93,13 @@ window.HwmonHub = (function () {
                 .withAutomaticReconnect()
                 .build();
             connection.onreconnecting(function () {
-                showBanner("Sunucuyla bağlantı koptu, yeniden bağlanılıyor…");
+                showBanner(t("Sunucuyla bağlantı koptu, yeniden bağlanılıyor…"));
             });
             connection.onreconnected(function () {
                 hideBanner();
             });
             connection.onclose(function () {
-                showBanner("Sunucuyla bağlantı kesildi. Veriler artık canlı güncellenmiyor, sayfayı yenileyin.");
+                showBanner(t("Sunucuyla bağlantı kesildi. Veriler artık canlı güncellenmiyor, sayfayı yenileyin."));
             });
         }
         return connection;
@@ -113,7 +113,7 @@ window.HwmonHub = (function () {
     return { get: get, start: start };
 })();
 
-// Değer+birim formatlama — eskiden dashboard.js/details.js/history.js/comparison.js (İKİ farklı
+// Değer+birim formatlama, eskiden dashboard.js/details.js/history.js/comparison.js (İKİ farklı
 // kopyası, biri savunmacı null-kontrolü yapıyor diğeri yapmıyordu)/game-history.js/report.js/
 // threshold-notifier.js olmak üzere 8 dosyada birebir kopyalanmıştı; biri değişip diğerleri
 // unutulursa sayfalar arasında tutarsız gösterim riski vardı. Artık tek kaynak burası.
@@ -129,7 +129,7 @@ window.HwmonFormat = (function () {
     return { fmt: fmt };
 })();
 
-// Eşik ayarları — Panel'deki kart uyarıları ve bildirimleri (dashboard.js) ile Ayarlar sayfasındaki
+// Eşik ayarları, Panel'deki kart uyarıları ve bildirimleri (dashboard.js) ile Ayarlar sayfasındaki
 // form (settings.js) aynı kaynağı kullanır. İşlemci ve Ekran Kartı için kullanıcı hangi metriğin
 // (sıcaklık ya da kullanım %) izleneceğini seçebilir; varsayılan hâlâ sıcaklık ve eski 85°C değeridir,
 // yani mevcut davranış değişmez, yalnızca değiştirilebilir hâle gelir. Bellek ve disk şimdilik tek
@@ -141,12 +141,12 @@ window.HwmonThresholds = (function () {
 
     var METRICS = {
         cpu: {
-            temp: { label: "Sıcaklık", unit: "°C", field: "packageTemperatureC" },
-            usage: { label: "Kullanım", unit: "%", field: "totalLoadPercent" }
+            temp: { label: t("Sıcaklık"), unit: "°C", field: "packageTemperatureC" },
+            usage: { label: t("Kullanım"), unit: "%", field: "totalLoadPercent" }
         },
         gpu: {
-            temp: { label: "Sıcaklık", unit: "°C", field: "coreTemperatureC" },
-            usage: { label: "Kullanım", unit: "%", field: "loadPercent" }
+            temp: { label: t("Sıcaklık"), unit: "°C", field: "coreTemperatureC" },
+            usage: { label: t("Kullanım"), unit: "%", field: "loadPercent" }
         }
     };
 
@@ -221,7 +221,7 @@ window.HwmonThresholds = (function () {
 
     // Sağlık puanı: her seviye (levelFor) için -20 (kritik) / -8 (dikkat) düşülüp 0-100 aralığına
     // kırpılır. Bu formül eskiden dashboard.js/history.js/report.js'te üç kez bağımsız kopyalanmıştı
-    // (biri güncellenip diğerleri unutulursa Panel/Geçmiş/Rapor farklı puan gösterebilirdi) — artık
+    // (biri güncellenip diğerleri unutulursa Panel/Geçmiş/Rapor farklı puan gösterebilirdi), artık
     // tek kaynak burası. Panel'in canlı puanı (dashboard.js) DEĞİŞKEN sayıda seviye kullanır
     // (CPU/GPU/RAM/Disk/SMART), bu yüzden ham `scoreFromLevels` doğrudan çağrılır; Geçmiş/Rapor'daki
     // günlük puan ise disk sıcaklığı kalıcı geçmişte tutulmadığından yalnızca CPU/GPU/RAM'e dayanır,
@@ -249,7 +249,7 @@ window.HwmonThresholds = (function () {
     };
 })();
 
-// Birim tercihi — sıcaklık (°C/°F) ve hız (MB/s/Mbps) gerçek matematiksel dönüşüm yapar. Boyut
+// Birim tercihi, sıcaklık (°C/°F) ve hız (MB/s/Mbps) gerçek matematiksel dönüşüm yapar. Boyut
 // (GB/GiB) İSE sayıyı değiştirmez, yalnızca etiketi değiştirir: LibreHardwareMonitorLib zaten
 // 1024 tabanlı (yani matematiksel olarak GiB) bir değer veriyor ve uygulama bunu her zaman "GB"
 // diye etiketlemişti (çoğu Windows uygulamasının yaptığı gibi); "GiB" seçimi yalnızca bu sayının
@@ -290,7 +290,7 @@ window.HwmonUnitPreferences = (function () {
     return { load: load, save: save, sanitize: sanitize, defaults: DEFAULTS, storageKey: STORAGE_KEY };
 })();
 
-// Enerji tüketimi maliyet tahmini — yalnızca İşlemci + Ekran Kartı paket güçlerinden hesaplanır
+// Enerji tüketimi maliyet tahmini, yalnızca İşlemci + Ekran Kartı paket güçlerinden hesaplanır
 // (anakart/depolama/ekran gibi ölçülemeyen bileşenler dahil değildir), bu yüzden gerçek toplam
 // sistem tüketiminden düşük çıkması beklenen bir YAKLAŞIK değerdir; arayüzde de bu şekilde belirtilir.
 window.HwmonEnergyCost = (function () {
@@ -357,7 +357,7 @@ window.HwmonUnits = (function () {
 
 // Kart içindeki "45°C · %62" gibi değer satırları (.stat-value-row) HER ZAMAN yan yana kalmalı,
 // hiçbir zaman alt alta düşmemeli (kullanıcı isteği). CSS'te flex-wrap:nowrap zorlanıyor; büyük
-// yazı boyutu/serif gibi geniş yazı tiplerinde satır kart genişliğine sığmayabilir — bu durumda
+// yazı boyutu/serif gibi geniş yazı tiplerinde satır kart genişliğine sığmayabilir; bu durumda
 // burada satır tek satıra sığana kadar font-size adım adım küçültülür. Sığdıktan sonra tekrar
 // büyütülmeye ÇALIŞILMAZ (yalnızca küçültme yönünde), çünkü taban değer zaten CSS'ten (density
 // moduna göre de değişebilen) doğru şekilde geliyor; her çağrıda önce inline font-size sıfırlanıp
@@ -396,7 +396,7 @@ window.HwmonFitStatRows = (function () {
     return { fitAll: fitAll, fitRow: fitRow };
 })();
 
-// Yazı tipi boyutu/ailesi — :root'taki --app-font-size (html'e uygulanır, çoğu bileşen rem
+// Yazı tipi boyutu/ailesi, :root'taki --app-font-size (html'e uygulanır, çoğu bileşen rem
 // kullandığı için tüm sayfa orantılı büyür/küçülür) ve --app-font-family (body'ye uygulanır,
 // diğer elemanlar zaten font-family:inherit kullanıyor) override edilerek anında geçerli olur.
 window.HwmonTypography = (function () {
@@ -450,7 +450,7 @@ window.HwmonTypography = (function () {
     return { load: load, save: save, sanitize: sanitize, apply: apply, defaults: DEFAULTS, storageKey: STORAGE_KEY, fontSizes: FONT_SIZE_PX, fontFamilies: FONT_FAMILY_STACK };
 })();
 
-// Cam efekti (glassmorphism) aç/kapa — <html>'e "glass-effect" sınıfı eklenip kaldırılır, gerçek
+// Cam efekti (glassmorphism) aç/kapa, <html>'e "glass-effect" sınıfı eklenip kaldırılır, gerçek
 // görsel kurallar site.css'teki .glass-effect bloğunda.
 window.HwmonGlassEffect = (function () {
     "use strict";
@@ -479,7 +479,7 @@ window.HwmonGlassEffect = (function () {
     return { load: load, save: save, apply: apply, storageKey: STORAGE_KEY };
 })();
 
-// Kart yoğunluk modu — <html data-density="compact|normal|detailed">, gerçek kurallar
+// Kart yoğunluk modu, <html data-density="compact|normal|detailed">, gerçek kurallar
 // site.css'te. "normal" hiçbir öznitelik eklemez (varsayılan görünüm, regresyon riski yok).
 window.HwmonDensity = (function () {
     "use strict";
@@ -519,7 +519,7 @@ window.HwmonDensity = (function () {
     return { load: load, save: save, apply: apply, sanitize: sanitize, defaultValue: DEFAULT, storageKey: STORAGE_KEY };
 })();
 
-// Panel görünüm modu — <html data-panel-view="list">, gerçek kurallar site.css'te. "grid"
+// Panel görünüm modu, <html data-panel-view="list">, gerçek kurallar site.css'te. "grid"
 // (varsayılan) hiçbir öznitelik eklemez, mevcut çok sütunlu düzenle birebir aynıdır.
 window.HwmonPanelView = (function () {
     "use strict";
@@ -556,7 +556,7 @@ window.HwmonPanelView = (function () {
     return { load: load, save: save, apply: apply, sanitize: sanitize, defaultValue: DEFAULT, storageKey: STORAGE_KEY };
 })();
 
-// Kart bazında grafik tipi (çizgi/alan/bar) — yalnızca Panel'deki ana 4 seri (İşlemci/Ekran
+// Kart bazında grafik tipi (çizgi/alan/bar), yalnızca Panel'deki ana 4 seri (İşlemci/Ekran
 // Kartı/Bellek/Kare Hızı) için; ikincil seriler (İndirme/Yükleme/Kare Süresi/low'lar) hep çizgi.
 window.HwmonChartTypes = (function () {
     "use strict";
@@ -592,7 +592,7 @@ window.HwmonChartTypes = (function () {
     return { load: load, save: save, sanitize: sanitize, defaults: DEFAULTS, keys: KEYS, storageKey: STORAGE_KEY };
 })();
 
-// Bildirim sesi — harici ses dosyası KULLANILMAZ (proje bağımlılık minimizasyonu kararına uygun,
+// Bildirim sesi, harici ses dosyası KULLANILMAZ (proje bağımlılık minimizasyonu kararına uygun,
 // bkz. [[hardwaremonitor-bagimlilik-karari]]); Web Audio API ile anlık sentezlenen kısa "bip"
 // dizileri kullanılır. threshold-notifier.js her gerçek bildirimde play() çağırır.
 window.HwmonNotifySound = (function () {
@@ -639,10 +639,10 @@ window.HwmonNotifySound = (function () {
     }
 
     // Tarayıcıların otomatik oynatma politikası, kullanıcı etkileşimi olmadan AudioContext'in
-    // askıya alınmış (suspended) kalmasına yol açabilir — bildirim, SignalR akışından tetiklendiği
+    // askıya alınmış (suspended) kalmasına yol açabilir; bildirim, SignalR akışından tetiklendiği
     // için bir "kullanıcı hareketi" sayılmaz. Kullanıcı sayfada en az bir kez tıklamışsa (ör. bir
     // kartı gizlemek için) bağlam zaten açılmış olur; hiç tıklamadıysa ilk birkaç bildirimde ses
-    // sessiz kalabilir — bu, JS'in aşamayacağı bir tarayıcı kısıtı (Notification izni gibi).
+    // sessiz kalabilir; bu, JS'in aşamayacağı bir tarayıcı kısıtı (Notification izni gibi).
     function play(prefsOverride) {
         var prefs = prefsOverride || load();
         if (prefs.sound === "none" || prefs.volume <= 0) return;
@@ -679,7 +679,7 @@ window.HwmonNotifySound = (function () {
     return { load: load, save: save, sanitize: sanitize, defaults: DEFAULTS, play: play, storageKey: STORAGE_KEY };
 })();
 
-// Açılışta gösterilecek sekme — gerçek yönlendirme mantığı _Layout.cshtml'in <head>'indeki
+// Açılışta gösterilecek sekme, gerçek yönlendirme mantığı _Layout.cshtml'in <head>'indeki
 // senkron script'te (yalnızca Dashboard/Index'te render edilir); burada yalnızca Ayarlar
 // formunun okuyup yazması için saklama/doğrulama var.
 window.HwmonStartupTab = (function () {
@@ -704,7 +704,7 @@ window.HwmonStartupTab = (function () {
     return { load: load, save: save, sanitize: sanitize, defaultValue: DEFAULT, storageKey: STORAGE_KEY };
 })();
 
-// İstatistiksel anomali tespiti aç/kapa — gerçek hesaplama (rolling ortalama/standart sapma,
+// İstatistiksel anomali tespiti aç/kapa, gerçek hesaplama (rolling ortalama/standart sapma,
 // z-score) dashboard.js'te; burada yalnızca kullanıcının bu özelliği açık/kapalı tutma tercihi var.
 window.HwmonAnomalyDetection = (function () {
     "use strict";
@@ -727,7 +727,7 @@ window.HwmonAnomalyDetection = (function () {
     return { isEnabled: isEnabled, setEnabled: setEnabled, storageKey: STORAGE_KEY };
 })();
 
-// Bellek sızıntısı tespiti aç/kapa — gerçek hesaplama (process bazlı RAM eğilimi) dashboard.js'te;
+// Bellek sızıntısı tespiti aç/kapa, gerçek hesaplama (process bazlı RAM eğilimi) dashboard.js'te;
 // eskiden anomali tespitiyle aynı anahtarı paylaşıyordu (anomali kapatılınca sızıntı uyarıları da
 // istemeden kapanıyordu), artık ayrı ve bağımsız bir tercih. Aynı desen: window.HwmonAnomalyDetection.
 window.HwmonMemoryLeakDetection = (function () {
@@ -751,7 +751,7 @@ window.HwmonMemoryLeakDetection = (function () {
     return { isEnabled: isEnabled, setEnabled: setEnabled, storageKey: STORAGE_KEY };
 })();
 
-// Renk özelleştirme — kullanıcının Ayarlar sayfasından seçtiği renkler, CSS'teki --accent-*
+// Renk özelleştirme, kullanıcının Ayarlar sayfasından seçtiği renkler, CSS'teki --accent-*
 // değişkenlerini :root üzerinde override ederek hem kartlarda hem grafikte anında geçerli olur.
 // Bu blok her sayfada (hwmon-chart.js'den hemen sonra, dashboard.js'den önce) çalışır; böylece
 // grafik oluşturulmadan önce doğru renkler zaten uygulanmış olur.
@@ -800,7 +800,7 @@ window.HwmonAccentColors = (function () {
     return { load: load, apply: apply, clear: clear, defaults: DEFAULTS, storageKey: STORAGE_KEY, vars: VARS };
 })();
 
-// Kart sıralaması — İşlemci ve Ekran Kartı kartlarında hangi değerin büyük/üstte (ilk iki sırada),
+// Kart sıralaması, İşlemci ve Ekran Kartı kartlarında hangi değerin büyük/üstte (ilk iki sırada),
 // hangisinin küçük/altta (son iki sırada) göründüğünü belirler. Sıralamanın kendisi Ayarlar
 // sayfasında düzenlenir; burada yalnızca saklama, doğrulama ve DOM'a uygulama mantığı var.
 // Panel dışındaki sayfalarda #cpu-main-row gibi elemanlar bulunmadığı için apply() sessizce atlar.
@@ -812,7 +812,7 @@ window.HwmonCardOrder = (function () {
         cpu: { usage: "cpu-usage", temp: "cpu-temp", power: "cpu-power", clock: "cpu-clock" },
         gpu: { usage: "gpu-usage", temp: "gpu-temp", power: "gpu-power", clock: "gpu-clock" }
     };
-    var METRIC_LABELS = { usage: "Kullanım", temp: "Sıcaklık", power: "Güç Tüketimi", clock: "Frekans" };
+    var METRIC_LABELS = { usage: t("Kullanım"), temp: t("Sıcaklık"), power: t("Güç Tüketimi"), clock: t("Frekans") };
     var DEFAULTS = {
         cpu: ["temp", "usage", "power", "clock"],
         gpu: ["temp", "usage", "power", "clock"]
@@ -872,12 +872,12 @@ window.HwmonCardOrder = (function () {
     };
 })();
 
-// Kart detay görünürlüğü — kullanıcı, her kartta hangi ikincil değerlerin gösterileceğini
-// Ayarlar → Kart Sıralaması sayfasından tek tek seçer ("hepsi için" — CPU/GPU'ya özgü kart
+// Kart detay görünürlüğü, kullanıcı, her kartta hangi ikincil değerlerin gösterileceğini
+// Ayarlar → Kart Sıralaması sayfasından tek tek seçer ("hepsi için", CPU/GPU'ya özgü kart
 // sıralamasından farklı olarak Bellek/VRAM/FPS/Ağ/Sistem Özeti dahil TÜM kartları kapsar).
 // Eskiden bu iş yalnızca "Kart Yoğunluğu" (data-density) tarafından kabaca (yalnızca
 // .stat-sub-row gizlenerek) yapılıyordu; yoğunluk seviyeleri artık burada birer HAZIR ŞABLON
-// (PRESETS) olarak kalıyor — bir seviyeye tıklamak kutucukları o şablona göre toplu ayarlar,
+// (PRESETS) olarak kalıyor; bir seviyeye tıklamak kutucukları o şablona göre toplu ayarlar,
 // kullanıcı sonrasında istediği kutucuğu yine elle açıp kapatabilir (şablon yalnızca başlangıç
 // noktasıdır, kalıcı bir kısıtlama değildir).
 window.HwmonDetailVisibility = (function () {
@@ -886,51 +886,51 @@ window.HwmonDetailVisibility = (function () {
     var STORAGE_KEY = "hwmon-detail-visibility";
 
     // id: null olan alanlar DOM'da element değil (dinamik olarak yeniden oluşturulan Depolama
-    // kartı gibi) — bunlar dashboard.js'teki ilgili render fonksiyonu tarafından okunur.
+    // kartı gibi), bunlar dashboard.js'teki ilgili render fonksiyonu tarafından okunur.
     var FIELDS = {
         cpu: [
-            { key: "usage", id: "cpu-usage", label: "Kullanım" },
-            { key: "temp", id: "cpu-temp", label: "Sıcaklık" },
-            { key: "power", id: "cpu-power", label: "Güç Tüketimi" },
-            { key: "clock", id: "cpu-clock", label: "Frekans" }
+            { key: "usage", id: "cpu-usage", label: t("Kullanım") },
+            { key: "temp", id: "cpu-temp", label: t("Sıcaklık") },
+            { key: "power", id: "cpu-power", label: t("Güç Tüketimi") },
+            { key: "clock", id: "cpu-clock", label: t("Frekans") }
         ],
         gpu: [
-            { key: "usage", id: "gpu-usage", label: "Kullanım" },
-            { key: "temp", id: "gpu-temp", label: "Sıcaklık" },
-            { key: "power", id: "gpu-power", label: "Güç Tüketimi" },
-            { key: "clock", id: "gpu-clock", label: "Frekans" }
+            { key: "usage", id: "gpu-usage", label: t("Kullanım") },
+            { key: "temp", id: "gpu-temp", label: t("Sıcaklık") },
+            { key: "power", id: "gpu-power", label: t("Güç Tüketimi") },
+            { key: "clock", id: "gpu-clock", label: t("Frekans") }
         ],
         vram: [
-            { key: "detail", id: "vram-detail", label: "Kullanılan / Toplam MB" }
+            { key: "detail", id: "vram-detail", label: t("Kullanılan / Toplam MB") }
         ],
         ram: [
-            { key: "detail", id: "ram-detail", label: "Kullanılan / Toplam GB" }
+            { key: "detail", id: "ram-detail", label: t("Kullanılan / Toplam GB") }
         ],
         fps: [
             { key: "low1", id: "fps-low1", label: "1% Low" },
             { key: "low01", id: "fps-low01", label: "0.1% Low" },
-            { key: "frametime", id: "fps-frametime", label: "Kare Süresi" },
-            { key: "source", id: "fps-source", label: "Kaynak İşlem" }
+            { key: "frametime", id: "fps-frametime", label: t("Kare Süresi") },
+            { key: "source", id: "fps-source", label: t("Kaynak İşlem") }
         ],
         network: [
-            { key: "upload", id: "network-upload-row", label: "Yükleme Hızı" },
-            { key: "adapter", id: "network-adapter", label: "Adaptör Adı" },
-            { key: "sessionTotal", id: "network-session-total", label: "Oturum Toplamı" }
+            { key: "upload", id: "network-upload-row", label: t("Yükleme Hızı") },
+            { key: "adapter", id: "network-adapter", label: t("Adaptör Adı") },
+            { key: "sessionTotal", id: "network-session-total", label: t("Oturum Toplamı") }
         ],
         storage: [
-            { key: "temp", id: null, label: "Sıcaklık" },
-            { key: "usage", id: null, label: "Kullanım Yüzdesi" },
-            { key: "capacity", id: null, label: "Kapasite (Kullanılan / Toplam)" },
-            { key: "rwRate", id: null, label: "Okuma / Yazma Hızı" },
-            { key: "name", id: null, label: "Disk Adı" },
-            { key: "smart", id: null, label: "Disk Sağlığı (SMART)" }
+            { key: "temp", id: null, label: t("Sıcaklık") },
+            { key: "usage", id: null, label: t("Kullanım Yüzdesi") },
+            { key: "capacity", id: null, label: t("Kapasite (Kullanılan / Toplam)") },
+            { key: "rwRate", id: null, label: t("Okuma / Yazma Hızı") },
+            { key: "name", id: null, label: t("Disk Adı") },
+            { key: "smart", id: null, label: t("Disk Sağlığı (SMART)") }
         ],
         system: [
-            { key: "gpuNames", id: "system-gpu-names-row", label: "Ekran Kartı Adı" },
-            { key: "os", id: "system-os-row", label: "İşletim Sistemi" },
-            { key: "ramTotal", id: "system-ram-row", label: "Toplam Bellek" },
-            { key: "storageTotal", id: "system-storage-row", label: "Toplam Depolama" },
-            { key: "uptime", id: "system-uptime-row", label: "Açık Kalma Süresi" }
+            { key: "gpuNames", id: "system-gpu-names-row", label: t("Ekran Kartı Adı") },
+            { key: "os", id: "system-os-row", label: t("İşletim Sistemi") },
+            { key: "ramTotal", id: "system-ram-row", label: t("Toplam Bellek") },
+            { key: "storageTotal", id: "system-storage-row", label: t("Toplam Depolama") },
+            { key: "uptime", id: "system-uptime-row", label: t("Açık Kalma Süresi") }
         ]
     };
 
@@ -966,7 +966,7 @@ window.HwmonDetailVisibility = (function () {
     }
 
     // "normal": tüm canlı metrikler açık, yalnızca sayfa yenilenmedikçe değişmeyen betimleyici/
-    // kimlik bilgileri (isim/adaptör/kaynak işlem, Sistem Özeti'nin tamamı) kapalı — bunlar zaten
+    // kimlik bilgileri (isim/adaptör/kaynak işlem, Sistem Özeti'nin tamamı) kapalı; bunlar zaten
     // "detaylı"da her zaman görünür.
     function buildNormalPreset() {
         var result = allTrue();
@@ -978,7 +978,7 @@ window.HwmonDetailVisibility = (function () {
     }
 
     // Bu, PRESETS.normal'DAN AYRI ve sabit "her şey görünür" hâlidir: hiçbir yoğunluk şablonu
-    // hiç seçilmemişken (ilk kurulum, localStorage boş) uygulanan gerçek varsayılan budur — kartlar
+    // hiç seçilmemişken (ilk kurulum, localStorage boş) uygulanan gerçek varsayılan budur; kartlar
     // ancak kullanıcı Kart Sıralaması'ndan bir şablona (Kompakt/Normal/Detaylı) TIKLARSA o şablona
     // göre değişir. PRESETS.normal'a bağlı olsaydı, "normal" şablonunun içeriğini değiştirmek hiç
     // dokunmamış kullanıcıların varsayılan görünümünü de sessizce değiştirirdi.
@@ -1043,11 +1043,11 @@ window.HwmonDetailVisibility = (function () {
     };
 })();
 
-// Arka plan rengi özelleştirme — aydınlık ve karanlık mod için ayrı ayrı seçilebilir. Aktif temaya
+// Arka plan rengi özelleştirme, aydınlık ve karanlık mod için ayrı ayrı seçilebilir. Aktif temaya
 // göre --bg'yi override eder; tema değiştiğinde (hwmon:theme-changed) doğru renge yeniden uygulanır.
 // Kart/üst yüzey/kenarlık renkleri (--card-bg, --bg-elevated, --border) sabit lacivert kalmasın diye
 // seçilen --bg'den aynı ton (hue/saturation) korunarak, yalnızca açıklık (lightness) kaydırılarak
-// türetilir — böylece her tema (hazır ya da elle seçilmiş) kartlara da kendi rengini yansıtır.
+// türetilir; böylece her tema (hazır ya da elle seçilmiş) kartlara da kendi rengini yansıtır.
 window.HwmonBackgroundColors = (function () {
     "use strict";
 
@@ -1173,7 +1173,7 @@ window.HwmonBackgroundColors = (function () {
     return { load: load, apply: apply, clear: clear, defaults: DEFAULTS, storageKey: STORAGE_KEY };
 })();
 
-// Anlık Görüntü ayarları — 📸 butonuyla oluşturulan PNG kartta hangi kartların (İşlemci, Ekran Kartı,
+// Anlık Görüntü ayarları, 📸 butonuyla oluşturulan PNG kartta hangi kartların (İşlemci, Ekran Kartı,
 // Bellek, Kare Hızı, Depolama) ve her kartın içinde hangi değerlerin (sıcaklık, kullanım, güç, frekans
 // vb.) hangi sırayla göründüğünü tutar. Sıralamanın kendisi Ayarlar sayfasında düzenlenir; burada
 // yalnızca saklama, doğrulama ve varsayılan değerler var. Varsayılanlar önceki (sabit) görünümle
@@ -1183,14 +1183,14 @@ window.HwmonSnapshotSettings = (function () {
 
     var STORAGE_KEY = "hwmon-snapshot-settings";
 
-    var BLOCK_LABELS = { cpu: "İşlemci", gpu: "Ekran Kartı", ram: "Bellek", fps: "Kare Hızı", storage: "Depolama" };
+    var BLOCK_LABELS = { cpu: t("İşlemci"), gpu: t("Ekran Kartı"), ram: t("Bellek"), fps: t("Kare Hızı"), storage: t("Depolama") };
 
     var METRIC_LABELS = {
-        cpu: { usage: "Kullanım (%)", temp: "Sıcaklık (°C)", power: "Güç (W)", clock: "Frekans (MHz)" },
-        gpu: { usage: "Kullanım (%)", temp: "Sıcaklık (°C)", power: "Güç (W)", clock: "Frekans (MHz)" },
-        ram: { usage: "Kullanım (%)", detail: "Kullanılan / Toplam (GB)" },
-        fps: { value: "Kare Hızı", process: "Kaynak Uygulama" },
-        storage: { usage: "Kullanım (%)", temp: "Sıcaklık (°C)" }
+        cpu: { usage: t("Kullanım (%)"), temp: t("Sıcaklık (°C)"), power: t("Güç (W)"), clock: t("Frekans (MHz)") },
+        gpu: { usage: t("Kullanım (%)"), temp: t("Sıcaklık (°C)"), power: t("Güç (W)"), clock: t("Frekans (MHz)") },
+        ram: { usage: t("Kullanım (%)"), detail: t("Kullanılan / Toplam (GB)") },
+        fps: { value: t("Kare Hızı"), process: t("Kaynak Uygulama") },
+        storage: { usage: t("Kullanım (%)"), temp: t("Sıcaklık (°C)") }
     };
 
     var DEFAULT_BLOCK_ORDER = ["cpu", "gpu", "ram", "fps", "storage"];
@@ -1215,10 +1215,10 @@ window.HwmonSnapshotSettings = (function () {
 
     // Anlık görüntü sabit bir 1200 birimlik tasarım genişliği üzerine çizilir (buildSnapshotCanvas);
     // burada seçilen çözünürlük yalnızca bu tasarımın kaç fiziksel piksele büyütülerek dışa
-    // aktarılacağını belirler (16:9 standart çözünürlükler) — düşük pikselli/bulanık PNG şikayetine
+    // aktarılacağını belirler (16:9 standart çözünürlükler); düşük pikselli/bulanık PNG şikayetine
     // karşı kullanıcının netlik/dosya boyutu tercih edebilmesi için.
     var RESOLUTIONS = {
-        "1080p": { w: 1920, h: 1080, label: "1080p (Varsayılan)" },
+        "1080p": { w: 1920, h: 1080, label: t("1080p (Varsayılan)") },
         "2k": { w: 2560, h: 1440, label: "2K (1440p)" },
         "4k": { w: 3840, h: 2160, label: "4K (2160p)" }
     };
@@ -1284,7 +1284,7 @@ window.HwmonSnapshotSettings = (function () {
     };
 })();
 
-// Ambiyans Modu — tam ekran saat + büyük göstergeler ekranında hangi kartların görüneceğini
+// Ambiyans Modu, tam ekran saat + büyük göstergeler ekranında hangi kartların görüneceğini
 // tutar (Ayarlar sayfasında düzenlenir). Varsayılan olarak eskisi gibi yalnızca CPU/GPU/RAM
 // açıktır; Kare Hızı ve Depolama kullanıcı isterse eklenebilir.
 window.HwmonAmbientSettings = (function () {
@@ -1292,7 +1292,7 @@ window.HwmonAmbientSettings = (function () {
 
     var STORAGE_KEY = "hwmon-ambient-settings";
     var METRICS = ["cpu", "gpu", "ram", "fps", "storage"];
-    var LABELS = { cpu: "İşlemci", gpu: "Ekran Kartı", ram: "Bellek", fps: "Kare Hızı", storage: "Depolama" };
+    var LABELS = { cpu: t("İşlemci"), gpu: t("Ekran Kartı"), ram: t("Bellek"), fps: t("Kare Hızı"), storage: t("Depolama") };
     var DEFAULT_ENABLED = { cpu: true, gpu: true, ram: true, fps: false, storage: false };
 
     function load() {
@@ -1320,9 +1320,9 @@ window.HwmonAmbientSettings = (function () {
     return { load: load, save: save, metrics: METRICS, labels: LABELS, defaultEnabled: DEFAULT_ENABLED, storageKey: STORAGE_KEY };
 })();
 
-// Oyun Profilleri — işlem adına (fps.sourceProcessName, ETW'den .exe uzantısız gelir) göre özel
+// Oyun Profilleri, işlem adına (fps.sourceProcessName, ETW'den .exe uzantısız gelir) göre özel
 // renk/eşik/ambiyans ayarı tanımlar. dashboard.js, ön plandaki uygulama değişip bir profille
-// eşleşince bunu HwmonAccentColors.apply()/HwmonThresholds ile "önizleme" gibi uygular — kullanıcının
+// eşleşince bunu HwmonAccentColors.apply()/HwmonThresholds ile "önizleme" gibi uygular; kullanıcının
 // asıl kayıtlı (localStorage'daki) tercihlerine dokunmadan; oyun kapanınca otomatik geri döner.
 window.HwmonGameProfiles = (function () {
     "use strict";
@@ -1376,7 +1376,7 @@ window.HwmonGameProfiles = (function () {
     return { load: load, save: save, findMatch: findMatch, getProcessNames: getProcessNames, storageKey: STORAGE_KEY };
 })();
 
-// Panel Düzeni — Panel'deki 9 kartın (İşlemci/Ekran Kartı/VRAM/Bellek/Kare Hızı/Depolama/Ağ/Kaynak
+// Panel Düzeni, Panel'deki 9 kartın (İşlemci/Ekran Kartı/VRAM/Bellek/Kare Hızı/Depolama/Ağ/Kaynak
 // Kullanımı/Sistem Özeti) hangisinin görüneceğini ve hangi sırada duracağını tutar. Sıralama
 // Ayarlar sayfasında sürükle-bırak ile düzenlenir; burada yalnızca saklama + DOM'a uygulama var.
 window.HwmonPanelLayout = (function () {
@@ -1385,12 +1385,12 @@ window.HwmonPanelLayout = (function () {
     var STORAGE_KEY = "hwmon-panel-layout";
     var DEFAULT_ORDER = ["cpu", "gpu", "vram", "ram", "fps", "storage", "network", "processes", "system"];
     var LABELS = {
-        cpu: "İşlemci", gpu: "Ekran Kartı", vram: "Video Belleği (VRAM)", ram: "Bellek", fps: "Kare Hızı",
-        storage: "Depolama", network: "Ağ", processes: "Kaynak Kullanımı", system: "Sistem Özeti"
+        cpu: t("İşlemci"), gpu: t("Ekran Kartı"), vram: t("Video Belleği (VRAM)"), ram: t("Bellek"), fps: t("Kare Hızı"),
+        storage: t("Depolama"), network: t("Ağ"), processes: t("Kaynak Kullanımı"), system: t("Sistem Özeti")
     };
 
     // Kaydedilmiş sıradaki TANIDIK OLMAYAN anahtarlar (ör. kaldırılmış "fans") sessizce elenir,
-    // geri kalan sıralama korunur — eski katı "tam eşleşme" kontrolü (bir tek anahtar bile
+    // geri kalan sıralama korunur; eski katı "tam eşleşme" kontrolü (bir tek anahtar bile
     // uyuşmayınca TÜM düzeni sıfırlıyordu) hem yeni bir kart eklendiğinde hem de eskisi
     // kaldırıldığında kullanıcının özenle kurduğu sıralamayı gereksiz yere siliyordu.
     function sanitizeOrder(order) {
@@ -1401,7 +1401,7 @@ window.HwmonPanelLayout = (function () {
 
     function load() {
         // localStorage'da HİÇ kayıt yoksa (ilk açılış, yeni kullanıcı) VRAM varsayılan olarak
-        // gizli gelir — kayıt varsa (kullanıcı en az bir kez Kaydet'e basmışsa) bu davranış hiç
+        // gizli gelir; kayıt varsa (kullanıcı en az bir kez Kaydet'e basmışsa) bu davranış hiç
         // devreye girmez, "hidden" içinde vram için ayrı bir değer yoksa görünür kalır (yeni bir
         // kart eklendiğinde sona eklenmesiyle aynı geriye dönük uyum mantığı).
         var isFirstTimeUser = localStorage.getItem(STORAGE_KEY) === null;
@@ -1414,7 +1414,7 @@ window.HwmonPanelLayout = (function () {
         var order = sanitizeOrder(saved.order);
         if (order) {
             // Kaydedilmiş düzende olmayan yeni bir kart (ör. VRAM eklendiğinde eski kayıtlar)
-            // sona eklenir — aksi hâlde yeni kart hiç görünmez.
+            // sona eklenir; aksi hâlde yeni kart hiç görünmez.
             DEFAULT_ORDER.forEach(function (key) {
                 if (order.indexOf(key) === -1) order.push(key);
             });
@@ -1441,7 +1441,7 @@ window.HwmonPanelLayout = (function () {
     }
 
     // Verilen sıraya/görünürlüğe göre kartları taşır (appendChild var olan elemanı taşır, yeniden
-    // oluşturmaz) ve gizlenenleri display:none yapar. localStorage'a DOKUNMAZ — bu yüzden Oyun
+    // oluşturmaz) ve gizlenenleri display:none yapar. localStorage'a DOKUNMAZ; bu yüzden Oyun
     // Profilleri gibi "geçici önizleme" ihtiyaçları için de kullanılabilir (bkz. dashboard.js
     // applyGameProfile). Panel dışındaki sayfalarda .stat-grid bulunmadığı için sessizce atlanır.
     function applyLayout(layout) {
@@ -1470,15 +1470,15 @@ window.HwmonPanelLayout = (function () {
     return { load: load, save: save, apply: apply, applyLayout: applyLayout, defaults: DEFAULT_ORDER, labels: LABELS, storageKey: STORAGE_KEY };
 })();
 
-// Ayarlar sayfasındaki "Panel Düzeni" VE "Panel Görünümü" bölümlerinin küçük canlı önizlemesi —
+// Ayarlar sayfasındaki "Panel Düzeni" VE "Panel Görünümü" bölümlerinin küçük canlı önizlemesi;
 // ikisi de aynı mini kart grid'ini çiziyor (biri sıra/görünürlüğü değiştirirken, diğeri Grid/Liste
-// modunu değiştirirken), bu yüzden çizim mantığı burada TEK yerde — settings.js'teki iki init
+// modunu değiştirirken), bu yüzden çizim mantığı burada TEK yerde; settings.js'teki iki init
 // fonksiyonu da kendi güncel (order, hidden, viewMode) değerlerini bu saf fonksiyona verir.
 window.HwmonPanelPreviewRenderer = (function () {
     "use strict";
 
     // Gerçek .stat-card'la BİREBİR AYNI vurgu rengi (bkz. Dashboard/Index.cshtml'deki
-    // style="--accent: var(--accent-X)" tanımları) — önizlemenin gerçeğe ne kadar benzediği bu
+    // style="--accent: var(--accent-X)" tanımları), önizlemenin gerçeğe ne kadar benzediği bu
     // eşlemeye bağlı.
     var ACCENT_VARS = {
         cpu: "--accent-cpu", gpu: "--accent-gpu", vram: "--accent-gpu", ram: "--accent-ram",
@@ -1495,7 +1495,7 @@ window.HwmonPanelPreviewRenderer = (function () {
         if (visible.length === 0) {
             var empty = document.createElement("p");
             empty.className = "panel-layout-preview-empty";
-            empty.textContent = "Tüm kartlar gizli, Panel boş görünecek.";
+            empty.textContent = t("Tüm kartlar gizli, Panel boş görünecek.");
             container.appendChild(empty);
             return;
         }
@@ -1520,9 +1520,9 @@ window.HwmonPanelPreviewRenderer = (function () {
     return { render: render };
 })();
 
-// Panel Düzeni Profilleri — HwmonPanelLayout tek bir "aktif" düzeni tutar; bu modül birden fazla
+// Panel Düzeni Profilleri, HwmonPanelLayout tek bir "aktif" düzeni tutar; bu modül birden fazla
 // isimlendirilmiş düzeni saklayıp aralarında geçiş yapılmasını sağlar (ör. "İzleme Düzeni" ve
-// "Oyun Düzeni"). Bir profil "uygulandığında" yalnızca HwmonPanelLayout.save() çağrılır — Panel'e
+// "Oyun Düzeni"). Bir profil "uygulandığında" yalnızca HwmonPanelLayout.save() çağrılır; Panel'e
 // yansıması zaten o modülün var olan apply() mantığıyla olur, burada tekrar edilmez.
 window.HwmonPanelLayoutProfiles = (function () {
     "use strict";
@@ -1581,7 +1581,7 @@ window.HwmonPanelLayoutProfiles = (function () {
     };
 })();
 
-// Sekmeli sayfalarda (Ayarlar, Geçmiş, Karşılaştırma) sol kategori/alt-bölüm gezinmesi — sayfadaki
+// Sekmeli sayfalarda (Ayarlar, Geçmiş, Karşılaştırma) sol kategori/alt-bölüm gezinmesi; sayfadaki
 // tüm bölümler tek seferde gösterilmek yerine solda kategori altında listelenir, sağda yalnızca
 // seçili bölüm görünür. `hidden` yalnızca görünürlüğü değiştirir, DOM'dan kaldırmaz; sayfaya özel
 // init fonksiyonları elemanları gizliyken de normal şekilde bulup kurabilir. Üç sayfada da aynı
@@ -1601,15 +1601,15 @@ window.HwmonSectionNav = (function () {
 
         // .settings-sidebar'ın mouse uzaklaşınca daralması (yalnızca history-rows-active iken,
         // bkz. site.css) :hover/:focus-within'e dayanır. Bir menü butonuna tıklamak o butona
-        // klavye odağını (focus) verir; odak kalktığı sürece :focus-within sidebar'ı GENİŞ tutar
-        // — kullanıcı menüden bir sayfaya geçip fareyi hemen uzaklaştırsa bile sidebar başka bir
+        // klavye odağını (focus) verir; odak kalktığı sürece :focus-within sidebar'ı GENİŞ tutar,
+        // kullanıcı menüden bir sayfaya geçip fareyi hemen uzaklaştırsa bile sidebar başka bir
         // yere tıklanana kadar açık kalıyordu. Tıklama sonrası odağı hemen kaldırarak yalnızca
         // gerçek :hover'ın (fare konumunun) daralma/genişlemeyi belirlemesi sağlanır.
         //
         // Sol üstteki hamburger (☰) butonu (sidebar-toggle) ise ayrı, hover'dan bağımsız kilitli
         // bir daralma sağlar: tıklanınca daralır, tekrar tıklanana KADAR (hover'a bakılmaksızın)
         // daralı kalır. Daralmışken herhangi bir sidebar butonuna (kategori/grup aç-kapa ya da bir
-        // alt sekme hedefi) tıklanırsa kilidi kalkar ve genişler — kullanıcı nereye tıkladığını
+        // alt sekme hedefi) tıklanırsa kilidi kalkar ve genişler; kullanıcı nereye tıkladığını
         // görebilsin diye. history-rows-active panelinde (Kayıtları Görüntüle) bu buton bilerek
         // işlevsizdir; o panelde daralma tamamen hover'a bağlı otomatik mekanizmaya bırakılır.
         var toggleBtn = sidebar.querySelector(".sidebar-toggle");
@@ -1641,7 +1641,7 @@ window.HwmonSectionNav = (function () {
 
         // Bir kategorinin altında iç içe bir grup yoksa VE tam olarak tek hedefi varsa (ör. "Oyun
         // Profilleri" kategorisinin altında yalnızca "Oyun Profilleri" adlı tek bir öğe), o tek öğe
-        // kategoriyle birebir aynı şeydir — açıp sonra tekrar tıklamak gereksiz bir adım. Bu
+        // kategoriyle birebir aynı şeydir; açıp sonra tekrar tıklamak gereksiz bir adım. Bu
         // kategoriler `settings-category-single` işaretlenir: kategori butonu aç/kapa yerine
         // DOĞRUDAN o hedefe gider (bkz. aşağıdaki tıklama kurulumu), alt liste hiç açılmaz (CSS'te
         // varsayılan `display:none` kalır, `is-open` hiç eklenmediği için), ok işareti gizlenir.
@@ -1720,7 +1720,7 @@ window.HwmonSectionNav = (function () {
         });
 
         // Kullanıcının GERÇEK bir tıklamasıyla bölüm değişimi, tarayıcı geçmişine yeni bir adım
-        // ekler (pushState) — eskiden burada da (initial-load ile aynı) replaceState kullanılıyordu,
+        // ekler (pushState); eskiden burada da (initial-load ile aynı) replaceState kullanılıyordu,
         // bu yüzden "Geri" tuşu alt-sekmeler arasında adım adım gitmek yerine doğrudan bir önceki
         // TAM SAYFAYA atlıyordu (kullanıcı tarafından bulunan hata). `showSection`'ın kendi iç
         // `replaceState`'i burada `false` ile bastırılıp yerine gerçek bir geçmiş girdisi eklenir.
@@ -1754,9 +1754,9 @@ window.HwmonSectionNav = (function () {
 })();
 
 // Geçmiş sayfasındaki 4 "Kayıt Bilgileri" panelinin (Kayıtlar/Oyun Geçmişi/Süreç/Güvenlik) hepsinde
-// aynı "en eski N günü sil" kontrolü var — tek tek 4 kez kopyalamak yerine paylaşılan tek bir
+// aynı "en eski N günü sil" kontrolü var; tek tek 4 kez kopyalamak yerine paylaşılan tek bir
 // uygulama. CSRF deseni settings.js'teki Uzaktan Erişim/Başlangıç formlarıyla aynı: token'ı gizli
-// input'tan okuyup URLSearchParams body'siyle POST eder. Silme sonrası tüm sayfa yenilenir — sunucu
+// input'tan okuyup URLSearchParams body'siyle POST eder. Silme sonrası tüm sayfa yenilenir; sunucu
 // zaten Razor ile render ettiği için (bu panellerin hiçbiri JS-fetch değil) ayrı bir client-side
 // render yolu icat etmek yerine en basit/güvenilir tazeleme budur.
 window.HwmonRecordCleanup = (function () {
@@ -1771,8 +1771,7 @@ window.HwmonRecordCleanup = (function () {
         button.addEventListener("click", function () {
             var days = select.value;
             var confirmed = confirm(
-                "En eski " + days + " günlük " + options.nounLabel + " verisini kalıcı olarak silmek " +
-                "istediğinize emin misiniz? Bu işlem geri alınamaz."
+                t("En eski") + " " + days + " " + t("günlük") + " " + options.nounLabel + " " + t("verisini kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.")
             );
             if (!confirmed) return;
 
@@ -1787,12 +1786,12 @@ window.HwmonRecordCleanup = (function () {
                     return r.json();
                 })
                 .then(function (result) {
-                    alert(result.deletedCount + " kayıt silindi.");
+                    alert(result.deletedCount + " " + t("kayıt silindi."));
                     window.location.reload();
                 })
                 .catch(function () {
                     button.disabled = false;
-                    alert("Silme işlemi başarısız oldu.");
+                    alert(t("Silme işlemi başarısız oldu."));
                 });
         });
     }
@@ -1819,7 +1818,7 @@ window.HwmonRecordCleanup = (function () {
     setTimeout(function () { target.classList.remove("settings-highlight"); }, 2200);
 })();
 
-// Sekmeler — Bootstrap'in tab bileşeni yerine.
+// Sekmeler, Bootstrap'in tab bileşeni yerine.
 (function () {
     "use strict";
 
@@ -1860,7 +1859,7 @@ window.HwmonRecordCleanup = (function () {
     });
 })();
 
-// Klavye kısayolları — tuş atamaları Ayarlar → Klavye Kısayolları'ndan değiştirilebilir. Her eylemin
+// Klavye kısayolları, tuş atamaları Ayarlar → Klavye Kısayolları'ndan değiştirilebilir. Her eylemin
 // varsayılan ve kayıtlı bir tuş kombinasyonu ("combo", ör. "1" ya da "ctrl+shift+s") vardır; combo'lar
 // çakışamaz (bkz. sanitize). ACTIONS listesi hem burada (gerçek tetikleme) hem de Ayarlar sayfasında
 // (düzenleme listesi) kullanılır.
@@ -1870,14 +1869,14 @@ window.HwmonShortcuts = (function () {
     var STORAGE_KEY = "hwmon-shortcuts";
 
     var ACTIONS = [
-        { key: "nav1", label: "Panel'e git", type: "nav", path: "/", defaultCombo: "1" },
-        { key: "nav2", label: "Detaylar'a git", type: "nav", path: "/Details", defaultCombo: "2" },
-        { key: "nav3", label: "Karşılaştırma'ya git", type: "nav", path: "/Comparison", defaultCombo: "3" },
-        { key: "nav4", label: "Geçmiş'e git", type: "nav", path: "/History", defaultCombo: "4" },
-        { key: "nav5", label: "Ayarlar'a git", type: "nav", path: "/Settings", defaultCombo: "5" },
-        { key: "nav6", label: "Bildirimler'e git", type: "nav", path: "/Notifications", defaultCombo: "6" },
-        { key: "nav7", label: "Hakkında'ya git", type: "nav", path: "/About", defaultCombo: "7" },
-        { key: "snapshot", label: "Anlık Görüntü Al (yalnızca Panel'de)", type: "click", targetId: "snapshot-share", defaultCombo: "ctrl+shift+s" }
+        { key: "nav1", label: t("Panel'e git"), type: "nav", path: "/", defaultCombo: "1" },
+        { key: "nav2", label: t("Detaylar'a git"), type: "nav", path: "/Details", defaultCombo: "2" },
+        { key: "nav3", label: t("Karşılaştırma'ya git"), type: "nav", path: "/Comparison", defaultCombo: "3" },
+        { key: "nav4", label: t("Geçmiş'e git"), type: "nav", path: "/History", defaultCombo: "4" },
+        { key: "nav5", label: t("Ayarlar'a git"), type: "nav", path: "/Settings", defaultCombo: "5" },
+        { key: "nav6", label: t("Bildirimler'e git"), type: "nav", path: "/Notifications", defaultCombo: "6" },
+        { key: "nav7", label: t("Hakkında'ya git"), type: "nav", path: "/About", defaultCombo: "7" },
+        { key: "snapshot", label: t("Anlık Görüntü Al (yalnızca Panel'de)"), type: "click", targetId: "snapshot-share", defaultCombo: "ctrl+shift+s" }
     ];
 
     function defaults() {
@@ -1926,7 +1925,7 @@ window.HwmonShortcuts = (function () {
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* kota aşımı/gizli sekme: yok say */ }
     }
 
-    // Aynı combo'nun (varsa) hangi BAŞKA eyleme atanmış olduğunu döndürür — Ayarlar sayfasındaki
+    // Aynı combo'nun (varsa) hangi BAŞKA eyleme atanmış olduğunu döndürür; Ayarlar sayfasındaki
     // çakışma uyarısı için. excludeKey, düzenlenmekte olan eylemin kendisini hariç tutar.
     function findConflict(state, combo, excludeKey) {
         var conflictAction = null;
@@ -1947,7 +1946,7 @@ window.HwmonShortcuts = (function () {
     };
 })();
 
-// Klavye kısayollarını gerçekten tetikleyen dinleyici — her sayfada çalışır (site.js her yerde
+// Klavye kısayollarını gerçekten tetikleyen dinleyici, her sayfada çalışır (site.js her yerde
 // yüklü). Bir input/select/textarea/contenteditable odaklıyken devre dışı bırakılır ki forma yazı
 // yazarken (ör. eşik değeri girerken "5" yazmak) sayfa değişmesin.
 (function initKeyboardShortcuts() {
@@ -1996,7 +1995,7 @@ window.HwmonShortcuts = (function () {
 
     function applyIcon(theme) {
         button.textContent = theme === "light" ? "🌙" : "☀️";
-        button.setAttribute("aria-label", theme === "light" ? "Karanlık moda geç" : "Aydınlık moda geç");
+        button.setAttribute("aria-label", theme === "light" ? t("Karanlık moda geç") : t("Aydınlık moda geç"));
     }
 
     applyIcon(document.documentElement.getAttribute("data-theme") || "dark");
@@ -2011,7 +2010,7 @@ window.HwmonShortcuts = (function () {
     });
 })();
 
-// Programın açık kalma süresi — AppSession.StartedAtUtc, sayfa yüklenirken _Layout.cshtml
+// Programın açık kalma süresi, AppSession.StartedAtUtc, sayfa yüklenirken _Layout.cshtml
 // tarafından data-started-at olarak gömülür; buradan itibaren saniyede bir client tarafında sayılır.
 (function () {
     "use strict";
@@ -2034,17 +2033,17 @@ window.HwmonShortcuts = (function () {
         var minutes = Math.floor((totalSeconds % 3600) / 60);
         var seconds = totalSeconds % 60;
         var clock = pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
-        wrap.textContent = days > 0 ? days + "g " + clock : clock;
+        wrap.textContent = days > 0 ? days + t("g ") + clock : clock;
     }
 
     tick();
     setInterval(tick, 1000);
 })();
 
-// Eşik bildirimleri — Panel sayfasındaki dashboard.js, hem tarayıcı izni "granted" hem de burada
+// Eşik bildirimleri, Panel sayfasındaki dashboard.js, hem tarayıcı izni "granted" hem de burada
 // yönetilen uygulama-içi açık/kapalı tercihi true ise Notification API ile uyarı gönderir.
 // Tarayıcı izni JS'ten geri alınamadığı için (yalnızca tarayıcı ayarlarından), "kapatma" burada
-// ayrı bir localStorage bayrağıyla simüle edilir — zil ikonu buna göre 🔔/🔕 arasında değişir.
+// ayrı bir localStorage bayrağıyla simüle edilir; zil ikonu buna göre 🔔/🔕 arasında değişir.
 window.HwmonNotifyToggle = (function () {
     "use strict";
 
@@ -2068,7 +2067,7 @@ window.HwmonNotifyToggle = (function () {
     return { isEnabledPref: isEnabledPref, setEnabledPref: setEnabledPref, isActive: isActive };
 })();
 
-// Bildirim ayarları — Ayarlar sayfasındaki "Bildirimler" bölümünden düzenlenir: eşik aşılı
+// Bildirim ayarları, Ayarlar sayfasındaki "Bildirimler" bölümünden düzenlenir: eşik aşılı
 // kaldığı sürece kaç saniyede bir tekrar bildirim gönderileceği (0 = yalnızca bir kez) ve hangi
 // kartlar (İşlemci/Ekran Kartı/Bellek/Depolama) için bildirim gönderileceği. notifications.js
 // (her sayfada yüklenir) bunu okuyup gerçek bildirimleri gönderir.
@@ -2123,7 +2122,7 @@ window.HwmonNotifySettings = (function () {
     if (typeof Notification === "undefined") {
         button.disabled = true;
         button.textContent = "🔕";
-        button.title = "Bu tarayıcı bildirimleri desteklemiyor";
+        button.title = t("Bu tarayıcı bildirimleri desteklemiyor");
         return;
     }
 
@@ -2132,27 +2131,27 @@ window.HwmonNotifySettings = (function () {
         button.textContent = active ? "🔔" : "🔕";
         button.setAttribute("aria-pressed", active ? "true" : "false");
         if (Notification.permission === "denied") {
-            button.title = "Bildirimlere izin verilmedi (tarayıcı ayarlarından değiştirebilirsiniz)";
+            button.title = t("Bildirimlere izin verilmedi (tarayıcı ayarlarından değiştirebilirsiniz)");
         } else if (active) {
-            button.title = "Eşik bildirimleri açık, kapatmak için tıklayın";
+            button.title = t("Eşik bildirimleri açık, kapatmak için tıklayın");
         } else if (Notification.permission === "granted") {
-            button.title = "Bildirimler kapalı, açmak için tıklayın";
+            button.title = t("Bildirimler kapalı, açmak için tıklayın");
         } else {
-            button.title = "Eşik aşıldığında bildirim almak için tıklayın";
+            button.title = t("Eşik aşıldığında bildirim almak için tıklayın");
         }
     }
 
     applyState();
 
     // Tarayıcı izni "denied" olduğunda tıklama JS'ten hiçbir şeyi değiştiremez (yalnızca tooltip
-    // vardı, bu da fare üzerine gelmeden görünmüyordu — kullanıcıya "buton bozuk" hissi veriyordu).
+    // vardı, bu da fare üzerine gelmeden görünmüyordu; kullanıcıya "buton bozuk" hissi veriyordu).
     // Bunun yerine kısa süreliğine görünen bir ipucu balonu göstererek nedenini açıkça belirtiyoruz.
     var deniedHint = null;
     function showDeniedHint() {
         if (deniedHint) { clearTimeout(deniedHint.timer); deniedHint.el.remove(); }
         var el = document.createElement("div");
         el.className = "notify-denied-hint";
-        el.textContent = "Bildirimler bu site için engellenmiş. Tarayıcının adres çubuğundaki kilit/site ayarları simgesinden izin vermeniz gerekiyor.";
+        el.textContent = t("Bildirimler bu site için engellenmiş. Tarayıcının adres çubuğundaki kilit/site ayarları simgesinden izin vermeniz gerekiyor.");
         document.body.appendChild(el);
         var rect = button.getBoundingClientRect();
         el.style.top = (rect.bottom + 8) + "px";
@@ -2187,7 +2186,7 @@ window.HwmonNotifySettings = (function () {
     });
 })();
 
-// Ayarları dışa/içe aktarma — her modül kendi tercihini "hwmon-" önekiyle localStorage'a yazıyor
+// Ayarları dışa/içe aktarma, her modül kendi tercihini "hwmon-" önekiyle localStorage'a yazıyor
 // (bu dosyadaki tüm window.Hwmon* modülleri); bu yüzden export TEK TEK alanları bilmek zorunda
 // değil, yalnızca bu önekle başlayan anahtarları toplar. "hwmon-notification-history" İSTİSNA:
 // bir tercih değil, geçmiş bir olay kaydı (veri) olduğu için ayar yedeğine dahil edilmez.
@@ -2226,17 +2225,17 @@ window.HwmonSettingsBackup = (function () {
     }
 
     // Döner: { ok: true, count } veya { ok: false, error }. Yalnızca "hwmon-" önekiyle başlayan
-    // anahtarlar yazılır — rastgele bir JSON dosyası localStorage'a keyfi anahtar enjekte edemez.
+    // anahtarlar yazılır; rastgele bir JSON dosyası localStorage'a keyfi anahtar enjekte edemez.
     function importFromText(text) {
         var parsed;
         try {
             parsed = JSON.parse(text);
         } catch (e) {
-            return { ok: false, error: "Dosya geçerli bir JSON değil." };
+            return { ok: false, error: t("Dosya geçerli bir JSON değil.") };
         }
 
         if (!parsed || typeof parsed !== "object" || !parsed.settings || typeof parsed.settings !== "object")
-            return { ok: false, error: "Dosya beklenen ayar yedeği biçiminde değil." };
+            return { ok: false, error: t("Dosya beklenen ayar yedeği biçiminde değil.") };
 
         var count = 0;
         Object.keys(parsed.settings).forEach(function (key) {

@@ -8,7 +8,7 @@ namespace HardwareMonitorByYuinn.Web.Desktop;
 /// başlatıp masaüstü penceresi kapanana kadar bloklar. Program.cs top-level statements kullandığından
 /// giriş noktasının apartment durumuna güvenmek yerine bu iş parçacığı açıkça STA olarak işaretlenir.
 ///
-/// İki giriş noktası var: <see cref="Run"/> (basit, sistem tepsisinde sessiz başlarken kullanılır —
+/// İki giriş noktası var: <see cref="Run"/> (basit, sistem tepsisinde sessiz başlarken kullanılır,
 /// splash göstermeye gerek yok) ve <see cref="BeginEarly"/>+<see cref="Handle.Continue"/> (normal
 /// açılışta splash'i ASP.NET Core'un builder/DI kurulumu daha BAŞLAMADAN göstermek için Program.cs'in
 /// çok erken bir noktasından çağrılır; Kestrel/host hazır olunca <c>Continue</c> ile devam sinyali
@@ -17,9 +17,9 @@ namespace HardwareMonitorByYuinn.Web.Desktop;
 internal static class DesktopShellRunner
 {
     /// <summary>
-    /// Pencere kapanana (kullanıcı elle kapatır YA DA <paramref name="hostStopping"/> tetiklenir
-    /// — ör. Ayarlar → Yerel Ağa Açma → "Yeniden Başlat") ya da WebView2 Runtime hiç kurulamayana
-    /// kadar bloklar. Splash göstermez — yalnızca sistem tepsisinde sessiz başlarken kullanılır,
+    /// Pencere kapanana (kullanıcı elle kapatır YA DA <paramref name="hostStopping"/> tetiklenir,
+    /// ör. Ayarlar → Yerel Ağa Açma → "Yeniden Başlat") ya da WebView2 Runtime hiç kurulamayana
+    /// kadar bloklar. Splash göstermez; yalnızca sistem tepsisinde sessiz başlarken kullanılır,
     /// o durumda zaten hiçbir pencere görünmeyecek.
     /// </summary>
     internal static void Run(string startUrl, CancellationToken hostStopping, bool startMinimized = false)
@@ -28,7 +28,7 @@ internal static class DesktopShellRunner
         {
             InitializeWinForms();
             // Sessiz (tepsi) başlangıçta hiçbir pencere gösterilmediği ilkeye sadık kalınıp onarım da
-            // sessiz yapılır — sorun log dosyasına yazılır, kullanıcıya ekstra bir pencere çıkmaz.
+            // sessiz yapılır; sorun log dosyasına yazılır, kullanıcıya ekstra bir pencere çıkmaz.
             RunRepairIfNeeded(showUi: false);
             CreateAndRunShellForm(startUrl, hostStopping, startMinimized, splash: null);
         });
@@ -38,7 +38,7 @@ internal static class DesktopShellRunner
     }
 
     /// <summary>
-    /// Splash'ı HEMEN (çağrıldığı an) ayrı bir STA iş parçacığında gösterip döner — Program.cs bunu
+    /// Splash'ı HEMEN (çağrıldığı an) ayrı bir STA iş parçacığında gösterip döner; Program.cs bunu
     /// <c>WebApplication.CreateBuilder</c>'dan hemen sonra, asıl builder/DI/Kestrel kurulumu
     /// başlamadan ÖNCE çağırır. Kestrel/host hazır olduğunda <see cref="Handle.Continue"/> çağrılana
     /// kadar bu iş parçacığı yalnızca mesaj pompalayıp bekler (splash animasyonunun donmaması için).
@@ -58,7 +58,7 @@ internal static class DesktopShellRunner
         InitializeWinForms();
 
         // Ana iş parçacığındaki builder/DI kurulumu daha başlamadan, ASP.NET Core hiç bu veritabanı
-        // dosyalarına dokunmadan ÖNCE çalışır — böylece bir sorun varsa Host.StartAsync (dolayısıyla
+        // dosyalarına dokunmadan ÖNCE çalışır; böylece bir sorun varsa Host.StartAsync (dolayısıyla
         // tüm süreç) hiç çökmeden düzeltilmiş olur (bkz. HistoryDatabaseRepair'in doc yorumu:
         // 2026-08-27 gecesi yaşanan gerçek olay).
         RunRepairIfNeeded(showUi: true);
@@ -68,7 +68,7 @@ internal static class DesktopShellRunner
         splash.SetProgress(10);
 
         // ASP.NET Core'un builder/DI kurulumu ve Kestrel başlangıcı ana iş parçacığında SÜRERKEN
-        // burada mesaj pompalanmaya devam ediliyor — aksi hâlde splash'in Timer'ı (dolma animasyonu)
+        // burada mesaj pompalanmaya devam ediliyor, aksi hâlde splash'in Timer'ı (dolma animasyonu)
         // ve yeniden çizimi donardı. Application.DoEvents() burada güvenli: splash hiçbir kullanıcı
         // girdisi almıyor (tıklanabilir/odaklanabilir bir kontrolü yok), reentrancy riski yok.
         while (!handle.IsReady)
@@ -111,7 +111,11 @@ internal static class DesktopShellRunner
             }
         }
 
-        HistoryDatabaseRepair.RepairIfNeeded(historyDirectory, onProgress: Report);
+        HistoryDatabaseRepair.RepairIfNeeded(
+            historyDirectory,
+            onProgress: Report,
+            repairingMessageTemplate: Loc.T("{0} bozuk görünüyor, onarılıyor…"),
+            completedMessage: Loc.T("Tamamlandı"));
 
         if (form is not null)
         {
@@ -135,10 +139,7 @@ internal static class DesktopShellRunner
         {
             splash?.Close();
             MessageBox.Show(
-                "Bu uygulamanın arayüzü için gereken Microsoft Edge WebView2 bileşeni kurulamadı " +
-                "(muhtemelen internet bağlantısı yok). Lütfen internete bağlanıp uygulamayı tekrar " +
-                "başlatın, ya da https://developer.microsoft.com/microsoft-edge/webview2/consumer/ " +
-                "adresinden elle kurun.",
+                Loc.T("Bu uygulamanın arayüzü için gereken Microsoft Edge WebView2 bileşeni kurulamadı (muhtemelen internet bağlantısı yok). Lütfen internete bağlanıp uygulamayı tekrar başlatın, ya da https://developer.microsoft.com/microsoft-edge/webview2/consumer/ adresinden elle kurun."),
                 "HardwareMonitorByYuinn",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Warning);
@@ -148,7 +149,7 @@ internal static class DesktopShellRunner
         var form = new ShellForm(startUrl, startMinimized, splash);
 
         // Host taraflı bir durdurma (ör. RemoteAccessController.Restart'ın çağırdığı
-        // StopApplication()) pencereyi otomatik kapatmaz — bu callback olmadan Kestrel arka planda
+        // StopApplication()) pencereyi otomatik kapatmaz; bu callback olmadan Kestrel arka planda
         // durur ama pencere açık/bağlantısız kalır, süreç hiç sonlanmaz ve Restart'ın başlattığı
         // yeni süreç, eskisi mutex'i hâlâ tuttuğu için sessizce çıkar. ForceClose(), "sistem
         // tepsisine küçült" ayarını devre dışı bırakıp Application.Run'ın aşağıda dönmesini
@@ -169,7 +170,7 @@ internal static class DesktopShellRunner
         });
 
         // Application.Run(Form), belirtilen form kapandığında mesaj döngüsünü kendiliğinden
-        // sonlandırır — bu iş parçacığının (Run'daki uiThread.Join() ya da Handle.Continue'daki
+        // sonlandırır; bu iş parçacığının (Run'daki uiThread.Join() ya da Handle.Continue'daki
         // UiThread.Join()) dönüşü bunu yeterli sinyal olarak kullanır.
         Application.Run(form);
     }

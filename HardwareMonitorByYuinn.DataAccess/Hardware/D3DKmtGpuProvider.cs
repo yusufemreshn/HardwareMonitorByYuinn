@@ -35,14 +35,14 @@ internal sealed class D3DKmtGpuProvider(ILogger logger)
     private const int MaxDiscoveryAttempts = 8;
 
     /// <summary>
-    /// `PerfDataTypeCandidates` belgelenmemiş/tersine mühendislikle bulunmuş sayılar — hangi Windows
+    /// `PerfDataTypeCandidates` belgelenmemiş/tersine mühendislikle bulunmuş sayılar; hangi Windows
     /// sürümünde/sürücüde hangi numaranın gerçekte hangi çekirdek yapısına karşılık geldiği garanti
     /// değil. Yanlış (ama "başarılı" dönen) bir sorgu türü, sürücünün bizim `AdapterPerfData`
-    /// struct'ımızdan DAHA BÜYÜK bir yapıyı aynı arabelleğe yazmaya çalışmasına yol açabilir — bu,
+    /// struct'ımızdan DAHA BÜYÜK bir yapıyı aynı arabelleğe yazmaya çalışmasına yol açabilir; bu
     /// projenin geçmişte yaşadığı açıklanamayan sessiz çökmelerin en olası nedeni olarak
     /// tanımlanmıştı (bkz. CHANGELOG.md). Arabelleği yalnızca struct boyutu kadar değil, bu payla
     /// ekstra ayırmak; sürücü beklenenden fazla yazsa bile komşu heap belleğine taşmayı önler.
-    /// `PrivateDriverDataSize` yine de yalnızca gerçek struct boyutunu bildirir — davranış değişmez,
+    /// `PrivateDriverDataSize` yine de yalnızca gerçek struct boyutunu bildirir; davranış değişmez,
     /// sadece olası bir taşmaya karşı güvenlik payı eklenir.
     private const int NativeBufferSafetyPaddingBytes = 256;
 

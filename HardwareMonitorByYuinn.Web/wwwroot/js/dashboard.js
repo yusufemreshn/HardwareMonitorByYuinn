@@ -2,12 +2,12 @@
     "use strict";
 
     var WINDOW_MS = 5 * 60 * 1000;
-    // Grafiğin bellek retention'ı sabit 1 saat — toggle butonları (1dk/5dk/15dk/1sa) artık veri
+    // Grafiğin bellek retention'ı sabit 1 saat; toggle butonları (1dk/5dk/15dk/1sa) artık veri
     // çekmez/değiştirmez, yalnızca zaten yüklü olan veriye zoom yapar (bkz. initChartRangeToggle).
     var MAX_WINDOW_MS = 60 * 60 * 1000;
     var initialHistory = window.__dashboardInitialHistory || {};
 
-    // İstatistiksel anomali tespiti — sabit eşiklerden (Dikkat/Kritik) BAĞIMSIZ, tamamlayıcı bir
+    // İstatistiksel anomali tespiti, sabit eşiklerden (Dikkat/Kritik) BAĞIMSIZ, tamamlayıcı bir
     // katman: eşiği hiç aşmasa bile son ~2 dakikaya göre ANİ bir sıçrama yaşayan bir metriği
     // yakalar (ör. normalde %20 CPU kullanan bir sistemin aniden %60'a fırlaması). En az 20 örnek
     // birikmeden hesaplama yapılmaz (aksi hâlde standart sapma güvenilmez/gürültülü olur).
@@ -33,7 +33,7 @@
     var ANOMALY_Z_THRESHOLD = 3;
     var anomalyStats = { cpu: createRollingStat(120), gpu: createRollingStat(120), ram: createRollingStat(120) };
 
-    // Process bazlı bellek sızıntısı tespiti — bir process'in RAM kullanımı listede göründüğü
+    // Process bazlı bellek sızıntısı tespiti: bir process'in RAM kullanımı listede göründüğü
     // sürece SÜREKLİ artıyorsa (ilk yarı ortalamasına göre son yarı ortalaması en az %50 VE
     // en az 100 MB fazlaysa) bir not düşülür. Anomali tespiti gibi bu da sabit eşiklerden bağımsız,
     // sağlık puanını ETKİLEMEZ (yalnızca bilgilendirme amaçlı).
@@ -43,7 +43,7 @@
     var MEMORY_LEAK_MIN_GROWTH_MB = 100;
     // Bir process, CPU/GPU/RAM sıralamalarının hiçbirinde net üst-N'de değilse (ör. yavaş sızan ama
     // orta seviyede kalan bir process) bir tur listeden düşüp geri gelebilir. Eskiden bu, geçmişin
-    // ANINDA silinmesine yol açıyordu — bir process hiçbir zaman MEMORY_LEAK_MIN_SAMPLES'a
+    // ANINDA silinmesine yol açıyordu, bu yüzden bir process hiçbir zaman MEMORY_LEAK_MIN_SAMPLES'a
     // ulaşamıyor, tespit fiilen hiç çalışmıyordu (kullanıcı tarafından bulunan, canlı doğrulanmış
     // hata). Artık bir process yalnızca bu süre boyunca HİÇ görünmezse geçmişi silinir.
     var MEMORY_LEAK_ABSENCE_GRACE_MS = 5 * 60 * 1000;
@@ -72,13 +72,13 @@
                 var secondHalfAvg = hist.slice(half).reduce(function (a, b) { return a + b; }, 0) / (hist.length - half);
                 var growthMb = secondHalfAvg - firstHalfAvg;
                 if (firstHalfAvg > 0 && secondHalfAvg > firstHalfAvg * MEMORY_LEAK_GROWTH_RATIO && growthMb > MEMORY_LEAK_MIN_GROWTH_MB) {
-                    warnings.push("⚡ " + name + " bellek kullanımı sürekli artıyor (" + firstHalfAvg.toFixed(0) + " MB → " + secondHalfAvg.toFixed(0) + " MB)");
+                    warnings.push("⚡ " + name + " " + t("bellek kullanımı sürekli artıyor") + " (" + firstHalfAvg.toFixed(0) + " MB → " + secondHalfAvg.toFixed(0) + " MB)");
                     hist.length = 0; // aynı uyarı sürekli tekrarlanmasın; yeni bir eğilim birikmeye başlar
                 }
             }
         });
 
-        // Yalnızca uzun süredir (5+ dk) hiç görünmeyen process'lerin geçmişini sil — kendi
+        // Yalnızca uzun süredir (5+ dk) hiç görünmeyen process'lerin geçmişini sil, kendi
         // belleğimizde sınırsız birikmesin, ama üst-N listesinden bir-iki tur için düşen bir
         // process'in trendi kaybolmasın.
         Object.keys(processRamHistory).forEach(function (name) {
@@ -101,7 +101,7 @@
         var z = anomalyStats[key].zScoreFor(value);
         anomalyStats[key].add(value);
         if (z !== null && Math.abs(z) > ANOMALY_Z_THRESHOLD) {
-            return "⚡ " + label + " son 2 dakikaya göre ani bir sıçrama gösterdi (" + value.toFixed(digits) + " " + unit + ")";
+            return "⚡ " + label + " " + t("son 2 dakikaya göre ani bir sıçrama gösterdi") + " (" + value.toFixed(digits) + " " + unit + ")";
         }
         return null;
     }
@@ -120,16 +120,16 @@
             fps: { min: 0, max: "auto", fallbackMax: 60, format: function (v) { return v.toFixed(0); } }
         },
         series: [
-            { key: "cpu", label: "İşlemci", colorVar: "--accent-cpu", axis: "percent", unit: "%", digits: 1, chartType: chartTypes.cpu },
-            { key: "gpu", label: "Ekran Kartı", colorVar: "--accent-gpu", axis: "percent", unit: "%", digits: 1, chartType: chartTypes.gpu },
+            { key: "cpu", label: t("İşlemci"), colorVar: "--accent-cpu", axis: "percent", unit: "%", digits: 1, chartType: chartTypes.cpu },
+            { key: "gpu", label: t("Ekran Kartı"), colorVar: "--accent-gpu", axis: "percent", unit: "%", digits: 1, chartType: chartTypes.gpu },
             { key: "vram", label: "VRAM", colorVar: "--accent-gpu", axis: "percent", unit: "%", digits: 1, visible: false, dashed: true },
-            { key: "ram", label: "Bellek", colorVar: "--accent-ram", axis: "percent", unit: "%", digits: 1, chartType: chartTypes.ram },
-            { key: "fps", label: "Kare Hızı", colorVar: "--accent-fps", axis: "fps", unit: "FPS", digits: 1, chartType: chartTypes.fps },
-            { key: "download", label: "İndirme", colorVar: "--accent-network", axis: "fps", unit: "MB/s", digits: 1, visible: false },
-            { key: "upload", label: "Yükleme", colorVar: "--accent-network", axis: "fps", unit: "MB/s", digits: 1, visible: false, dashed: true },
+            { key: "ram", label: t("Bellek"), colorVar: "--accent-ram", axis: "percent", unit: "%", digits: 1, chartType: chartTypes.ram },
+            { key: "fps", label: t("Kare Hızı"), colorVar: "--accent-fps", axis: "fps", unit: "FPS", digits: 1, chartType: chartTypes.fps },
+            { key: "download", label: t("İndirme"), colorVar: "--accent-network", axis: "fps", unit: "MB/s", digits: 1, visible: false },
+            { key: "upload", label: t("Yükleme"), colorVar: "--accent-network", axis: "fps", unit: "MB/s", digits: 1, visible: false, dashed: true },
             // Kare süresi (ms), FPS ile aynı eksende paylaşılır; tipik oyun FPS aralığında (30-240)
             // sayısal olarak da benzer büyüklükte kaldığı için ayrı bir eksen açmaya gerek kalmaz.
-            { key: "frametime", label: "Kare Süresi", colorVar: "--accent-fps", axis: "fps", unit: "ms", digits: 1, visible: false, dashed: true },
+            { key: "frametime", label: t("Kare Süresi"), colorVar: "--accent-fps", axis: "fps", unit: "ms", digits: 1, visible: false, dashed: true },
             { key: "fpsLow1", label: "1% Low", colorVar: "--accent-fps", axis: "fps", unit: "FPS", digits: 0, visible: false, dashed: true },
             { key: "fpsLow01", label: "0.1% Low", colorVar: "--accent-fps", axis: "fps", unit: "FPS", digits: 0, visible: false, dashed: true }
         ]
@@ -159,10 +159,10 @@
     chart.render();
 
     // Sunucudaki TimeSeriesStore yalnızca son 15 dk'yı ince (saniyelik) çözünürlükte bellekte tutuyor
-    // (initialHistory de o kadarını içerir) — "1 sa" penceresinin geri kalan 45 dk'lık kısmı için
+    // (initialHistory de o kadarını içerir), bu yüzden "1 sa" penceresinin geri kalan 45 dk'lık kısmı için
     // burada BİR KEZ, sayfa açılışında, /History/Rows'tan (dakikalık ortalama) geçmiş veri çekilip
     // ince veriden ÖNCEYE eklenir. Bundan sonra 1dk/5dk/15dk/1sa arasında geçiş yapmak artık hiç
-    // ağ isteği yapmaz (bkz. initChartRangeToggle) — sadece zaten yüklü olan bu veriye zoom yapar.
+    // ağ isteği yapmaz (bkz. initChartRangeToggle), sadece zaten yüklü olan bu veriye zoom yapar.
     (function seedOlderHistoryOnce() {
         var oldestNeeded = new Date(Date.now() - MAX_WINDOW_MS);
         var fineStart = new Date(Date.now() - 15 * 60 * 1000);
@@ -235,10 +235,10 @@
         });
     });
 
-    // Grafik zaman aralığı toggle'ı (1dk/5dk/15dk/1sa) — fare tekerleğiyle yakınlaştırmaya ek,
+    // Grafik zaman aralığı toggle'ı (1dk/5dk/15dk/1sa), fare tekerleğiyle yakınlaştırmaya ek,
     // daha keşfedilebilir bir alternatif. Veri zaten (yukarıdaki initialHistory seed'i +
     // seedOlderHistoryOnce ile) tam 1 saatlik retention'a kadar yüklü olduğundan, toggle burada
-    // hiçbir zaman ağ isteği yapmaz — yalnızca zoom yapar (bkz. hwmon-chart.js setWindowMs).
+    // hiçbir zaman ağ isteği yapmaz, yalnızca zoom yapar (bkz. hwmon-chart.js setWindowMs).
     (function initChartRangeToggle() {
         var container = document.getElementById("chart-range-toggle");
         if (!container) return;
@@ -255,7 +255,7 @@
     // Grafiğin kullanım ipucu ("fare tekerleğiyle yakınlaştır...") eskiden native `title`
     // niteliğiyle gösteriliyordu (tarayıcının kendi zamanlaması/görünürlüğü, kontrol edilemez).
     // Artık: fare grafiğe her girdiğinde (sayfa yenilenene kadar en fazla 3 kez) 2 sn görünüp
-    // yavaşça kaybolan özel bir baloncuk gösteriyoruz — 3. gösterimden sonra sayfa yenilenene
+    // yavaşça kaybolan özel bir baloncuk gösteriyoruz, 3. gösterimden sonra sayfa yenilenene
     // kadar bir daha çıkmıyor.
     (function initChartHint() {
         var canvas = document.getElementById("usage-chart");
@@ -283,7 +283,7 @@
     })();
 
     // Değer okunamadığında birimi de gizleriz; "-- MHz" okuyucuya sıfır ölçüldüğü izlenimi verir.
-    // Tanım artık site.js'te (HwmonFormat) — burada yalnızca kısa bir takma ad.
+    // Tanım artık site.js'te (HwmonFormat), burada yalnızca kısa bir takma ad.
     var fmt = window.HwmonFormat.fmt;
 
     function setText(id, text) {
@@ -327,7 +327,7 @@
         if (!Array.isArray(storages) || storages.length === 0) {
             var empty = document.createElement("div");
             empty.className = "stat-sub";
-            empty.textContent = "Disk bulunamadı";
+            empty.textContent = t("Disk bulunamadı");
             container.appendChild(empty);
             return;
         }
@@ -385,8 +385,8 @@
             if (isOn("smart") && s.smartStatus) {
                 var smartRow = document.createElement("div");
                 smartRow.className = "stat-sub";
-                var smartText = "Disk Sağlığı: " + s.smartStatus;
-                if (typeof s.smartLifePercent === "number") smartText += " · Ömür %" + s.smartLifePercent;
+                var smartText = t("Disk Sağlığı:") + " " + t(s.smartStatus);
+                if (typeof s.smartLifePercent === "number") smartText += " · " + t("Ömür %") + s.smartLifePercent;
                 smartRow.textContent = smartText;
                 if (s.smartStatus === "Kötü" || s.smartStatus === "Dikkat") smartRow.style.color = "var(--accent-danger)";
                 row.appendChild(smartRow);
@@ -396,7 +396,7 @@
         });
     }
 
-    // Kaynak Kullanımı sıralama ölçütü — CPU/GPU/RAM arasında seçilebilir, tarayıcıda saklanır.
+    // Kaynak Kullanımı sıralama ölçütü: CPU/GPU/RAM arasında seçilebilir, tarayıcıda saklanır.
     // Sunucu zaten her ölçüte göre en üstteki adayları birleştirip gönderiyor (ProcessMetricsProvider),
     // burada yalnızca seçilen ölçüte göre yeniden sıralayıp ilk 8'i gösteriyoruz.
     var PROCESS_SORT_KEY = "hwmon-process-sort";
@@ -421,7 +421,7 @@
         if (!Array.isArray(processes) || processes.length === 0) {
             var empty = document.createElement("div");
             empty.className = "stat-sub";
-            empty.textContent = "Veri bekleniyor…";
+            empty.textContent = t("Veri bekleniyor…");
             container.appendChild(empty);
             return;
         }
@@ -475,7 +475,7 @@
     });
     updateProcessSortToggleStyles();
 
-    // Windows'un açık kalma süresi (program değil, işletim sistemi) — sayfa yüklendiğinde
+    // Windows'un açık kalma süresi (program değil, işletim sistemi), sayfa yüklendiğinde
     // sunucudan gelen sabit bir açılış zamanından itibaren saniyede bir client tarafında sayılır.
     (function initSystemUptime() {
         var el = document.getElementById("system-uptime");
@@ -493,7 +493,7 @@
             var minutes = Math.floor((totalSeconds % 3600) / 60);
             var seconds = totalSeconds % 60;
             var clock = pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
-            el.textContent = days > 0 ? days + "g " + clock : clock;
+            el.textContent = days > 0 ? days + t("g ") + clock : clock;
         }
 
         tick();
@@ -502,7 +502,7 @@
 
     // Eşik değerleri; aşıldığında kart kırmızıya döner. Değerler "Ayarlar" sayfasından değiştirilir
     // (settings.js); burada yalnızca okunur. Gerçek bildirim gönderme sorumluluğu artık her
-    // sayfada çalışan threshold-notifier.js'te — böylece Panel açık olmasa da bildirim gelir.
+    // sayfada çalışan threshold-notifier.js'te, böylece Panel açık olmasa da bildirim gelir.
     var HwmonThresholds = window.HwmonThresholds;
     var WARNING_THRESHOLDS = HwmonThresholds.load();
 
@@ -511,7 +511,7 @@
         WARNING_THRESHOLDS = HwmonThresholds.load();
     });
 
-    // Enerji maliyeti — yalnızca İşlemci + Ekran Kartı paket güçlerinden hesaplanan bir tahmindir.
+    // Enerji maliyeti, yalnızca İşlemci + Ekran Kartı paket güçlerinden hesaplanan bir tahmindir.
     var ENERGY_COST_PREFS = window.HwmonEnergyCost.load();
     document.addEventListener("hwmon:energy-cost-changed", function () {
         ENERGY_COST_PREFS = window.HwmonEnergyCost.load();
@@ -532,11 +532,11 @@
         var kwhPerHour = totalWatts / 1000;
         var costPerHour = kwhPerHour * ENERGY_COST_PREFS.ratePerKwh;
         row.style.display = "";
-        display.textContent = "Enerji maliyeti (tahmini): ₺" + costPerHour.toFixed(2) + "/sa · ₺" +
-            (costPerHour * 24).toFixed(2) + "/gün · ₺" + (costPerHour * 24 * 30).toFixed(2) + "/ay";
+        display.textContent = t("Enerji maliyeti (tahmini):") + " ₺" + costPerHour.toFixed(2) + t("/sa") + " · ₺" +
+            (costPerHour * 24).toFixed(2) + t("/gün") + " · ₺" + (costPerHour * 24 * 30).toFixed(2) + t("/ay");
     }
 
-    // level: "normal" | "caution" | "critical" — iki kademeli eşik renklendirmesi (Dikkat sarı /
+    // level: "normal" | "caution" | "critical"; iki kademeli eşik renklendirmesi (Dikkat sarı /
     // Kritik kırmızı) için kartın sınıflarını buna göre ayarlar.
     function setCardWarningBySeries(seriesKey, level) {
         document.querySelectorAll('.stat-card[data-toggle-series="' + seriesKey + '"]').forEach(function (card) {
@@ -549,13 +549,13 @@
     var ORIGINAL_TITLE = document.title;
     function updateTabTitle(cpuPercent, gpuPercent) {
         if (typeof cpuPercent === "number" && typeof gpuPercent === "number") {
-            document.title = "CPU " + cpuPercent.toFixed(0) + "% · GPU " + gpuPercent.toFixed(0) + "% — HardwareMonitorByYuinn";
+            document.title = "CPU " + cpuPercent.toFixed(0) + "% · GPU " + gpuPercent.toFixed(0) + "% · HardwareMonitorByYuinn";
         } else {
             document.title = ORIGINAL_TITLE;
         }
     }
 
-    // Ambiyans modu — Panel'in tamamını kaplayan saat + büyük gösterge ekranı.
+    // Ambiyans modu: Panel'in tamamını kaplayan saat + büyük gösterge ekranı.
     // Dışarıya (Oyun Profilleri'nin otomatik ambiyans geçişi için) enter/exit/isActive açar.
     var ambientMode = (function initAmbientMode() {
         var overlay = document.getElementById("ambient-overlay");
@@ -567,8 +567,9 @@
 
         function updateClock() {
             var now = new Date();
-            setText("ambient-clock", now.toLocaleTimeString("tr-TR"));
-            setText("ambient-date", now.toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long" }));
+            var locale = window.HwmonLocaleTag();
+            setText("ambient-clock", now.toLocaleTimeString(locale));
+            setText("ambient-date", now.toLocaleDateString(locale, { weekday: "long", day: "numeric", month: "long" }));
         }
 
         // Ayarlar sayfasında hangi kartların (İşlemci/Ekran Kartı/Bellek/Kare Hızı/Depolama)
@@ -617,7 +618,7 @@
         return { enter: enter, exit: exit, isActive: function () { return !overlay.hidden; } };
     })();
 
-    // Oyun Profilleri — ön plandaki uygulama (fps.sourceProcessName, Kare Hızı ölçümüyle aynı
+    // Oyun Profilleri: ön plandaki uygulama (fps.sourceProcessName, Kare Hızı ölçümüyle aynı
     // kaynak) Ayarlar sayfasında tanımlı bir profille eşleşince renkleri/eşikleri "önizleme" gibi
     // uygular (localStorage'daki asıl tercihlere dokunmadan); işlem değişince (oyun kapanınca ya da
     // başka bir profile geçince) otomatik olarak geri döner.
@@ -658,7 +659,7 @@
         if (profile.colors) HwmonAccentColors.apply(profile.colors);
         if (profile.thresholds) WARNING_THRESHOLDS = HwmonThresholds.sanitize(profile.thresholds);
 
-        // Panel düzeni de renkler/eşikler gibi "önizleme" olarak uygulanır — localStorage'daki
+        // Panel düzeni de renkler/eşikler gibi "önizleme" olarak uygulanır, localStorage'daki
         // asıl kayıtlı düzene dokunulmaz, yalnızca DOM'a geçici olarak uygulanır (applyLayout).
         if (profile.panelLayoutProfileId && window.HwmonPanelLayoutProfiles && window.HwmonPanelLayout) {
             var layoutProfiles = HwmonPanelLayoutProfiles.load();
@@ -680,16 +681,16 @@
         activeGameProfileProcessName = undefined;
     });
 
-    // Paylaşılabilir "kartvizit" görüntüsü — o anki tüm değerleri tek bir PNG karta çizer.
+    // Paylaşılabilir "kartvizit" görüntüsü: o anki tüm değerleri tek bir PNG karta çizer.
     var lastMessage = null;
 
-    // Genel Sağlık Özeti — Panel'in en üstünde, mevcut eşik ayarlarına (HwmonThresholds) ve SMART
+    // Genel Sağlık Özeti: Panel'in en üstünde, mevcut eşik ayarlarına (HwmonThresholds) ve SMART
     // disk durumuna göre canlı güncellenen bir özet. Kullanıcı × ile kapatınca sayfa yeniden
     // yüklenene kadar (yani bir sonraki açılışa kadar) tekrar gösterilmez.
     var healthSummaryDismissed = false;
 
     // 100'den başlar; her "kritik" seviye -20, her "dikkat" seviye -8 (0'ın altına inmez). Basit
-    // ama iki kademeli eşik sistemiyle (bkz. levelFor) tutarlı bir özet puan — SMART "Dikkat"/"Kötü"
+    // ama iki kademeli eşik sistemiyle (bkz. levelFor) tutarlı bir özet puan; SMART "Dikkat"/"Kötü"
     // durumları da concerns listesine zaten "kritik" gibi eklendiği için ayrıca sayılmıyor.
     function renderHealthSummary(concerns, score) {
         var container = document.getElementById("health-summary");
@@ -711,19 +712,19 @@
             scoreEl.classList.toggle("is-caution", score >= 50 && score < 80);
             scoreEl.classList.toggle("is-bad", score < 50);
             scoreEl.textContent = score + "/100";
-            scoreEl.title = "Sistem sağlığı puanı";
+            scoreEl.title = t("Sistem sağlığı puanı");
             container.appendChild(scoreEl);
         }
 
         var text = document.createElement("div");
         text.className = "health-summary-text";
-        text.textContent = concerns.length > 0 ? concerns.join(" · ") : "Her şey normal görünüyor.";
+        text.textContent = concerns.length > 0 ? concerns.join(" · ") : t("Her şey normal görünüyor.");
         container.appendChild(text);
 
         var closeButton = document.createElement("button");
         closeButton.type = "button";
         closeButton.className = "health-summary-close";
-        closeButton.setAttribute("aria-label", "Kapat");
+        closeButton.setAttribute("aria-label", t("Kapat"));
         closeButton.textContent = "×";
         closeButton.addEventListener("click", function () {
             healthSummaryDismissed = true;
@@ -738,7 +739,7 @@
     }
 
     // Kartın altındaki değerler (kullanıcının Ayarlar sayfasında seçtiği metrikler) her biri kendi
-    // satırına yazılır — " · " ile yan yana birleştirmek, üç veya dört metrik birden seçildiğinde
+    // satırına yazılır, çünkü " · " ile yan yana birleştirmek, üç veya dört metrik birden seçildiğinde
     // kart genişliğini aşıp bir sonraki karta taşıyordu. Satır başına tek metrik olduğunda kart
     // genişliğini hiçbir zaman aşmaz; kart yüksekliği de satır sayısına göre çağıran taraf ayarlar.
     var SNAPSHOT_SUB_LINE_HEIGHT = 22;
@@ -797,7 +798,7 @@
             case "ram:usage": return fmt(ram.usedPercent, "%", 1);
             case "ram:detail": return formatRamDetail(ram.usedGb, ram.totalGb);
             case "fps:value": return typeof fps.framesPerSecond === "number" ? fps.framesPerSecond.toFixed(0) : "--";
-            case "fps:process": return fps.sourceProcessName || "Ölçülemiyor";
+            case "fps:process": return fps.sourceProcessName || t("Ölçülemiyor");
             case "storage:usage": return fmt(storage.usedPercent, "%", 1);
             case "storage:temp": return fmt(storage.temperatureC, "°C", 1);
             default: return "--";
@@ -810,7 +811,7 @@
 
         // Tasarım her zaman 1200 birimlik mantıksal genişlik üzerine çizilir; Ayarlar'da seçilen
         // çözünürlük (varsayılan 1080p, ayrıca 2K/4K) yalnızca bunun kaç fiziksel piksele
-        // büyütülerek dışa aktarılacağını belirler — sabit 1200x630'luk küçük tuval bulanık PNG'ye
+        // büyütülerek dışa aktarılacağını belirler, çünkü sabit 1200x630'luk küçük tuval bulanık PNG'ye
         // yol açıyordu.
         var resKey = (snapSettings && snapSettings.resolution) || (settingsApi && settingsApi.defaultResolution) || "1080p";
         var res = (settingsApi && settingsApi.resolutions[resKey]) || { w: 1920, h: 1080 };
@@ -846,7 +847,7 @@
         var systemInfo = window.__systemInfo || {};
         ctx.fillStyle = mutedColor;
         ctx.font = "500 17px 'Segoe UI', sans-serif";
-        ctx.fillText(new Date().toLocaleString("tr-TR") + (systemInfo.machineName ? "  ·  " + systemInfo.machineName : ""), 48, 88);
+        ctx.fillText(new Date().toLocaleString(window.HwmonLocaleTag()) + (systemInfo.machineName ? "  ·  " + systemInfo.machineName : ""), 48, 88);
 
         var specLine = [systemInfo.cpuName].concat(systemInfo.gpuNames || []).filter(Boolean).join("   ·   ");
         ctx.fillText(specLine, 48, 112);
@@ -856,7 +857,7 @@
             fps: "--accent-fps", storage: "--accent-storage"
         };
         var accentFallbacks = { cpu: "#ff9f45", gpu: "#35d0ba", ram: "#6ea8fe", fps: "#c792ea", storage: "#f2c14e" };
-        var blockLabelFallbacks = { cpu: "İşlemci", gpu: "Ekran Kartı", ram: "Bellek", fps: "Kare Hızı", storage: "Depolama" };
+        var blockLabelFallbacks = { cpu: t("İşlemci"), gpu: t("Ekran Kartı"), ram: t("Bellek"), fps: t("Kare Hızı"), storage: t("Depolama") };
 
         var blockOrder = snapSettings ? snapSettings.blockOrder : Object.keys(accentVars);
 
@@ -915,18 +916,18 @@
             '<line x1="3" y1="3" x2="13" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>' +
             '<line x1="13" y1="3" x2="3" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>' +
             '</svg>';
-        closeButton.setAttribute("aria-label", "Kapat");
+        closeButton.setAttribute("aria-label", t("Kapat"));
 
         var img = document.createElement("img");
         img.className = "snapshot-modal-image";
         img.src = dataUrl;
-        img.alt = "Anlık görüntü önizlemesi";
+        img.alt = t("Anlık görüntü önizlemesi");
 
         var downloadLink = document.createElement("a");
         downloadLink.className = "snapshot-modal-download";
         downloadLink.href = dataUrl;
         downloadLink.download = "hardwaremonitor-" + Date.now() + ".png";
-        downloadLink.textContent = "⬇ İndir";
+        downloadLink.textContent = "⬇ " + t("İndir");
 
         function close() {
             document.removeEventListener("keydown", onKeydown);
@@ -956,7 +957,7 @@
         showSnapshotPreview(buildSnapshotCanvas());
     }
 
-    // Oyun Profilleri'nde "Oyun kapanınca otomatik anlık görüntü al" açıksa çağrılır — önizleme
+    // Oyun Profilleri'nde "Oyun kapanınca otomatik anlık görüntü al" açıksa çağrılır, önizleme
     // penceresi göstermeden (kullanıcı o an ekranda olmayabilir) doğrudan PNG'yi indirir.
     function autoDownloadSnapshot() {
         if (!lastMessage) return;
@@ -976,7 +977,7 @@
 
     connection.on("hardwareUpdate", function (message) {
         lastMessage = message;
-        var t = new Date(message.timestampUtc).getTime();
+        var ts = new Date(message.timestampUtc).getTime();
         var healthConcerns = [];
         var healthLevels = [];
 
@@ -985,7 +986,7 @@
             setText("cpu-clock", fmt(message.cpu.packageClockMhz, "MHz", 0));
             setText("cpu-temp", fmt(message.cpu.packageTemperatureC, "°C", 1));
             setText("cpu-power", fmt(message.cpu.packagePowerWatts, "W", 1));
-            chart.push("cpu", t, message.cpu.totalLoadPercent);
+            chart.push("cpu", ts, message.cpu.totalLoadPercent);
 
             setText("ambient-cpu", fmt(message.cpu.totalLoadPercent, "%", 1));
             setText("ambient-cpu-sub", fmt(message.cpu.packageTemperatureC, "°C", 1) + " · " + fmt(message.cpu.packagePowerWatts, "W", 1));
@@ -995,8 +996,9 @@
             var cpuLevel = HwmonThresholds.levelFor(cpuMetricValue, WARNING_THRESHOLDS.cpu.cautionValue, WARNING_THRESHOLDS.cpu.value);
             setCardWarningBySeries("cpu", cpuLevel);
             healthLevels.push(cpuLevel);
-            if (cpuLevel === "critical") healthConcerns.push("İşlemci " + cpuMetric.label.toLowerCase() + " yüksek (" + fmt(cpuMetricValue, cpuMetric.unit, 1).trim() + ")");
-            var cpuAnomaly = checkAnomaly("cpu", cpuMetricValue, "İşlemci " + cpuMetric.label.toLowerCase() + "ı", cpuMetric.unit, 1);
+            if (cpuLevel === "critical") healthConcerns.push(t("İşlemci") + " " + cpuMetric.label.toLowerCase() + " " + t("yüksek") + " (" + fmt(cpuMetricValue, cpuMetric.unit, 1).trim() + ")");
+            var cpuAnomalyLabel = t("İşlemci") + " " + cpuMetric.label.toLowerCase() + (window.HWMON_LANG === "tr" ? "ı" : "");
+            var cpuAnomaly = checkAnomaly("cpu", cpuMetricValue, cpuAnomalyLabel, cpuMetric.unit, 1);
             if (cpuAnomaly) healthConcerns.push(cpuAnomaly);
         }
 
@@ -1005,7 +1007,7 @@
             setText("gpu-clock", fmt(message.gpu.coreClockMhz, "MHz", 0));
             setText("gpu-temp", fmt(message.gpu.coreTemperatureC, "°C", 1));
             setText("gpu-power", fmt(message.gpu.powerWatts, "W", 1));
-            chart.push("gpu", t, message.gpu.loadPercent);
+            chart.push("gpu", ts, message.gpu.loadPercent);
 
             setText("ambient-gpu", fmt(message.gpu.loadPercent, "%", 1));
             setText("ambient-gpu-sub", fmt(message.gpu.coreTemperatureC, "°C", 1) + " · " + fmt(message.gpu.powerWatts, "W", 1));
@@ -1015,17 +1017,18 @@
             var gpuLevel = HwmonThresholds.levelFor(gpuMetricValue, WARNING_THRESHOLDS.gpu.cautionValue, WARNING_THRESHOLDS.gpu.value);
             setCardWarningBySeries("gpu", gpuLevel);
             healthLevels.push(gpuLevel);
-            if (gpuLevel === "critical") healthConcerns.push("Ekran kartı " + gpuMetric.label.toLowerCase() + " yüksek (" + fmt(gpuMetricValue, gpuMetric.unit, 1).trim() + ")");
-            var gpuAnomaly = checkAnomaly("gpu", gpuMetricValue, "Ekran kartı " + gpuMetric.label.toLowerCase() + "ı", gpuMetric.unit, 1);
+            if (gpuLevel === "critical") healthConcerns.push(t("Ekran kartı") + " " + gpuMetric.label.toLowerCase() + " " + t("yüksek") + " (" + fmt(gpuMetricValue, gpuMetric.unit, 1).trim() + ")");
+            var gpuAnomalyLabel = t("Ekran kartı") + " " + gpuMetric.label.toLowerCase() + (window.HWMON_LANG === "tr" ? "ı" : "");
+            var gpuAnomaly = checkAnomaly("gpu", gpuMetricValue, gpuAnomalyLabel, gpuMetric.unit, 1);
             if (gpuAnomaly) healthConcerns.push(gpuAnomaly);
 
-            // VRAM — bazı GPU'larda (ör. LibreHardwareMonitorLib desteklemiyorsa) bellek verisi
+            // VRAM: bazı GPU'larda (ör. LibreHardwareMonitorLib desteklemiyorsa) bellek verisi
             // gelmeyebilir; bu durumda kart "--" göstermeye devam eder, hata vermez.
             if (typeof message.gpu.memoryUsedMb === "number" && typeof message.gpu.memoryTotalMb === "number" && message.gpu.memoryTotalMb > 0) {
                 var vramPercent = (message.gpu.memoryUsedMb / message.gpu.memoryTotalMb) * 100;
                 setText("vram-usage", fmt(vramPercent, "%", 1));
                 setText("vram-detail", fmt(message.gpu.memoryUsedMb, "", 0).trim() + " / " + fmt(message.gpu.memoryTotalMb, "", 0).trim() + " MB");
-                chart.push("vram", t, vramPercent);
+                chart.push("vram", ts, vramPercent);
             } else {
                 setText("vram-usage", "-- %");
                 setText("vram-detail", "-- / -- MB");
@@ -1035,7 +1038,7 @@
         if (message.ram) {
             setText("ram-usage", fmt(message.ram.usedPercent, "%", 1));
             setText("ram-detail", formatRamDetail(message.ram.usedGb, message.ram.totalGb));
-            chart.push("ram", t, message.ram.usedPercent);
+            chart.push("ram", ts, message.ram.usedPercent);
 
             setText("ambient-ram", fmt(message.ram.usedPercent, "%", 1));
             setText("ambient-ram-sub", formatRamDetail(message.ram.usedGb, message.ram.totalGb));
@@ -1043,8 +1046,8 @@
             var ramLevel = HwmonThresholds.levelFor(message.ram.usedPercent, WARNING_THRESHOLDS.ramCautionPercent, WARNING_THRESHOLDS.ramUsedPercent);
             setCardWarningBySeries("ram", ramLevel);
             healthLevels.push(ramLevel);
-            if (ramLevel === "critical") healthConcerns.push("Bellek kullanımı yüksek (" + fmt(message.ram.usedPercent, "%", 1).trim() + ")");
-            var ramAnomaly = checkAnomaly("ram", message.ram.usedPercent, "Bellek kullanımı", "%", 1);
+            if (ramLevel === "critical") healthConcerns.push(t("Bellek kullanımı") + " " + t("yüksek") + " (" + fmt(message.ram.usedPercent, "%", 1).trim() + ")");
+            var ramAnomaly = checkAnomaly("ram", message.ram.usedPercent, t("Bellek kullanımı"), "%", 1);
             if (ramAnomaly) healthConcerns.push(ramAnomaly);
         }
 
@@ -1055,21 +1058,21 @@
         var fps = message.fps || {};
         applyGameProfile(fps.sourceProcessName);
         setText("fps-value", typeof fps.framesPerSecond === "number" ? fps.framesPerSecond.toFixed(1) : "--");
-        setText("fps-source", fps.sourceProcessName || "Ölçülemiyor");
-        chart.push("fps", t, fps.framesPerSecond);
-        chart.push("frametime", t, fps.frameTimeMs);
-        chart.push("fpsLow1", t, fps.low1PercentFps);
-        chart.push("fpsLow01", t, fps.lowPoint1PercentFps);
+        setText("fps-source", fps.sourceProcessName || t("Ölçülemiyor"));
+        chart.push("fps", ts, fps.framesPerSecond);
+        chart.push("frametime", ts, fps.frameTimeMs);
+        chart.push("fpsLow1", ts, fps.low1PercentFps);
+        chart.push("fpsLow01", ts, fps.lowPoint1PercentFps);
 
         // Başlıklar veri olmasa da (FPS kartındaki büyük değer gibi) hep görünür kalır, yalnızca
         // sayı "--" olur; %1/%0.1 low en az ~10 saniyelik kare geçmişi birikene kadar null döner
         // (bkz. ProcessPresentCounter).
         setText("fps-low1", "1% Low " + fmt(fps.low1PercentFps, "", 0).trim());
         setText("fps-low01", "0.1% Low " + fmt(fps.lowPoint1PercentFps, "", 0).trim());
-        setText("fps-frametime", "Kare Süresi " + fmt(fps.frameTimeMs, "ms", 1));
+        setText("fps-frametime", t("Kare Süresi") + " " + fmt(fps.frameTimeMs, "ms", 1));
 
         setText("ambient-fps", typeof fps.framesPerSecond === "number" ? fps.framesPerSecond.toFixed(0) : "--");
-        setText("ambient-fps-sub", fps.sourceProcessName || "Ölçülemiyor");
+        setText("ambient-fps-sub", fps.sourceProcessName || t("Ölçülemiyor"));
 
         updateTabTitle(message.cpu && message.cpu.totalLoadPercent, message.gpu && message.gpu.loadPercent);
 
@@ -1095,13 +1098,13 @@
             storageCard.classList.toggle("is-warning", diskLevel === "critical");
         }
         if (maxDiskTemp !== -Infinity) healthLevels.push(diskLevel);
-        if (diskLevel === "critical") healthConcerns.push("Disk sıcaklığı yüksek (" + maxDiskTemp.toFixed(1) + " °C)");
+        if (diskLevel === "critical") healthConcerns.push(t("Disk sıcaklığı") + " " + t("yüksek") + " (" + maxDiskTemp.toFixed(1) + " °C)");
 
         storages.forEach(function (s) {
             if (s.smartStatus === "Kötü") healthLevels.push("critical");
             else if (s.smartStatus === "Dikkat") healthLevels.push("caution");
             if (s.smartStatus === "Dikkat" || s.smartStatus === "Kötü") {
-                healthConcerns.push((s.name || "Disk") + " disk sağlığı durumu: " + s.smartStatus);
+                healthConcerns.push((s.name || t("Disk")) + " " + t("disk sağlığı durumu:") + " " + s.smartStatus);
             }
         });
 
@@ -1110,8 +1113,8 @@
         var network = message.network;
         setText("network-download", "↓ " + formatRateMBs(network && network.downloadBytesPerSec));
         setText("network-upload", "↑ " + formatRateMBs(network && network.uploadBytesPerSec));
-        chart.push("download", t, toMBs(network && network.downloadBytesPerSec));
-        chart.push("upload", t, toMBs(network && network.uploadBytesPerSec));
+        chart.push("download", ts, toMBs(network && network.downloadBytesPerSec));
+        chart.push("upload", ts, toMBs(network && network.uploadBytesPerSec));
 
         if (network && network.adapterName) {
             var speedText = typeof network.linkSpeedMbps === "number"
@@ -1122,7 +1125,7 @@
             setText("network-adapter", "--");
         }
 
-        setText("network-session-total", "Bu oturum: ↓ " + fmt(network && network.totalDownloadedGb, "GB", 1) +
+        setText("network-session-total", t("Bu oturum:") + " ↓ " + fmt(network && network.totalDownloadedGb, "GB", 1) +
             " · ↑ " + fmt(network && network.totalUploadedGb, "GB", 1));
 
         chart.render();

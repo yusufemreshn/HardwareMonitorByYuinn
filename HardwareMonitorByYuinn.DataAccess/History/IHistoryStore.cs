@@ -42,17 +42,17 @@ public interface IHistoryStore
     /// <summary>En son N giriş denemesi, en yeniden eskiye.</summary>
     Task<IReadOnlyList<LoginAttemptEntry>> GetRecentLoginAttemptsAsync(int limit, CancellationToken cancellationToken = default);
 
-    /// <summary>Giriş denemesi tablosunun özeti (kayıt sayısı, aralık, veritabanı boyutu) —
+    /// <summary>Giriş denemesi tablosunun özeti (kayıt sayısı, aralık, veritabanı boyutu),
     /// "Kayıt Bilgileri"ndeki genel durumla aynı şekil, Geçmiş → Güvenlik'te gösterilir. Kendi ayrı
     /// dosyasında (login-attempts.db) tutulduğundan boyutu diğer tablolardan bağımsızdır.</summary>
     Task<HistoryStoreStatus> GetLoginAttemptsSummaryAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>Oyun oturumları tablosunun özeti (oturum sayısı, aralık, veritabanı boyutu) —
+    /// <summary>Oyun oturumları tablosunun özeti (oturum sayısı, aralık, veritabanı boyutu),
     /// Geçmiş → Oyun Geçmişi → Kayıt Bilgileri'nde gösterilir. Kendi ayrı dosyasında
     /// (game-sessions.db) tutulur.</summary>
     Task<HistoryStoreStatus> GetGameSessionsSummaryAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>Process bazlı geçmiş tablosunun özeti (kayıt sayısı, aralık, veritabanı boyutu) —
+    /// <summary>Process bazlı geçmiş tablosunun özeti (kayıt sayısı, aralık, veritabanı boyutu),
     /// Geçmiş → Süreç ve Sistem Olayları → Kayıt Bilgileri'nde gösterilir. Kendi ayrı dosyasında
     /// (process-samples.db) tutulur.</summary>
     Task<HistoryStoreStatus> GetProcessSamplesSummaryAsync(CancellationToken cancellationToken = default);
@@ -64,12 +64,12 @@ public interface IHistoryStore
     /// </summary>
     Task<int> DeleteOldestSamplesAsync(int days, CancellationToken cancellationToken = default);
 
-    /// <summary>Bkz. <see cref="DeleteOldestSamplesAsync"/> — aynı mantık, game_sessions için.</summary>
+    /// <summary>Bkz. <see cref="DeleteOldestSamplesAsync"/>, aynı mantık, game_sessions için.</summary>
     Task<int> DeleteOldestGameSessionsAsync(int days, CancellationToken cancellationToken = default);
 
-    /// <summary>Bkz. <see cref="DeleteOldestSamplesAsync"/> — aynı mantık, process_samples için.</summary>
+    /// <summary>Bkz. <see cref="DeleteOldestSamplesAsync"/>, aynı mantık, process_samples için.</summary>
     Task<int> DeleteOldestProcessSamplesAsync(int days, CancellationToken cancellationToken = default);
 
-    /// <summary>Bkz. <see cref="DeleteOldestSamplesAsync"/> — aynı mantık, login_attempts için.</summary>
+    /// <summary>Bkz. <see cref="DeleteOldestSamplesAsync"/>, aynı mantık, login_attempts için.</summary>
     Task<int> DeleteOldestLoginAttemptsAsync(int days, CancellationToken cancellationToken = default);
 }
