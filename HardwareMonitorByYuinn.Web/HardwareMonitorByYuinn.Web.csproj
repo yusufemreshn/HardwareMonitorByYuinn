@@ -43,11 +43,11 @@
     <!-- HardwareMonitorByYuinn.Web.exe'nin simgesi (kullanıcının verdiği CPU/anakart görselinden
          16-256px arası 6 boyutlu .ico olarak üretildi). Bu ayar SDK'nın apphost/singlefile
          oluşturma adımında otomatik işlendiği için hem `dotnet build` hem `dotnet publish`
-         çıktısındaki exe'ye gömülür — ayrı bir adım gerekmez, her publish'te geçerlidir. -->
+         çıktısındaki exe'ye gömülür; ayrı bir adım gerekmez, her publish'te geçerlidir. -->
     <ApplicationIcon>app.ico</ApplicationIcon>
   </PropertyGroup>
 
-  <!-- Yalnızca `dotnet publish`i etkiler (`dotnet build`/IDE ile geliştirmeyi etkilemez — bu
+  <!-- Yalnızca `dotnet publish`i etkiler (`dotnet build`/IDE ile geliştirmeyi etkilemez; bu
        özellikler SDK'nın Publish hedefinde işlenir). Eskiden self-contained publish ~420 dosya/
        birkaç klasöre (amd64/arm64/x86 + tek tek yönetilen DLL'ler) yayılıyordu; tek dosyaya
        gömme (native kütüphaneler dahil) bunu tek bir .exe + wwwroot/ + birkaç küçük yapılandırma
@@ -62,7 +62,7 @@
        Program.cs'de bilerek AppContext.BaseDirectory'ye sabitlendiği için normal ASP.NET Core
        static-web-assets kaynak-geçişi devreye girmiyor). Bu, JS/CSS değişikliklerinin build
        sonrası hatasızca ama sessizce eski kalmasına yol açan tekrarlayan bir tuzaktı (2026-07-31,
-       "devam 43" — bkz. CHANGELOG.md). Bu hedef her build sonrası wwwroot'u çıktı klasörüne
+       "devam 43", bkz. CHANGELOG.md). Bu hedef her build sonrası wwwroot'u çıktı klasörüne
        senkronize eder; yalnızca değişen/yeni dosyalar kopyalanır (SkipUnchangedFiles), bu yüzden
        normal build süresini gözle görülür şekilde uzatmaz. -->
   <Target Name="SyncWwwrootToOutput" AfterTargets="Build">
@@ -89,7 +89,7 @@
        öğesi normal `dotnet build`'de $(OutDir)'a düzgün kopyalanır (doğrulandı), ama tek-dosya
        publish paketleyicisi ".exe" uzantılı gevşek (loose) Content dosyalarını publish çıktısına
        hiç kopyalamadan sessizce atlıyor (muhtemelen yalnızca tek bir .exe'nin bulunacağı varsayımı
-       yüzünden) — canlı publish testinde doğrulandı: dosya $(OutDir)'da var ama $(PublishDir)'da
+       yüzünden); canlı publish testinde doğrulandı: dosya $(OutDir)'da var ama $(PublishDir)'da
        yoktu. Bu yüzden publish çıktısına açıkça, ayrıca kopyalanır. -->
   <Target Name="CopyWebView2BootstrapperToPublish" AfterTargets="Publish">
     <Copy SourceFiles="Runtime\MicrosoftEdgeWebView2Setup.exe"

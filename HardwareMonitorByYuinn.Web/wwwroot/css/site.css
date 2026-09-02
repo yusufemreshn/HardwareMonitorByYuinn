@@ -15,7 +15,7 @@
   --accent-system: #38bdf8;
   --accent-danger: #ff6b6b;
   --accent-caution: #f5b942;
-  /* Genel Sağlık Özeti'nin "iyi" durumu için ayrı bir yeşil — Ağ kartının (--accent-network)
+  /* Genel Sağlık Özeti'nin "iyi" durumu için ayrı bir yeşil; Ağ kartının (--accent-network)
      rengiyle aynıydı, kullanıcı özellikle bu yeşilin daha koyu olmasını istedi; Ağ kartını
      etkilememesi için ayrı bir değişkene taşındı. */
   --accent-success: #22c55e;
@@ -28,7 +28,7 @@
   color-scheme: dark;
 
   /* Form kutuları (metin girişi, seçici, buton) için tek ortak köşe yuvarlaklığı ve boşluk
-     ölçeği — daha önce aynı türden kutular (.hwmon-field/.cleanup-days-select/.threshold-field
+     ölçeği; daha önce aynı türden kutular (.hwmon-field/.cleanup-days-select/.threshold-field
      input) birbirinden bağımsız, hafif farklı değerlerle (8px/9px/10px köşe, 8-10px dolgu)
      kopyalanmıştı; biri değişince diğerleri sessizce farklılaşıyordu (bkz. CHANGELOG 2026-08-04). */
   --control-radius: 10px;
@@ -83,7 +83,7 @@ table {
   border-collapse: collapse;
 }
 
-/* Sekme panelleri — Bootstrap'in .fade/.show mantığı yerine. */
+/* Sekme panelleri: Bootstrap'in .fade/.show mantığı yerine. */
 .tab-pane {
   display: none;
 }
@@ -169,7 +169,7 @@ a {
   /* "safe center": sığdığında ortalar, taşıp overflow-x:auto devreye girdiğinde flex-start'a
      düşer. Düz "center" kullanılırsa taşan içerik container'ın HER İKİ ucuna eşit dağılır ve
      scrollLeft 0'ın altına inemediği için sol uçtaki öğe (Panel) hiçbir zaman scroll ile
-     görünür hale gelmez, sağ uçtaki öğe (Hakkında) de aynı simetrik kırpılmadan etkilenir —
+     görünür hale gelmez, sağ uçtaki öğe (Hakkında) de aynı simetrik kırpılmadan etkilenir;
      kullanıcı raporu: dar pencerede en sola/sağa kaydırsa bile Panel/Hakkında tam görünmüyor. */
   justify-content: safe center;
   gap: 4px;
@@ -275,7 +275,7 @@ a {
   margin-bottom: 20px;
 }
 
-/* Panel görünüm modu — Ayarlar → Görünüm'den seçilir. "Grid" (varsayılan) öznitelik eklemez,
+/* Panel görünüm modu: Ayarlar → Görünüm'den seçilir. "Grid" (varsayılan) öznitelik eklemez,
    mevcut çok sütunlu kart düzenidir. "Liste" kartları tek sütunda alt alta dizer. */
 html[data-panel-view="list"] .stat-grid {
   grid-template-columns: 1fr;
@@ -287,7 +287,7 @@ html[data-panel-view="list"] .stat-grid {
    kalıyordu. Satırın kendisine bir üst genişlik sınırı koyarak (yalnızca liste modunda, grid
    modu bu kuraldan etkilenmez) ikinci öğeyi ana değere yakın tutarız; satır varsayılan olarak
    sola yaslı kaldığı için kartın geri kalanı boş kalır, bu istenen görünümdür.
-   Kullanıcı geri bildirimi: ilk denemede (320px/460px) mesafe hâlâ çok fazlaydı — gerçek
+   Kullanıcı geri bildirimi: ilk denemede (320px/460px) mesafe hâlâ çok fazlaydı; gerçek
    render ölçümüne göre (fps-value ~67px + lows ~126px, process-metrics 136px sabit) bu
    değerler mesafeyi en az yarıya indirecek şekilde belirgin biçimde küçültüldü.
    Not: process-metrics sütunları (CPU/GPU % taşma düzeltmesi) 136px'ten 152px'e çıkınca
@@ -300,7 +300,7 @@ html[data-panel-view="list"] .process-row {
   max-width: 276px;
 }
 
-/* Cam efekti (glassmorphism) — Ayarlar → Görünüm'den açılıp kapatılır. Kartlar/paneller/üst menü/
+/* Cam efekti (glassmorphism): Ayarlar → Görünüm'den açılıp kapatılır. Kartlar/paneller/üst menü/
    sol menüler yarı saydam olup arkalarındaki (sabit renkli) sayfa arka planını bulanıklaştırır;
    Safari için -webkit- öneki gerekiyor. .main-nav = üst gezinme çubuğu (Panel/Detaylar/Ayarlar/
    Geçmiş...); .panel her sayfadaki (Ayarlar, Geçmiş dahil) tüm kart/kutuları kapsıyor;
@@ -315,10 +315,10 @@ html[data-panel-view="list"] .process-row {
   -webkit-backdrop-filter: blur(16px) saturate(160%);
 }
 
-/* Kart yoğunluğu — Ayarlar → Kart Sıralaması'ndan seçilir. Yalnızca dolgu/font boyutunu
+/* Kart yoğunluğu: Ayarlar → Kart Sıralaması'ndan seçilir. Yalnızca dolgu/font boyutunu
    (görsel sıkılığı) değiştirir; hangi detayların (güç/frekans, VRAM/Bellek alt satırı, FPS
    low'ları vb.) görüneceği artık burada DEĞİL, window.HwmonDetailVisibility (site.js) tarafından
-   her elemana ayrı ayrı uygulanan inline display ile kontrol edilir — yoğunluk seviyeleri o
+   her elemana ayrı ayrı uygulanan inline display ile kontrol edilir; yoğunluk seviyeleri o
    sistemde birer hazır şablon (PRESETS) olarak kullanılır. "Normal" (varsayılan) hiçbir kural
    eklemez, mevcut görünümle birebir aynıdır. */
 html[data-density="compact"] .stat-card {
@@ -690,7 +690,7 @@ html[data-density="detailed"] .stat-sub-row {
   margin: 0 0 14px;
 }
 
-/* Ayarlar sayfası — sol tarafta kategori/alt bölüm listesi, sağda seçili bölümün içeriği. */
+/* Ayarlar sayfası: sol tarafta kategori/alt bölüm listesi, sağda seçili bölümün içeriği. */
 .settings-shell {
   display: flex;
   align-items: flex-start;
@@ -730,7 +730,7 @@ html[data-density="detailed"] .stat-sub-row {
 }
 
 /* Arama kutusuna yazılınca eşleşmeyen öğeler gizlenir, eşleşenleri içeren kategori/grup ise
-   normal aç/kapa durumundan (is-open) bağımsız olarak zorla açılır — arama bittiğinde (kutu
+   normal aç/kapa durumundan (is-open) bağımsız olarak zorla açılır; arama bittiğinde (kutu
    boşalınca) bu sınıflar kaldırılır, önceki is-open durumuna dokunulmadığı için sayfa arama
    öncesindeki hâline sorunsuzca döner. */
 .settings-search-hidden {
@@ -777,7 +777,7 @@ html[data-density="detailed"] .stat-sub-row {
 }
 
 /* Tek alt öğesi olan kategoriler (settings-category-single, bkz. site.js HwmonSectionNav) hiç
-   açılıp kapanmaz — kategori butonu doğrudan o tek panele gider. Açılacak bir şey olmadığı için
+   açılıp kapanmaz; kategori butonu doğrudan o tek panele gider. Açılacak bir şey olmadığı için
    ok işareti kafa karıştırmasın diye gizlenir; aktifken diğer alt menü öğeleriyle aynı vurgu
    (is-active) uygulanır. */
 .settings-category-single .settings-category-toggle .chevron {
@@ -914,19 +914,19 @@ html[data-density="detailed"] .stat-sub-row {
   }
 }
 
-/* Sol menü daralması — Ayarlar/Geçmiş/Karşılaştırma sayfalarının paylaştığı .settings-sidebar.
+/* Sol menü daralması: Ayarlar/Geçmiş/Karşılaştırma sayfalarının paylaştığı .settings-sidebar.
    İki bağımsız, farklı davranışlı tetikleyici var:
-     1) .history-rows-active — yalnızca Geçmiş sayfasında "Kayıtları Görüntüle" paneli açıkken
+     1) .history-rows-active: yalnızca Geçmiş sayfasında "Kayıtları Görüntüle" paneli açıkken
         history.js tarafından eklenir/kaldırılır (bkz. site.js HwmonSectionNav.init'in
         autoCollapseTargetId parametresi). Mouse üzerinde değilken daralır, üzerine gelince
         (ya da klavyeyle odaklanınca) tam genişliğe döner. Diğer sayfalarda/sekmelerde bu sınıf
         hiç eklenmez, sidebar her zaman 230px kalır.
-     2) .is-collapsed — sidebar'ın en üstündeki hamburger (☰) butonuna tıklayınca kullanıcı elle
-        ekler (bkz. site.js). Hover'dan TAMAMEN bağımsız kilitli bir daralmadır — üzerine mouse
+     2) .is-collapsed: sidebar'ın en üstündeki hamburger (☰) butonuna tıklayınca kullanıcı elle
+        ekler (bkz. site.js). Hover'dan TAMAMEN bağımsız kilitli bir daralmadır; üzerine mouse
         gelse bile açılmaz, yalnızca hamburger'a tekrar basılınca ya da sidebar'daki başka bir
         butona (kategori/alt sekme) tıklanınca kalkar.
    .settings-content zaten flex:1 + min-width:0 olduğundan boşalan alanı otomatik dolduruyor, ayrı
-   bir yeniden boyutlandırma JS'i gerekmiyor. Yalnızca masaüstü genişliğinde etkin — 800px'in
+   bir yeniden boyutlandırma JS'i gerekmiyor. Yalnızca masaüstü genişliğinde etkin; 800px'in
    altında dokunmatik cihazlarda :hover kavramı olmadığından sidebar daralı takılı kalırdı, bu
    yüzden mobil breakpoint'le çakışmasın diye kendi aralığına (min-width: 801px) hapsedildi. */
 @media (min-width: 801px) {
@@ -958,7 +958,7 @@ html[data-density="detailed"] .stat-sub-row {
     flex-shrink: 0;
   }
 
-  /* history-rows-active panelindeyken hamburger bilerek işlevsiz (bkz. site.js) — bunu görsel
+  /* history-rows-active panelindeyken hamburger bilerek işlevsiz (bkz. site.js); bunu görsel
      olarak da belirtir. */
   .settings-sidebar.history-rows-active .sidebar-toggle {
     opacity: .35;
@@ -1006,7 +1006,7 @@ html[data-density="detailed"] .stat-sub-row {
   flex-wrap: wrap;
 }
 
-/* Ambiyans Modu/Anlık Görüntü/Anlık Görüntü Ayarları — satır sığmayınca hep birlikte alt satıra
+/* Ambiyans Modu/Anlık Görüntü/Anlık Görüntü Ayarları: satır sığmayınca hep birlikte alt satıra
    düşsünler diye (biri üstte kalıp diğerleri altta kalmasın) tek bir flex öğesi olarak gruplanır. */
 .chart-legend-actions {
   display: flex;
@@ -1014,7 +1014,7 @@ html[data-density="detailed"] .stat-sub-row {
   gap: 10px;
 }
 
-/* Grafik zaman aralığı toggle'ı (1dk/5dk/15dk/1sa) — mevcut fare tekerleğiyle yakınlaştırmaya ek
+/* Grafik zaman aralığı toggle'ı (1dk/5dk/15dk/1sa): mevcut fare tekerleğiyle yakınlaştırmaya ek
    olarak, daha keşfedilebilir/kesin bir alternatif. */
 .chart-range-toggle {
   display: flex;
@@ -1106,7 +1106,7 @@ html[data-density="detailed"] .stat-sub-row {
 
 /* Sayfa yenilenene kadar en fazla 3 kez, fareyle üzerine gelindiğinde 2 sn görünüp yavaşça
    kaybolan kullanım ipucu (bkz. dashboard.js initChartHint). Gösterirken hızlı, kaybolurken
-   yavaş bir opacity geçişi kullanılır — bu yüzden transition burada değil, JS'de ayarlanır. */
+   yavaş bir opacity geçişi kullanılır; bu yüzden transition burada değil, JS'de ayarlanır. */
 .chart-hint {
   position: absolute;
   top: 10px;
@@ -1232,7 +1232,7 @@ html[data-density="detailed"] .stat-sub-row {
 }
 
 /* Hakkında sayfası, panel dashboard'un tam genişliğini (1180px) değil, okunabilir bir sütun
-   genişliğini kullanır — aksi hâlde uzun paragraflar panelin yalnızca yarısını doldurup geri
+   genişliğini kullanır; aksi hâlde uzun paragraflar panelin yalnızca yarısını doldurup geri
    kalanını boş bırakıyor, sayfanın yarısı eksikmiş gibi bir izlenim veriyordu (kullanıcı bulgusu). */
 .about-page {
   max-width: 880px;
@@ -1304,15 +1304,15 @@ html[data-density="detailed"] .stat-sub-row {
 }
 
 /* Hakkında sayfasındaki hücreler sayı değil cümle taşır; tek satıra zorlanırsa tablo taşardı.
-   Bu kural .data-table'dan SONRA gelmek zorunda — ikisi de tek sınıf seçici olduğundan özgüllükleri
+   Bu kural .data-table'dan SONRA gelmek zorunda; ikisi de tek sınıf seçici olduğundan özgüllükleri
    eşit, kazanan sırada sonra gelendir (eskiden bu kural yukarıdaydı ve hiç etkisi olmuyordu, panel
    geniş olduğu için fark edilmiyordu). */
 .about-table td {
   white-space: normal;
   line-height: 1.5;
   /* "LibreHardwareMonitorLib" gibi boşluksuz uzun bileşen adları normalde hiç kırılmaz ve tabloyu
-     okunabilir sütun genişliğinin çok ötesine zorlayıp gereksiz bir yatay kaydırma çubuğu doğurur
-     — kelimenin ortasından kırılmasına izin vermek bunu önler. */
+     okunabilir sütun genişliğinin çok ötesine zorlayıp gereksiz bir yatay kaydırma çubuğu doğurur;
+     kelimenin ortasından kırılmasına izin vermek bunu önler. */
   overflow-wrap: break-word;
 }
 
@@ -1322,7 +1322,7 @@ html[data-density="detailed"] .stat-sub-row {
   text-align: center;
 }
 
-/* Isı haritası tablosu — hücreler JS'te satır içi renklendirildiği için burada yalnızca boyut/aralık. */
+/* Isı haritası tablosu: hücreler JS'te satır içi renklendirildiği için burada yalnızca boyut/aralık. */
 .heatmap-table th,
 .heatmap-table td {
   padding: 3px 5px;
@@ -1348,7 +1348,7 @@ html[data-density="detailed"] .stat-sub-row {
   flex: 1;
 }
 
-/* Hazır Temalar — her biri 8 aksan rengi + arka plan önizlemesi olan tıklanabilir kartlar. */
+/* Hazır Temalar: her biri 8 aksan rengi + arka plan önizlemesi olan tıklanabilir kartlar. */
 .preset-theme-header {
   display: flex;
   align-items: flex-end;
@@ -1412,7 +1412,7 @@ html[data-density="detailed"] .stat-sub-row {
   border-color: var(--accent-gpu);
 }
 
-/* Şu an uygulanan tema — grid'de hangi preset'in aktif olduğunu görsel olarak işaretler. */
+/* Şu an uygulanan tema: grid'de hangi preset'in aktif olduğunu görsel olarak işaretler. */
 .preset-theme-card.is-active {
   border-color: var(--accent-gpu);
   box-shadow: 0 0 0 1px var(--accent-gpu);
@@ -1463,7 +1463,7 @@ html[data-density="detailed"] .stat-sub-row {
   font-weight: 600;
 }
 
-/* Panel Düzeni — gerçek sürükle-bırak ile kart sıralama listesi. */
+/* Panel Düzeni: gerçek sürükle-bırak ile kart sıralama listesi. */
 .panel-layout-item {
   cursor: grab;
 }
@@ -1482,7 +1482,7 @@ html[data-density="detailed"] .stat-sub-row {
   cursor: grab;
 }
 
-/* Sürükle-bırak listesinin sağındaki boş alanı değerlendiren küçük, canlı güncellenen önizleme —
+/* Sürükle-bırak listesinin sağındaki boş alanı değerlendiren küçük, canlı güncellenen önizleme;
    Panel'in kendisine geçmeden, sıralama/görünürlük her değiştiğinde (kaydetmeden ÖNCE bile) burada
    anında yansır. Gerçek .stat-card renkleriyle (--accent-*) birebir aynı vurgu renklerini kullanır. */
 .panel-layout-columns {
@@ -1503,7 +1503,7 @@ html[data-density="detailed"] .stat-sub-row {
 }
 
 /* Panel Düzeni'nde sol taraf uzun bir sürükle-bırak listesi olduğu için önizleme bilerek biraz
-   aşağı kaydırılmış (kullanıcı isteği) — ama Panel Görünümü'nde sol taraf tek satırlık bir "Düzen"
+   aşağı kaydırılmış (kullanıcı isteği); ama Panel Görünümü'nde sol taraf tek satırlık bir "Düzen"
    etiketi olduğundan aynı kaydırma "Düzen" ile "Önizleme" başlıklarının hizasını bozuyordu. Bu yüzden
    kaydırma yalnızca Panel Düzeni örneğine (üst panel id'sine) özel, ortak sınıfa değil. */
 #panel-layout .panel-layout-column-preview {
@@ -1577,7 +1577,7 @@ html[data-density="detailed"] .stat-sub-row {
   align-self: center;
 }
 
-/* Cam Efekti önizlemesi — arkasında bulanıklaşacak bir şey olmazsa blur görünmez, bu yüzden
+/* Cam Efekti önizlemesi: arkasında bulanıklaşacak bir şey olmazsa blur görünmez, bu yüzden
    renkli bir gradyan arka plan üzerine gerçek .stat-card sınıfıyla küçük bir demo kart konur;
    .glass-effect anahtarı <html>'e uygulandığı an (site.js) bu kart da otomatik tepki verir. */
 .glass-demo-backdrop {
@@ -1597,7 +1597,7 @@ html[data-density="detailed"] .stat-sub-row {
   pointer-events: none;
 }
 
-/* Grafik Tipi önizlemesi — her seri için küçük bir SVG şekil (site.js/settings.js tarafından
+/* Grafik Tipi önizlemesi: her seri için küçük bir SVG şekil (site.js/settings.js tarafından
    çizgi/alan/bar seçimine göre çizilir). */
 .chart-type-preview-card {
   display: flex;
@@ -1642,11 +1642,11 @@ html[data-density="detailed"] .stat-sub-row {
   filter: brightness(1.08);
 }
 
-/* Koyu temaya uygun ortak form kutusu görünümü — metin girişi (.hwmon-field), "eski kayıtları
+/* Koyu temaya uygun ortak form kutusu görünümü: metin girişi (.hwmon-field), "eski kayıtları
    temizle" seçici (.cleanup-days-select) ve eşik/ayar formlarındaki girişler/seçiciler
    (.threshold-field input/select, aşağıda) hepsi BURADAN tek noktadan tanımlanır. Daha önce dördü
-   de birbirinden bağımsız, hafif farklı değerlerle kopyalanmıştı (8px/9px/10px köşe, farklı dolgu)
-   — biri değişince diğerleri sessizce farklılaşıyordu, hatta biri (.threshold-field input)
+   de birbirinden bağımsız, hafif farklı değerlerle kopyalanmıştı (8px/9px/10px köşe, farklı dolgu);
+   biri değişince diğerleri sessizce farklılaşıyordu, hatta biri (.threshold-field input)
    checkbox'ları da yanlışlıkla kapsayıp görünmez 110px'lik kutulara çeviriyordu (bkz. CHANGELOG
    2026-08-04). */
 .hwmon-field,
@@ -1685,7 +1685,7 @@ select.hwmon-field,
 }
 
 /* Metin + kutu şeklindeki büyük özellik açma/kapama anahtarları (Otomatik Ambiyans, Yerel Ağa
-   Açma, Windows'ta Otomatik Başlat, Enerji Maliyeti vb.) — her biri kendi HTML'inde ayrı ayrı
+   Açma, Windows'ta Otomatik Başlat, Enerji Maliyeti vb.); her biri kendi HTML'inde ayrı ayrı
    inline stille (farklı boşluk, farklı kutu boyutu) kopyalanmıştı; ortak sınıf olarak burada
    toplandı. Kutu boyutu/rengi .notify-metric-field'daki (küçük bildirim onay kutuları) ile aynı,
    tutarlı bir görünüm için. */
@@ -1751,7 +1751,7 @@ input[type="file"] {
 
 /* Not: bu ikisi ".threshold-field input:not([type=checkbox])"den daha spesifik olmalı, aksi
    hâlde o kuraldaki width:110px kazanır ve Dikkat/Kritik eşik kutuları/metrik satırları hep
-   110px genişlikte kalır (öyle bir üretim hatası vardı — genişlikler hiç uygulanmıyordu). */
+   110px genişlikte kalır (öyle bir üretim hatası vardı; genişlikler hiç uygulanmıyordu). */
 .threshold-field .threshold-tier-input input {
   width: 90px;
 }
@@ -1760,7 +1760,7 @@ input[type="file"] {
   width: 80px;
 }
 
-/* Bellek/Disk için tek seçenekli, değiştirilemeyen metrik göstergesi — gerçek bir dropdown gibi
+/* Bellek/Disk için tek seçenekli, değiştirilemeyen metrik göstergesi: gerçek bir dropdown gibi
    görünmemesi için ok işareti kaldırılıyor (İşlemci/Ekran Kartı'ndaki seçilebilir olanlarda kalır). */
 .threshold-metric-fixed {
   appearance: none;
@@ -1927,7 +1927,7 @@ input[type="file"] {
   cursor: default;
 }
 
-/* Anlık görüntü önizlemesi — 📸 butonuna basınca oluşan PNG'yi indirmeden önce ortada gösterir. */
+/* Anlık görüntü önizlemesi: 📸 butonuna basınca oluşan PNG'yi indirmeden önce ortada gösterir. */
 .snapshot-modal-backdrop {
   position: fixed;
   inset: 0;
@@ -1996,7 +1996,7 @@ input[type="file"] {
   filter: brightness(1.05);
 }
 
-/* Ambiyans modu — Panel üstündeki her şeyi kaplayan, saat ve büyük canlı değerler gösteren ekran. */
+/* Ambiyans modu: Panel üstündeki her şeyi kaplayan, saat ve büyük canlı değerler gösteren ekran. */
 .ambient-overlay {
   position: fixed;
   inset: 0;
