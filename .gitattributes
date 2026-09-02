@@ -1,0 +1,6 @@
+# wwwroot/lib, uygulamamızın kendi kodu değil; indirilen üçüncü taraf istemci kütüphaneleridir.
+HardwareMonitorByYuinn.Web/wwwroot/lib/** linguist-vendored
+
+# i18n.js neredeyse tamamen 9 dilin çeviri dizesi tablosudur, gerçek mantık değildir;
+# GitHub'ın dil istatistiğini bu veri değil, asıl kod belirlesin diye hariç tutulur.
+HardwareMonitorByYuinn.Web/wwwroot/js/i18n.js linguist-generated=true
