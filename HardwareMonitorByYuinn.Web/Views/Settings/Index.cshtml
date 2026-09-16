@@ -16,6 +16,7 @@
             </button>
             <ul class="settings-subnav">
                 <li><button type="button" data-target="preset-themes">@Localizer["Hazır Temalar"]</button></li>
+                <li><button type="button" data-target="ui-style-panel">@Localizer["Arayüz Stili"]</button></li>
                 <li><button type="button" data-target="colors-panel">@Localizer["Renkler"]</button></li>
                 <li class="settings-subnav-group">
                     <button type="button" class="settings-subnav-group-toggle">
@@ -282,6 +283,15 @@
             <div class="preset-theme-grid" id="preset-theme-grid"></div>
             <p id="preset-theme-empty" class="stat-sub" style="display:none;">@Localizer["Aramanızla eşleşen tema yok."]</p>
             <span id="preset-theme-saved-note" class="stat-sub" style="display:none;margin-top:10px;">@Localizer["Uygulandı ✓"]</span>
+        </div>
+
+        <div class="panel" id="ui-style-panel">
+            <h2 class="panel-title">@Localizer["Arayüz Stili"]</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                @Localizer["Tüm programın (menüler, butonlar, kartlar dâhil) renklerini, saydamlığını ve geçiş animasyonu tarzını seçin. Kart boyutları ve düzeni değişmez; aksan renkleriniz ve açık/koyu temanız korunur."]
+            </p>
+            <div class="preset-theme-grid" id="ui-style-grid"></div>
+            <span id="ui-style-saved-note" class="stat-sub" style="display:none;margin-top:10px;">@Localizer["Uygulandı ✓"]</span>
         </div>
 
         <div class="panel" id="card-order-panel">

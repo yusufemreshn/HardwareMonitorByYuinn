@@ -556,6 +556,101 @@ window.HwmonPanelView = (function () {
     return { load: load, save: save, apply: apply, sanitize: sanitize, defaultValue: DEFAULT, storageKey: STORAGE_KEY };
 })();
 
+// Arayüz stili (Panel'deki kart düzeni/görünümü), <html data-ui-style="bento|hud|minimal|
+// aurora|neumorphism|...">, gerçek görsel kurallar site.css'te (.stat-grid ve
+// #health-summary ile sınırlı, yalnızca Panel'i etkiler). "classic" (varsayılan) hiçbir
+// öznitelik eklemez, mevcut görünümle birebir aynıdır.
+window.HwmonUiStyle = (function () {
+    "use strict";
+
+    var STORAGE_KEY = "hwmon-ui-style";
+    var VALID = {
+        classic: true, bento: true, hud: true, minimal: true, aurora: true, neumorphism: true,
+        // İkinci turdan (tasarım ekibinin 51 önerisi) elenenler dışında kalan 25 stil
+        // (bkz. site.css aynı adlarla data-ui-style bloğu); kullanıcı isteğiyle
+        // 58 stilden en beğenilen 25'ine indirildi.
+        "corporate-navy": true, fintech: true, "cloud-white": true, "data-center": true,
+        "calm-spectrum": true, "high-readability": true, "dyslexia-friendly": true, contrast: true,
+        editorial: true, glacier: true, "zen-paper": true, forest: true, desert: true,
+        typewriter: true, pastel: true, synthwave: true, matrix: true, holo: true, blueprint: true
+    };
+    var DEFAULT = "classic";
+
+    function sanitize(value) {
+        return VALID[value] ? value : DEFAULT;
+    }
+
+    function load() {
+        try { return sanitize(localStorage.getItem(STORAGE_KEY)); } catch (e) { return DEFAULT; }
+    }
+
+    function save(value) {
+        try { localStorage.setItem(STORAGE_KEY, sanitize(value)); } catch (e) { /* kota aşımı/gizli sekme: yok say */ }
+    }
+
+    function apply(value) {
+        value = sanitize(value);
+        if (value === "classic") document.documentElement.removeAttribute("data-ui-style");
+        else document.documentElement.setAttribute("data-ui-style", value);
+        // Kart geometrisi (grid-column, dolgu) stile göre değiştiği için satırların yeniden
+        // sığması gerekebilir (bkz. window.HwmonDensity'deki aynı çağrı).
+        if (window.HwmonFitStatRows) window.HwmonFitStatRows.fitAll();
+    }
+
+    apply(load());
+
+    window.addEventListener("storage", function (e) {
+        if (e.key !== STORAGE_KEY) return;
+        apply(load());
+    });
+
+    return { load: load, save: save, apply: apply, sanitize: sanitize, defaultValue: DEFAULT, storageKey: STORAGE_KEY };
+})();
+
+// Ortak favori listesi fabrikası: hem Hazır Temalar hem Arayüz Stili aynı deseni kullanıyor
+// (id dizisi olarak localStorage'da tutulan bir "yıldızlanmış öğeler" listesi). İkisi ayrı
+// anahtar kullandığı için (kullanıcı temaları ve stilleri birbirinden bağımsız favorileyebilsin)
+// tek bir fabrika fonksiyonundan iki bağımsız modül üretiliyor.
+function HwmonMakeFavoritesList(storageKey) {
+    "use strict";
+
+    function load() {
+        try {
+            var raw = JSON.parse(localStorage.getItem(storageKey));
+            return Array.isArray(raw) ? raw.filter(function (x) { return typeof x === "string"; }) : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function save(list) {
+        try { localStorage.setItem(storageKey, JSON.stringify(list)); } catch (e) { /* kota aşımı/gizli sekme: yok say */ }
+    }
+
+    function isFavorite(id) {
+        return load().indexOf(id) !== -1;
+    }
+
+    function toggle(id) {
+        var list = load();
+        var idx = list.indexOf(id);
+        if (idx === -1) list.push(id);
+        else list.splice(idx, 1);
+        save(list);
+        return idx === -1;
+    }
+
+    return { load: load, save: save, isFavorite: isFavorite, toggle: toggle, storageKey: storageKey };
+}
+
+// Hazır Temalar'daki favori yıldızları (bkz. settings.js initPresetThemes); favorilenen
+// temalar listenin en başına taşınır.
+window.HwmonFavoriteThemes = HwmonMakeFavoritesList("hwmon-favorite-themes");
+
+// Arayüz Stili'ndeki favori yıldızları (bkz. settings.js initUiStyleForm); favorilenen
+// stiller listenin en başına taşınır.
+window.HwmonFavoriteUiStyles = HwmonMakeFavoritesList("hwmon-favorite-ui-styles");
+
 // Kart bazında grafik tipi (çizgi/alan/bar), yalnızca Panel'deki ana 4 seri (İşlemci/Ekran
 // Kartı/Bellek/Kare Hızı) için; ikincil seriler (İndirme/Yükleme/Kare Süresi/low'lar) hep çizgi.
 window.HwmonChartTypes = (function () {

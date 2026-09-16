@@ -414,6 +414,8 @@
   <data name="Ayarlarda ara" xml:space="preserve"><value>Search settings</value></data>
   <data name="Özelleştirme" xml:space="preserve"><value>Customization</value></data>
   <data name="Hazır Temalar" xml:space="preserve"><value>Preset Themes</value></data>
+  <data name="Arayüz Stili" xml:space="preserve"><value>UI Style</value></data>
+  <data name="Tüm programın (menüler, butonlar, kartlar dâhil) renklerini, saydamlığını ve geçiş animasyonu tarzını seçin. Kart boyutları ve düzeni değişmez; aksan renkleriniz ve açık/koyu temanız korunur." xml:space="preserve"><value>Choose the colors, transparency, and transition animation style for the whole app (including menus, buttons, and cards). Card sizes and layout stay the same; your accent colors and light/dark theme are preserved.</value></data>
   <data name="Renkler" xml:space="preserve"><value>Colors</value></data>
   <data name="Görünüm" xml:space="preserve"><value>Appearance</value></data>
   <data name="Birim Tercihi" xml:space="preserve"><value>Unit Preference</value></data>

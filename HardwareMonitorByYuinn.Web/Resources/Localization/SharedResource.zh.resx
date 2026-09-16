@@ -414,6 +414,8 @@
   <data name="Ayarlarda ara" xml:space="preserve"><value>搜索设置</value></data>
   <data name="Özelleştirme" xml:space="preserve"><value>个性化</value></data>
   <data name="Hazır Temalar" xml:space="preserve"><value>预设主题</value></data>
+  <data name="Arayüz Stili" xml:space="preserve"><value>界面风格</value></data>
+  <data name="Tüm programın (menüler, butonlar, kartlar dâhil) renklerini, saydamlığını ve geçiş animasyonu tarzını seçin. Kart boyutları ve düzeni değişmez; aksan renkleriniz ve açık/koyu temanız korunur." xml:space="preserve"><value>为整个程序（包括菜单、按钮和卡片）选择颜色、透明度和过渡动画风格。卡片的大小和布局不会改变；您的强调色和浅色/深色主题都会保留。</value></data>
   <data name="Renkler" xml:space="preserve"><value>颜色</value></data>
   <data name="Görünüm" xml:space="preserve"><value>外观</value></data>
   <data name="Birim Tercihi" xml:space="preserve"><value>单位偏好</value></data>

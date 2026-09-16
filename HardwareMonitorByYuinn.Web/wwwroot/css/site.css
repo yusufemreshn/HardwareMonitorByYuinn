@@ -36,6 +36,13 @@
   --space-2: 8px;
   --space-3: 14px;
   --space-4: 22px;
+
+  /* Arayüz Stili (aşağıda, dosyanın sonunda) tarafından yeniden tanımlanan üç token;
+     "classic" (stil seçilmemişken) burada tanımlı varsayılanlarla mevcut davranışın
+     birebir aynısını üretir. .stat-card'ın transition/hover kuralları bunları kullanır. */
+  --ui-card-transition: transform .15s ease, opacity .15s ease, box-shadow .15s ease;
+  --ui-card-hover-transform: translateY(-2px);
+  --ui-surface-blur: none;
 }
 
 [data-theme="light"] {
@@ -304,7 +311,17 @@ html[data-panel-view="list"] .process-row {
    sol menüler yarı saydam olup arkalarındaki (sabit renkli) sayfa arka planını bulanıklaştırır;
    Safari için -webkit- öneki gerekiyor. .main-nav = üst gezinme çubuğu (Panel/Detaylar/Ayarlar/
    Geçmiş...); .panel her sayfadaki (Ayarlar, Geçmiş dahil) tüm kart/kutuları kapsıyor;
-   .settings-sidebar = Ayarlar/Geçmiş/Karşılaştırma'nın paylaştığı sol alt-menü kutusu. */
+   .settings-sidebar = Ayarlar/Geçmiş/Karşılaştırma'nın paylaştığı sol alt-menü kutusu.
+   ÖNEMLİ: --card-bg-glass burada SABİT değil; :root/[data-theme]'de yalnızca "classic" stili
+   için bir varsayılan tanımlıyor. Her Arayüz Stili bloğu kendi --card-bg-glass'ını
+   "var(--card-bg)" olarak yeniden tanımlıyor (bkz. aşağıdaki data-ui-style blokları), yani Cam
+   Efekti açıldığında her stil KENDİ rengiyle bulanıklaşıyor. Eskiden bu token hep classic'in
+   sabit rengini kullanıyordu; bu yüzden Cam Efekti'ni açan biri hangi Arayüz Stili seçili
+   olursa olsun aynı (classic'e ait) laciverte/beyaza dönen kartlar görüyordu (ör. "Dijital
+   Yağmur" yeşili, "Yüksek Kontrast" siyah/sarısı kayboluyordu). Yüksek Okunabilirlik/Yüksek
+   Kontrast gibi opak (--card-bg: #000 gibi) a11y stillerinde var(--card-bg) da opak olduğu
+   için Cam Efekti bilerek görsel olarak etkisiz kalır (bulanıklaştıracak şeffaf bir şey yok),
+   bu tam olarak istenen davranış: yüksek kontrast kartlar saydamlaşıp okunaksız hale gelmez. */
 .glass-effect .stat-card,
 .glass-effect .panel,
 .glass-effect .health-summary,
@@ -354,7 +371,7 @@ html[data-density="detailed"] .stat-sub-row {
   cursor: pointer;
   user-select: none;
   color: inherit;
-  transition: transform .15s ease, opacity .15s ease, box-shadow .15s ease;
+  transition: var(--ui-card-transition);
 }
 
 .stat-card::before {
@@ -366,7 +383,7 @@ html[data-density="detailed"] .stat-sub-row {
 }
 
 .stat-card:hover {
-  transform: translateY(-2px);
+  transform: var(--ui-card-hover-transform);
 }
 
 .stat-card.is-static {
@@ -1436,6 +1453,39 @@ html[data-density="detailed"] .stat-sub-row {
   display: inline-block;
 }
 
+/* Favori yıldızı: Hazır Temalar VE Arayüz Stili kartlarının ikisinde de aynı sınıf/konum
+   (sol üst; "Kullanılıyor" rozeti sağ üstte olduğu için çakışmıyor). Favorilenen öğeler
+   settings.js tarafından listenin başına taşınıyor (bkz. HwmonFavoriteThemes/
+   HwmonFavoriteUiStyles, site.js). */
+.preset-theme-fav-btn {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--text-muted);
+  opacity: .5;
+  cursor: pointer;
+  user-select: none;
+  padding: 2px 4px;
+  border-radius: 6px;
+  z-index: 1;
+}
+
+.preset-theme-fav-btn:hover {
+  opacity: 1;
+  background: var(--bg-elevated);
+}
+
+.preset-theme-fav-btn.is-favorite {
+  color: var(--accent-caution);
+  opacity: 1;
+}
+
+.preset-theme-card.is-favorite {
+  border-color: var(--accent-caution);
+}
+
 .preset-theme-swatches {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -2106,6 +2156,21 @@ input[type="file"] {
   }
 }
 
+/* Arayüz Stili'nin saydamlık (--ui-surface-blur, varsayılan "none") efekti; uygulamanın
+   neredeyse tüm yüzeylerini kapsar (üst menü, sol menü, panel, kart, karo, uyarı kutusu,
+   sağlık özeti) ki Aurora Cam/Bento + Aurora seçilince cam efekti yalnızca Panel'deki
+   kartlarda değil TÜM programda görünsün. */
+.stat-card,
+.panel,
+.health-summary,
+.tile,
+.notice,
+.main-nav,
+.settings-sidebar {
+  backdrop-filter: var(--ui-surface-blur);
+  -webkit-backdrop-filter: var(--ui-surface-blur);
+}
+
 .stat-card:focus-visible,
 .legend-item:focus-visible,
 .nav-tabs-hwmon button:focus-visible,
@@ -2115,6 +2180,779 @@ input[type="file"] {
   outline: 2px solid var(--accent-gpu);
   outline-offset: 2px;
 }
+
+/* ============================================================
+   Arayüz Stili: Ayarlar → Arayüz Stili'nden seçilir, <html data-ui-style="...">,
+   window.HwmonUiStyle (site.js) tarafından uygulanır. "classic" (varsayılan) hiçbir
+   öznitelik eklemez, mevcut görünümle birebir aynıdır.
+
+   KASITLI TASARIM KARARI: hiçbir stil kartların/panellerin boyutunu, dolgusunu,
+   grid düzenini ya da köşe yuvarlaklığını DEĞİŞTİRMEZ (kullanıcı isteği: "kartların
+   boyutunu vs değiştirmesin, sadece renk/saydamlık/geçiş animasyonu gibi şeyler
+   değişsin"). Bunun yerine her stil, uygulamanın zaten HER YERDE (üst menü, sol
+   menüler, butonlar, tablolar, kartlar, paneller...) kullandığı ortak renk
+   token'larını (--bg, --card-bg, --border, --shadow...) yeniden tanımlar; bu
+   token'lar zaten body/.main-nav/.settings-sidebar/.stat-card/.panel/.tile/
+   .notice/.data-table gibi onlarca yerde kullanıldığı için TEK bir token
+   değişikliği tüm programı aynı anda giydirir, [data-theme="light"]'ın açık/koyu
+   temayı değiştirme yöntemiyle birebir aynı mekanizma. --shadow'a dokunmak
+   .is-caution/.is-warning eşik halkalarını ETKİLEMEZ, çünkü onlar kendi
+   box-shadow'larını ayrı, sabit olarak tanımlıyor (yukarıda), var(--shadow)
+   kullanmıyorlar; bu yüzden hiçbir stilde eşik uyarılarını yeniden tanımlamaya
+   gerek yok. --ui-card-transition/--ui-card-hover-transform/--ui-surface-blur
+   üç yeni token; kullanıldıkları yerler (.stat-card tanımı ve aşağıdaki ortak
+   "yüzey" kuralı) bu bloktan önce, dosyanın üst kısımlarında.
+
+   ÖNEMLİ (canlıda bulunan gerçek hata): bir token'ı ASLA kendi kendine referans
+   vererek tanımlamayın (ör. eskiden --card-bg: color-mix(in srgb, var(--card-bg)
+   ..., ...) vardı). Tarayıcı bunu döngüsel/geçersiz sayıyor ve token boş
+   kalıyordu; !important olsun olmasın fark etmiyor, Hazır Tema/özel arka plan
+   satır içi bir değer yazdığında da yazmadığında da aynı şekilde bozuluyordu
+   (kartlar şeffaflaşıyordu). Yerine her zaman SABİT bir renk/değer yazın. */
+
+/* ---- 1) Bento Grid: sıcak/bakır tonlu, ışıklı çerçeve, sekmeli (bouncy) geçiş ----
+   Not: rengi zayıf çıkan ilk denemede yalnızca --card-bg'yi hafifçe (%18) ısıtıyorduk;
+   koyu lacivert bir zeminde bu göze neredeyse hiç yansımıyordu (kullanıcı geri
+   bildirimi: "çok bişi değiştirmiyor gibi"). Bunun yerine kenarlığı TAM DOYGUN bir
+   turuncuya, gölgeyi ise etrafta gerçekten görünen bir turuncu halka + parıltıya
+   çevirdik; bu ikisi koyu zeminde de açık zeminde de kolayca fark edilir. */
+html[data-ui-style="bento"] {
+  /* Renkler → Arka Plan / Hazır Temalar bu dört değişkeni satır içi stille ayarlayabiliyor
+     (bkz. window.HwmonBackgroundColors, site.js); satır içi stil normalde her zaman
+     kazanır, bu yüzden burada bilerek !important kullanılıyor ki seçilen stil, önceden
+     seçilmiş bir hazır tema/özel arka plan varken de görünür kalsın. */
+  --card-bg: #2a2015 !important;
+  --card-bg-glass: var(--card-bg);
+  --bg-elevated: #332818 !important;
+  --border: rgba(255, 159, 69, .55) !important;
+  --grid-line: rgba(255, 159, 69, .22);
+  --shadow: 0 0 0 1px rgba(255, 159, 69, .4), 0 16px 32px rgba(255, 159, 69, .16), 0 6px 14px rgba(0, 0, 0, .35);
+  --ui-card-transition: transform .25s cubic-bezier(.34, 1.56, .64, 1), box-shadow .25s ease;
+  --ui-card-hover-transform: translateY(-4px) scale(1.015);
+}
+
+/* ---- 2) Kokpit HUD: siyah zemin, neon camgöbeği kenarlık/parıltı, anlık geçiş ---- */
+html[data-ui-style="hud"] {
+  /* !important gerekçesi için Bento Grid bloğundaki nota bakın (bu dört değişken satır
+     içi stille ayarlanabildiği için). */
+  --bg: #050708 !important;
+  --bg-elevated: #0b1011 !important;
+  --card-bg: #0a0e0f !important;
+  --card-bg-glass: var(--card-bg);
+  --border: rgba(0, 229, 199, .35) !important;
+  --text-muted: #6f9a93;
+  --grid-line: rgba(0, 229, 199, .14);
+  --shadow: 0 0 0 1px rgba(0, 229, 199, .16), 0 0 18px -6px rgba(0, 229, 199, .4);
+  --ui-card-transition: transform .08s ease, box-shadow .15s ease;
+  --ui-card-hover-transform: translateY(-1px);
+}
+
+html[data-ui-style="hud"] .stat-dot,
+html[data-ui-style="hud"] .health-summary-icon {
+  animation: hwmon-hud-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes hwmon-hud-pulse {
+  0%, 100% { filter: drop-shadow(0 0 1px currentColor); }
+  50% { filter: drop-shadow(0 0 6px currentColor); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-ui-style="hud"] .stat-dot,
+  html[data-ui-style="hud"] .health-summary-icon {
+    animation: none;
+  }
+}
+
+/* ---- 3) Minimal Veri: kartlar sayfayla aynı renge bürünüp "kutu" hissi tamamen
+   kalkıyor, geriye yalnızca renkli nokta + metin kalıyor ---- */
+html[data-ui-style="minimal"] {
+  /* !important gerekçesi için Bento Grid bloğundaki nota bakın. */
+  --card-bg: var(--bg) !important;
+  --card-bg-glass: var(--card-bg);
+  --bg-elevated: var(--bg) !important;
+  --shadow: none;
+  --border: transparent !important;
+  --grid-line: rgba(255, 255, 255, .04);
+  --ui-card-transition: opacity .15s ease;
+  --ui-card-hover-transform: none;
+}
+
+html[data-ui-style="minimal"] .stat-card::before {
+  display: none;
+}
+
+html[data-ui-style="minimal"] .stat-card:hover {
+  opacity: .72;
+}
+
+/* ---- 4) Aurora Cam: saydam cam yüzeyler + arka planda süzülen ışık lekeleri ---- */
+html[data-ui-style="aurora"] {
+  /* !important gerekçesi için Bento Grid bloğundaki nota bakın. */
+  --bg: #0a0b10 !important;
+  --bg-elevated: #12141b !important;
+  --card-bg: rgba(20, 28, 40, .55) !important;
+  --card-bg-glass: var(--card-bg);
+  --border: rgba(255, 255, 255, .14) !important;
+  --text-muted: rgba(242, 243, 245, .62);
+  --grid-line: rgba(255, 255, 255, .1);
+  --shadow: 0 12px 30px rgba(0, 0, 0, .45);
+  --ui-surface-blur: blur(18px) saturate(160%);
+  --ui-card-transition: transform .4s ease, box-shadow .4s ease, background-color .4s ease;
+  --ui-card-hover-transform: translateY(-3px);
+}
+
+/* ---- 5) Yumuşak Kabartma: tek renkli zemin, çift tonlu kabartma gölgesi, basma efekti ---- */
+html[data-ui-style="neumorphism"] {
+  /* !important gerekçesi için Bento Grid bloğundaki nota bakın. */
+  --card-bg: var(--bg) !important;
+  --card-bg-glass: var(--card-bg);
+  --bg-elevated: var(--bg) !important;
+  --border: transparent !important;
+  --grid-line: color-mix(in srgb, var(--bg) 85%, black);
+  --shadow: 8px 8px 16px color-mix(in srgb, var(--bg) 80%, black),
+            -8px -8px 16px color-mix(in srgb, var(--bg) 80%, white);
+  --ui-card-transition: box-shadow .2s ease, transform .2s ease;
+  --ui-card-hover-transform: none;
+}
+
+html[data-ui-style="neumorphism"] .stat-card:active {
+  box-shadow: inset 4px 4px 8px color-mix(in srgb, var(--bg) 80%, black),
+              inset -4px -4px 8px color-mix(in srgb, var(--bg) 80%, white);
+}
+
+/* Aurora Cam zaten kendi cam efektini uyguluyor; ayrıca Ayarlar → Cam Efekti anahtarı
+   açılırsa (.glass-effect), genel .glass-effect kuralı aynı/benzer bir saydamlık yazdığı
+   için anahtarın hiçbir görünür etkisi olmuyordu (kullanıcı geri bildirimi: "cam efekti
+   kapat aç yapınca hiçbir şey değişmiyor"). Bu stilde anahtar açıkken bulanıklığı/parıltıyı
+   belirgin şekilde artırıyoruz ki her zaman görünür bir fark olsun. */
+html.glass-effect[data-ui-style="aurora"] {
+  --ui-surface-blur: blur(32px) saturate(200%) !important;
+}
+
+html.glass-effect[data-ui-style="aurora"] .stat-card {
+  border-color: rgba(255, 255, 255, .35) !important;
+}
+
+/* Aurora Cam'da tüm sayfanın arkasında yavaşça süzülen iki ışık lekesi; position:fixed
+   olduğu için sayfa kaydırılsa bile yerinde kalır, pointer-events:none olduğu için hiçbir
+   tıklamayı engellemez, z-index:-1 içerikten geri kalır.
+   ÖNEMLİ: left/right değerleri ekranın ham köşesine değil, .app-shell'in (max-width: 1180px,
+   margin: 0 auto) gerçek kenarına göre hesaplanıyor. Eskiden sabit "left: -100px" gibi bir
+   değer kullanılıyordu; bu dar ekranda içerikle örtüşse de geniş/tam ekranda içerik 1180px'te
+   ortalanıp kaldığı için ışık lekeleri, aralarında boşluk olan uzak köşelerde, uygulamanın
+   hiç olmadığı bir yerde kalıyordu (kullanıcı geri bildirimi: "tam ekran yapınca köşelerde
+   uygulamanın olmadığı yerlerde kalıyor"). max(0px, (100vw - 1180px) / 2) ifadesi .app-shell'in
+   sol/sağ kenarındaki boşluğu verir; bu her ekran genişliğinde lekeyi içeriğin gerçek kenarına
+   sabitler. */
+html[data-ui-style="aurora"] body::before,
+html[data-ui-style="aurora"] body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: .32;
+  pointer-events: none;
+  animation: hwmon-aurora-drift 18s ease-in-out infinite alternate;
+}
+
+html[data-ui-style="aurora"] body::before {
+  width: 420px;
+  height: 420px;
+  background: #6d5ef7;
+  top: -120px;
+  left: calc(max(0px, (100vw - 1180px) / 2) - 100px);
+}
+
+html[data-ui-style="aurora"] body::after {
+  width: 380px;
+  height: 380px;
+  background: #24d0b0;
+  bottom: -140px;
+  right: calc(max(0px, (100vw - 1180px) / 2) - 80px);
+  animation-delay: -9s;
+}
+
+@keyframes hwmon-aurora-drift {
+  from { transform: translate(0, 0); }
+  to { transform: translate(60px, 40px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-ui-style="aurora"] body::before,
+  html[data-ui-style="aurora"] body::after {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   İkinci tur: 51 yeni Arayüz Stili (kullanıcı isteğiyle, tasarım ekibi önerileri).
+   Hepsi yukarıdaki 6 stille BİREBİR AYNI kurala uyuyor: yalnızca --bg/--bg-elevated/
+   --card-bg/--border/--text*/--shadow/--grid-line/--ui-* token'larını değiştiriyor,
+   hiçbiri grid/padding/radius'a dokunmuyor. --bg/--bg-elevated/--card-bg/--border
+   (ve açık temalı olanlarda --text/--text-muted) satır içi stille ayarlanabildiği
+   için (Hazır Temalar/Renkler → Arka Plan) hepsi !important; gerekçe için en
+   yukarıdaki "Bento Grid" bloğundaki nota bakın. */
+
+/* -- Elena Voss: Kurumsal & SaaS -- */
+html[data-ui-style="corporate-navy"] {
+  --bg: #0f2444 !important;
+  --bg-elevated: #16305a !important;
+  --card-bg: rgba(28, 58, 99, .6) !important;
+  --card-bg-glass: var(--card-bg);
+  --border: rgba(107, 147, 196, .4) !important;
+  --shadow: 0 12px 28px rgba(0, 0, 0, .35);
+  --grid-line: rgba(107, 147, 196, .15);
+  --ui-card-transition: transform .15s ease, box-shadow .2s ease;
+  --ui-card-hover-transform: translateY(-2px);
+}
+
+html[data-ui-style="fintech"] {
+  --bg: #f4fbf7 !important;
+  --bg-elevated: #eaf7f0 !important;
+  --card-bg: #ffffff !important;
+  --card-bg-glass: var(--card-bg);
+  --border: #3fae6f !important;
+  --text: #0f2e1c !important;
+  --text-muted: #4a7862 !important;
+  --shadow: 0 10px 24px rgba(20, 120, 70, .1);
+  --grid-line: rgba(63, 174, 111, .18);
+  --ui-card-transition: transform .35s ease, box-shadow .35s ease;
+  --ui-card-hover-transform: translateY(-2px);
+}
+
+html[data-ui-style="cloud-white"] {
+  --bg: #ffffff !important;
+  --bg-elevated: #f4f7fc !important;
+  --card-bg: #ffffff !important;
+  --card-bg-glass: var(--card-bg);
+  --border: #b9cdf0 !important;
+  --text: #16202c !important;
+  --text-muted: #5b6b81 !important;
+  --shadow: 0 10px 24px rgba(16, 60, 140, .08);
+  --grid-line: rgba(60, 110, 220, .12);
+  --ui-card-transition: transform .35s ease, box-shadow .35s ease;
+  --ui-card-hover-transform: translateY(-2px);
+}
+
+html[data-ui-style="data-center"] {
+  --bg: #1e2226 !important;
+  --bg-elevated: #262b30 !important;
+  --card-bg: rgba(44, 50, 56, .7) !important;
+  --card-bg-glass: var(--card-bg);
+  --border: #6d7a86 !important;
+  --shadow: 0 10px 24px rgba(0, 0, 0, .4);
+  --grid-line: rgba(109, 122, 134, .18);
+  --ui-card-transition: transform .15s ease, box-shadow .2s ease;
+  --ui-card-hover-transform: translateY(-2px);
+}
+
+/* -- Amara Osei: Erişilebilirlik -- */
+html[data-ui-style="calm-spectrum"] {
+  --bg: #e7e5ec !important;
+  --bg-elevated: #eeecf2 !important;
+  --card-bg: rgba(255, 255, 255, .55) !important;
+  --card-bg-glass: var(--card-bg);
+  --border: #b9b6c7 !important;
+  --text: #3a3745 !important;
+  --text-muted: #726f80 !important;
+  --shadow: 0 8px 20px rgba(60, 55, 80, .08);
+  --grid-line: rgba(60, 55, 80, .1);
+  --ui-card-transition: transform .35s ease, box-shadow .35s ease;
+  --ui-card-hover-transform: translateY(-2px);
+}
+
+html[data-ui-style="high-readability"] {
+  --bg: #000000 !important;
+  --bg-elevated: #000000 !important;
+  --card-bg: #000000 !important;
+  --card-bg-glass: var(--card-bg);
+  --border: #ffffff !important;
+  --text: #ffffff !important;
+  --text-muted: #e0e0e0 !important;
+  --shadow: 0 0 0 2px #ffffff;
+  --grid-line: rgba(255, 255, 255, .3);
+  --ui-card-transition: opacity .15s ease;
+  --ui-card-hover-transform: none;
+}
+
+html[data-ui-style="dyslexia-friendly"] {
+  --bg: #f7ecd9 !important;
+  --bg-elevated: #faf2e2 !important;
+  --card-bg: #fff8ea !important;
+  --card-bg-glass: var(--card-bg);
+  --border: #b08a55 !important;
+  --text: #3a2e1a !important;
+  --text-muted: #6e5a3c !important;
+  --shadow: 0 8px 20px rgba(90, 65, 20, .1);
+  --grid-line: rgba(176, 138, 85, .15);
+  --ui-card-transition: transform .35s ease, box-shadow .35s ease;
+  --ui-card-hover-transform: translateY(-2px);
+}
+
+/* -- Lucía Ferrante: Lüks & Editoryal -- */
+html[data-ui-style="editorial"] {
+  --bg: #fdfdfd !important;
+  --bg-elevated: #f5f5f5 !important;
+  --card-bg: #ffffff !important;
+  --card-bg-glass: var(--card-bg);
+  --border: #000000 !important;
+  --text: #0a0a0a !important;
+  --text-muted: #4a4a4a !important;
+  --shadow: none;
+  --grid-line: rgba(0, 0, 0, .15);
+  --ui-card-transition: opacity .15s ease;
+  --ui-card-hover-transform: none;
+}
+
+/* -- İlk tur öneriler (kendi hazırladığım 21) -- */
+html[data-ui-style="synthwave"] {
+  --bg: #1a0b2e !important;
+  --bg-elevated: #241040 !important;
+  --card-bg: rgba(61, 17, 85, .55) !important;
+  --card-bg-glass: var(--card-bg);
+  --border: rgba(0, 229, 255, .4) !important;
+  --text-muted: rgba(255, 255, 255, .6) !important;
+  --shadow: 0 0 0 1px rgba(255, 46, 159, .3), 0 16px 34px rgba(0, 0, 0, .5);
+  --grid-line: rgba(0, 229, 255, .15);
+  --ui-card-transition: transform .12s ease, box-shadow .15s ease;
+  --ui-card-hover-transform: translateY(-3px);
+}
+
+html[data-ui-style="matrix"] {
+  --bg: #020402 !important;
+  --bg-elevated: #061006 !important;
+  --card-bg: rgba(3, 20, 8, .6) !important;
+  --card-bg-glass: var(--card-bg);
+  --border: rgba(0, 255, 120, .4) !important;
+  --text-muted: rgba(150, 255, 180, .55) !important;
+  --shadow: 0 0 0 1px rgba(0, 255, 120, .2), 0 0 20px -6px rgba(0, 255, 120, .35);
+  --grid-line: rgba(0, 255, 120, .12);
+  --ui-card-transition: transform .12s ease, box-shadow .15s ease;
+  --ui-card-hover-transform: translateY(-3px);
+}
+
+html[data-ui-style="glacier"] {
+  --bg: #eaf6ff !important;
+  --bg-elevated: #f5fbff !important;
+  --card-bg: rgba(255, 255, 255, .75) !important;
+  --card-bg-glass: var(--card-bg);
+  --border: #a9d3ec !important;
+  --text: #16324a !important;
+  --text-muted: #4d7794 !important;
+  --shadow: 0 12px 28px rgba(60, 120, 160, .15);
+  --grid-line: rgba(60, 120, 160, .15);
+  --ui-card-transition: transform .35s ease, box-shadow .35s ease;
+  --ui-card-hover-transform: translateY(-2px);
+}
+
+html[data-ui-style="zen-paper"] {
+  --bg: #efe9dd !important;
+  --bg-elevated: #f6f1e6 !important;
+  --card-bg: #f8f4ea !important;
+  --card-bg-glass: var(--card-bg);
+  --border: #d8cfb8 !important;
+  --text: #3a3226 !important;
+  --text-muted: #7a7060 !important;
+  --shadow: 0 10px 24px rgba(60, 50, 30, .08);
+  --grid-line: rgba(60, 50, 30, .08);
+  --ui-card-transition: transform .35s ease, box-shadow .35s ease;
+  --ui-card-hover-transform: translateY(-2px);
+}
+
+html[data-ui-style="forest"] {
+  --bg: #16241a !important;
+  --bg-elevated: #1e3024 !important;
+  --card-bg: rgba(30, 48, 36, .75) !important;
+  --card-bg-glass: var(--card-bg);
+  --border: #6b8f4e !important;
+  --text-muted: rgba(210, 225, 205, .65) !important;
+  --shadow: 0 12px 28px rgba(0, 0, 0, .4);
+  --grid-line: rgba(107, 143, 78, .15);
+  --ui-card-transition: transform .35s ease, box-shadow .35s ease;
+  --ui-card-hover-transform: translateY(-2px);
+}
+
+html[data-ui-style="desert"] {
+  --bg: #e8cfa0 !important;
+  --bg-elevated: #f0ddb5 !important;
+  --card-bg: rgba(255, 255, 255, .4) !important;
+  --card-bg-glass: var(--card-bg);
+  --border: #b5651d !important;
+  --text: #3a2308 !important;
+  --text-muted: #6b4a1f !important;
+  --shadow: 0 12px 26px rgba(120, 70, 20, .15);
+  --grid-line: rgba(181, 101, 29, .2);
+  --ui-card-transition: transform .35s ease, box-shadow .35s ease;
+  --ui-card-hover-transform: translateY(-2px);
+}
+
+html[data-ui-style="typewriter"] {
+  --bg: #e9decb !important;
+  --bg-elevated: #f0e7d4 !important;
+  --card-bg: #f3ecdd !important;
+  --card-bg-glass: var(--card-bg);
+  --border: #b3a077 !important;
+  --text: #3a2f1c !important;
+  --text-muted: #7a6c4d !important;
+  --shadow: 0 8px 20px rgba(80, 65, 30, .12);
+  --grid-line: rgba(80, 65, 30, .12);
+  --ui-card-transition: transform .35s ease, box-shadow .35s ease;
+  --ui-card-hover-transform: translateY(-2px);
+}
+
+html[data-ui-style="holo"] {
+  --bg: #141018 !important;
+  --bg-elevated: #1e1826 !important;
+  --card-bg: linear-gradient(120deg, rgba(42, 27, 61, .6), rgba(27, 61, 58, .6), rgba(61, 27, 47, .6)) !important;
+  --card-bg-glass: var(--card-bg);
+  --border: rgba(255, 255, 255, .35) !important;
+  --shadow: 0 0 0 1px rgba(255, 255, 255, .15), 0 14px 30px rgba(0, 0, 0, .4);
+  --grid-line: rgba(255, 255, 255, .1);
+  --ui-card-transition: transform .12s ease, box-shadow .15s ease;
+  --ui-card-hover-transform: translateY(-3px);
+}
+
+html[data-ui-style="pastel"] {
+  --bg: linear-gradient(160deg, #f3ecfb, #e4f7ef 50%, #fff1e8) !important;
+  --bg-elevated: #faf7fc !important;
+  --card-bg: rgba(255, 255, 255, .6) !important;
+  --card-bg-glass: var(--card-bg);
+  --border: #c9b8e0 !important;
+  --text: #3a3550 !important;
+  --text-muted: #71698c !important;
+  --shadow: 0 10px 24px rgba(120, 100, 160, .12);
+  --grid-line: rgba(120, 100, 160, .15);
+  --ui-card-transition: transform .35s ease, box-shadow .35s ease;
+  --ui-card-hover-transform: translateY(-2px);
+}
+
+html[data-ui-style="contrast"] {
+  --bg: #000000 !important;
+  --bg-elevated: #000000 !important;
+  --card-bg: #000000 !important;
+  --card-bg-glass: var(--card-bg);
+  --border: #fff200 !important;
+  --text: #ffffff !important;
+  --text-muted: #eeeeee !important;
+  --shadow: 0 0 0 2px #fff200;
+  --grid-line: rgba(255, 242, 0, .3);
+  --ui-card-transition: opacity .15s ease;
+  --ui-card-hover-transform: none;
+}
+
+html[data-ui-style="blueprint"] {
+  --bg: #0a2540 !important;
+  --bg-elevated: #0f3252 !important;
+  --card-bg: rgba(15, 50, 82, .55) !important;
+  --card-bg-glass: var(--card-bg);
+  --border: rgba(150, 200, 255, .4) !important;
+  --shadow: 0 0 0 1px rgba(150, 200, 255, .2), 0 14px 30px rgba(0, 0, 0, .4);
+  --grid-line: rgba(150, 200, 255, .18);
+  --ui-card-transition: transform .15s ease, box-shadow .2s ease;
+  --ui-card-hover-transform: translateY(-2px);
+}
+
+html[data-ui-style="blueprint"] .stat-grid {
+  background-image:
+    linear-gradient(rgba(150, 200, 255, .12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(150, 200, 255, .12) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* ============================================================
+   Açık/Koyu tema karşılıkları: yukarıdaki stillerin çoğu tek bir sabit paleti
+   (ya hep koyu ya hep açık) kullanıyordu, yani Ayarlar → Görünüm'deki gece/gündüz
+   anahtarına dokunmuyordu (kullanıcı geri bildirimi: "gece modlarına entegre
+   etmemişsin"). Burada her birine, KENDİ renk kimliğini koruyarak, diğer temanın
+   karşılığı ekleniyor; _Layout.cshtml sayfa yüklenirken data-theme'i her zaman
+   "light" ya da "dark" olarak SOMUT yazdığı için (bkz. inline script) bu iki
+   öznitelikli seçiciler güvenle eşleşiyor. Neumorphism ve Minimal Veri burada
+   YOK çünkü ikisi zaten --bg'yi zorlamıyor (var(--bg) kullanıyor), o yüzden
+   zaten mevcut açık/koyu temaya otomatik uyuyorlar. */
+
+html[data-ui-style="bento"][data-theme="light"] {
+  --bg: #fdf6ee !important; --bg-elevated: #faecd9 !important; --card-bg: #ffffff !important;
+  --border: #c9701f !important; --text: #3a2308 !important; --text-muted: #7a5a30 !important;
+  --shadow: 0 0 0 1px rgba(201, 112, 31, .3), 0 10px 22px rgba(201, 112, 31, .12);
+  --grid-line: rgba(201, 112, 31, .15);
+}
+
+html[data-ui-style="hud"][data-theme="light"] {
+  --bg: #eafbf8 !important; --bg-elevated: #f2fcfa !important; --card-bg: #ffffff !important;
+  --border: #0a8f7a !important; --text: #08281f !important; --text-muted: #2f6b5c !important;
+  --shadow: 0 0 0 1px rgba(10, 143, 122, .3), 0 8px 18px rgba(10, 143, 122, .12);
+  --grid-line: rgba(10, 143, 122, .12);
+}
+
+html[data-ui-style="aurora"][data-theme="light"] {
+  --bg: #f6f4fe !important; --bg-elevated: #faf9ff !important; --card-bg: rgba(255, 255, 255, .7) !important;
+  --border: #7a6ae0 !important; --text: #2a2350 !important; --text-muted: #5c5480 !important;
+  --shadow: 0 12px 26px rgba(109, 94, 247, .15);
+  --grid-line: rgba(109, 94, 247, .12);
+}
+
+html[data-ui-style="corporate-navy"][data-theme="light"] {
+  --bg: #eef3fb !important; --bg-elevated: #f5f8fd !important; --card-bg: #ffffff !important;
+  --border: #3a5f8a !important; --text: #0f2440 !important; --text-muted: #3a5a80 !important;
+  --shadow: 0 10px 22px rgba(15, 36, 68, .1); --grid-line: rgba(58, 95, 138, .15);
+}
+
+html[data-ui-style="data-center"][data-theme="light"] {
+  --bg: #f1f2f3 !important; --bg-elevated: #f7f8f9 !important; --card-bg: #ffffff !important;
+  --border: #6d7a86 !important; --text: #23282d !important; --text-muted: #565e66 !important;
+  --shadow: 0 8px 18px rgba(0, 0, 0, .08); --grid-line: rgba(0, 0, 0, .1);
+}
+
+html[data-ui-style="high-readability"][data-theme="light"] {
+  --bg: #ffffff !important; --bg-elevated: #ffffff !important; --card-bg: #ffffff !important;
+  --border: #000000 !important; --text: #000000 !important; --text-muted: #1a1a1a !important;
+  --shadow: 0 0 0 2px #000000; --grid-line: rgba(0, 0, 0, .3);
+}
+
+html[data-ui-style="synthwave"][data-theme="light"] {
+  --bg: #fbeff8 !important; --bg-elevated: #fdf6fb !important; --card-bg: #ffffff !important;
+  --border: #b02090 !important; --text: #350a2e !important; --text-muted: #7a3a68 !important;
+  --shadow: 0 0 0 1px rgba(255, 46, 159, .25), 0 10px 22px rgba(255, 46, 159, .12);
+  --grid-line: rgba(0, 229, 255, .18);
+}
+
+html[data-ui-style="matrix"][data-theme="light"] {
+  --bg: #eef8ef !important; --bg-elevated: #f5fbf6 !important; --card-bg: #ffffff !important;
+  --border: #1a8f3a !important; --text: #0a2410 !important; --text-muted: #3a6b40 !important;
+  --shadow: 0 0 0 1px rgba(0, 255, 120, .3), 0 8px 18px rgba(0, 0, 0, .08);
+  --grid-line: rgba(0, 255, 120, .15);
+}
+
+html[data-ui-style="forest"][data-theme="light"] {
+  --bg: #eef5ee !important; --bg-elevated: #f4f9f3 !important; --card-bg: #ffffff !important;
+  --border: #4a7a30 !important; --text: #14240f !important; --text-muted: #3a5530 !important;
+  --shadow: 0 10px 22px rgba(0, 0, 0, .08); --grid-line: rgba(107, 143, 78, .18);
+}
+
+html[data-ui-style="typewriter"][data-theme="dark"] {
+  --bg: #1a1408 !important; --bg-elevated: #241d0c !important; --card-bg: rgba(50, 40, 20, .6) !important;
+  --border: #b09560 !important; --text: #f0e4c8 !important; --text-muted: #c5b088 !important;
+  --shadow: 0 10px 22px rgba(0, 0, 0, .4); --grid-line: rgba(80, 65, 30, .2);
+}
+
+html[data-ui-style="holo"][data-theme="light"] {
+  --bg: #f6f4fa !important; --bg-elevated: #faf9fc !important; --card-bg: rgba(255, 255, 255, .7) !important;
+  --border: #8a7ab0 !important; --text: #2a2438 !important; --text-muted: #5c5470 !important;
+  --shadow: 0 10px 22px rgba(0, 0, 0, .08); --grid-line: rgba(0, 0, 0, .08);
+}
+
+html[data-ui-style="pastel"][data-theme="dark"] {
+  --bg: #1a1622 !important; --bg-elevated: #241f2e !important; --card-bg: rgba(50, 42, 65, .6) !important;
+  --border: #a08ac0 !important; --text: #ece6f5 !important; --text-muted: #b8a8d0 !important;
+  --shadow: 0 10px 22px rgba(0, 0, 0, .4); --grid-line: rgba(120, 100, 160, .2);
+}
+
+html[data-ui-style="contrast"][data-theme="light"] {
+  --bg: #ffffff !important; --bg-elevated: #ffffff !important; --card-bg: #ffffff !important;
+  --border: #b8930a !important; --text: #000000 !important; --text-muted: #1a1a1a !important;
+  --shadow: 0 0 0 2px #b8930a; --grid-line: rgba(184, 147, 10, .3);
+}
+
+html[data-ui-style="blueprint"][data-theme="light"] {
+  --bg: #eef6fc !important; --bg-elevated: #f5faff !important; --card-bg: #ffffff !important;
+  --border: #2a7ab0 !important; --text: #0f2436 !important; --text-muted: #3a6080 !important;
+  --shadow: 0 10px 22px rgba(0, 0, 0, .08); --grid-line: rgba(60, 110, 220, .2);
+}
+
+html[data-ui-style="fintech"][data-theme="dark"] {
+  --bg: #0d1f14 !important; --bg-elevated: #12291b !important; --card-bg: rgba(20, 50, 30, .6) !important;
+  --border: #2a8f5a !important; --text: #d8f5e4 !important; --text-muted: #8fcaa8 !important;
+  --shadow: 0 10px 22px rgba(0, 0, 0, .4); --grid-line: rgba(63, 174, 111, .18);
+}
+
+html[data-ui-style="cloud-white"][data-theme="dark"] {
+  --bg: #0b1220 !important; --bg-elevated: #121b30 !important; --card-bg: rgba(20, 35, 60, .6) !important;
+  --border: #4a7ad0 !important; --text: #e4ecfb !important; --text-muted: #93aed8 !important;
+  --shadow: 0 10px 22px rgba(0, 0, 0, .4); --grid-line: rgba(60, 110, 220, .18);
+}
+
+html[data-ui-style="glacier"][data-theme="dark"] {
+  --bg: #0a1620 !important; --bg-elevated: #0f202e !important; --card-bg: rgba(20, 45, 60, .6) !important;
+  --border: #5aa8d0 !important; --text: #dff2fc !important; --text-muted: #8fc0da !important;
+  --shadow: 0 10px 22px rgba(0, 0, 0, .4); --grid-line: rgba(60, 120, 160, .2);
+}
+
+html[data-ui-style="zen-paper"][data-theme="dark"] {
+  --bg: #1c1810 !important; --bg-elevated: #282218 !important; --card-bg: rgba(50, 42, 28, .6) !important;
+  --border: #8a7a55 !important; --text: #f0e8d4 !important; --text-muted: #b8a888 !important;
+  --shadow: 0 10px 22px rgba(0, 0, 0, .4); --grid-line: rgba(80, 65, 30, .2);
+}
+
+html[data-ui-style="desert"][data-theme="dark"] {
+  --bg: #1f1608 !important; --bg-elevated: #2c1f0c !important; --card-bg: rgba(60, 40, 15, .6) !important;
+  --border: #d0821f !important; --text: #f5e2c0 !important; --text-muted: #d0a868 !important;
+  --shadow: 0 10px 22px rgba(0, 0, 0, .4); --grid-line: rgba(181, 101, 29, .2);
+}
+
+html[data-ui-style="dyslexia-friendly"][data-theme="dark"] {
+  --bg: #1c1608 !important; --bg-elevated: #28200c !important; --card-bg: rgba(50, 40, 18, .6) !important;
+  --border: #c9a05a !important; --text: #f5ecd6 !important; --text-muted: #cbb488 !important;
+  --shadow: 0 10px 22px rgba(0, 0, 0, .4); --grid-line: rgba(176, 138, 85, .2);
+}
+
+html[data-ui-style="editorial"][data-theme="dark"] {
+  --bg: #0a0a0a !important; --bg-elevated: #141414 !important; --card-bg: #000000 !important;
+  --border: #ffffff !important; --text: #ffffff !important; --text-muted: #b0b0b0 !important;
+  --shadow: none; --grid-line: rgba(255, 255, 255, .15);
+}
+
+html[data-ui-style="calm-spectrum"][data-theme="dark"] {
+  --bg: #1a1822 !important; --bg-elevated: #24222e !important; --card-bg: rgba(45, 42, 58, .6) !important;
+  --border: #8a86a0 !important; --text: #e5e3ee !important; --text-muted: #b0acc0 !important;
+  --shadow: 0 10px 22px rgba(0, 0, 0, .4); --grid-line: rgba(255, 255, 255, .08);
+}
+
+/* Arayüz Stili seçim kartları (Ayarlar → Arayüz Stili); .preset-theme-card'ı (renk
+   temaları) aynen kullanır, yalnızca içindeki küçük önizlemeyi (.ui-style-swatch)
+   kendi görsel kimliğine göre boyar. Kartların hepsi bilerek AYNI boyutta (yukarıdaki
+   stiller de gerçek uygulamada boyut değiştirmediği için), fark yalnızca renk/saydamlık/
+   gölgede; gerçek Panel verisiyle ilgisi yok, salt dekoratif bir örnek. */
+.ui-style-swatch {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  width: 100%;
+  height: 54px;
+  padding: 8px;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.ui-style-swatch span {
+  border-radius: 4px;
+  min-height: 0;
+}
+
+.ui-style-swatch--classic {
+  background: #141c28;
+}
+
+.ui-style-swatch--classic span {
+  background: #1c2531;
+  border: 1px solid #2a3648;
+}
+
+.ui-style-swatch--bento {
+  background: color-mix(in srgb, #141c28 92%, #ff9f45 8%);
+}
+
+.ui-style-swatch--bento span {
+  background: color-mix(in srgb, #1c2531 88%, #ff9f45 12%);
+  border: 1px solid color-mix(in srgb, #2a3648 65%, #ff9f45 35%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, .35);
+}
+
+.ui-style-swatch--hud {
+  background-color: #050708;
+  background-image:
+    linear-gradient(rgba(0, 229, 199, .18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 199, .18) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+.ui-style-swatch--hud span {
+  background: rgba(10, 14, 15, .6);
+  border: 1px solid rgba(0, 229, 199, .55);
+}
+
+.ui-style-swatch--minimal {
+  background: #101214;
+}
+
+.ui-style-swatch--minimal span {
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 0;
+}
+
+.ui-style-swatch--aurora {
+  background:
+    radial-gradient(circle at 20% 20%, #6d5ef7, transparent 60%),
+    radial-gradient(circle at 80% 80%, #24d0b0, transparent 60%),
+    #0a0b10;
+}
+
+.ui-style-swatch--aurora span {
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(255, 255, 255, .22);
+}
+
+.ui-style-swatch--neumorphism {
+  background: #e4e7eb;
+}
+
+.ui-style-swatch--neumorphism span {
+  background: #e4e7eb;
+  box-shadow: 3px 3px 6px #c2c6cb, -3px -3px 6px #ffffff;
+}
+
+/* İkinci tur 51 stilin önizleme kartları; gerçek token'larla birebir aynı renkler,
+   sabit değer olarak (tema/hazır tema önizlemesi bu kartların amacı değil). */
+.ui-style-swatch--corporate-navy { background: linear-gradient(160deg, #0f2444, #1c3a63); }
+.ui-style-swatch--corporate-navy span { background: rgba(255,255,255,.08); border: 1px solid #6b93c4; }
+
+.ui-style-swatch--fintech { background: linear-gradient(160deg, #f4fbf7, #dff2e6); }
+.ui-style-swatch--fintech span { background: rgba(255,255,255,.7); border: 1px solid #3fae6f; }
+
+.ui-style-swatch--cloud-white { background: linear-gradient(160deg, #ffffff, #eef3fb); }
+.ui-style-swatch--cloud-white span { background: #ffffff; border: 1px solid #b9cdf0; }
+
+.ui-style-swatch--data-center { background: linear-gradient(160deg, #1e2226, #2c3238); }
+.ui-style-swatch--data-center span { background: rgba(255,255,255,.05); border: 1px solid #6d7a86; }
+
+.ui-style-swatch--calm-spectrum { background: linear-gradient(160deg, #e7e5ec, #dcdae4); }
+.ui-style-swatch--calm-spectrum span { background: rgba(255,255,255,.55); border: 1px solid #b9b6c7; }
+
+.ui-style-swatch--high-readability { background: #000000; }
+.ui-style-swatch--high-readability span { background: #000; border: 2px solid #ffffff; }
+
+.ui-style-swatch--dyslexia-friendly { background: #f7ecd9; }
+.ui-style-swatch--dyslexia-friendly span { background: #fff8ea; border: 1px solid #b08a55; }
+
+.ui-style-swatch--editorial { background: #fdfdfd; }
+.ui-style-swatch--editorial span { background: #000; border: none; }
+.ui-style-swatch--editorial span:nth-child(even) { background: #fff; border: 1.5px solid #000; }
+
+.ui-style-swatch--synthwave { background: linear-gradient(180deg, #1a0b2e, #3d1155 60%, #ff2e9f); }
+.ui-style-swatch--synthwave span { background: rgba(255,255,255,.14); border: 1px solid rgba(0,229,255,.5); }
+
+.ui-style-swatch--matrix { background: #020402; }
+.ui-style-swatch--matrix span { background: rgba(0,255,120,.08); border: 1px solid rgba(0,255,120,.45); }
+
+.ui-style-swatch--glacier { background: linear-gradient(160deg, #eaf6ff, #cfe9fb); }
+.ui-style-swatch--glacier span { background: rgba(255,255,255,.7); border: 1px solid #a9d3ec; }
+
+.ui-style-swatch--zen-paper { background: #efe9dd; }
+.ui-style-swatch--zen-paper span { background: #f8f4ea; border: 1px solid #d8cfb8; }
+
+.ui-style-swatch--forest { background: linear-gradient(160deg, #16241a, #2c3d24); }
+.ui-style-swatch--forest span { background: rgba(255,255,255,.06); border: 1px solid #6b8f4e; }
+
+.ui-style-swatch--desert { background: linear-gradient(160deg, #e8cfa0, #d9a86a); }
+.ui-style-swatch--desert span { background: rgba(255,255,255,.35); border: 1px solid #b5651d; }
+
+.ui-style-swatch--typewriter { background: #e9decb; }
+.ui-style-swatch--typewriter span { background: #f3ecdd; border: 1px solid #b3a077; }
+
+.ui-style-swatch--holo { background: linear-gradient(120deg, #2a1b3d, #1b3d3a, #3d1b2f, #1b2a3d); }
+.ui-style-swatch--holo span { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.4); }
+
+.ui-style-swatch--pastel { background: linear-gradient(135deg, #e6d7f5, #d3f0e6, #ffe4d6); }
+.ui-style-swatch--pastel span { background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.8); }
+
+.ui-style-swatch--contrast { background: #000; }
+.ui-style-swatch--contrast span { background: #000; border: 2px solid #fff200; }
+
+.ui-style-swatch--blueprint { background: #0a2540; background-image: linear-gradient(rgba(120,180,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(120,180,255,.18) 1px, transparent 1px); background-size: 10px 10px; }
+.ui-style-swatch--blueprint span { background: rgba(120,180,255,.1); border: 1px solid rgba(150,200,255,.6); }
 
 @media (max-width: 560px) {
   .app-header {

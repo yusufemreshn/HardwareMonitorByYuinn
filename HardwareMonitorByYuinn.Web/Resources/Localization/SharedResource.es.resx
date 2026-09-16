@@ -414,6 +414,8 @@
   <data name="Ayarlarda ara" xml:space="preserve"><value>Buscar en ajustes</value></data>
   <data name="Özelleştirme" xml:space="preserve"><value>Personalización</value></data>
   <data name="Hazır Temalar" xml:space="preserve"><value>Temas predefinidos</value></data>
+  <data name="Arayüz Stili" xml:space="preserve"><value>Estilo de interfaz</value></data>
+  <data name="Tüm programın (menüler, butonlar, kartlar dâhil) renklerini, saydamlığını ve geçiş animasyonu tarzını seçin. Kart boyutları ve düzeni değişmez; aksan renkleriniz ve açık/koyu temanız korunur." xml:space="preserve"><value>Elija los colores, la transparencia y el estilo de animación de transición para toda la aplicación (incluidos menús, botones y tarjetas). El tamaño y la disposición de las tarjetas no cambian; sus colores de acento y el tema claro/oscuro se conservan.</value></data>
   <data name="Renkler" xml:space="preserve"><value>Colores</value></data>
   <data name="Görünüm" xml:space="preserve"><value>Apariencia</value></data>
   <data name="Birim Tercihi" xml:space="preserve"><value>Preferencia de unidades</value></data>

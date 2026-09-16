@@ -414,6 +414,8 @@
   <data name="Ayarlarda ara" xml:space="preserve"><value>Поиск по настройкам</value></data>
   <data name="Özelleştirme" xml:space="preserve"><value>Персонализация</value></data>
   <data name="Hazır Temalar" xml:space="preserve"><value>Готовые темы</value></data>
+  <data name="Arayüz Stili" xml:space="preserve"><value>Стиль интерфейса</value></data>
+  <data name="Tüm programın (menüler, butonlar, kartlar dâhil) renklerini, saydamlığını ve geçiş animasyonu tarzını seçin. Kart boyutları ve düzeni değişmez; aksan renkleriniz ve açık/koyu temanız korunur." xml:space="preserve"><value>Выберите цвета, прозрачность и стиль анимации переходов для всего приложения (включая меню, кнопки и карточки). Размер и расположение карточек не меняются; ваши акцентные цвета и светлая/тёмная тема сохраняются.</value></data>
   <data name="Renkler" xml:space="preserve"><value>Цвета</value></data>
   <data name="Görünüm" xml:space="preserve"><value>Внешний вид</value></data>
   <data name="Birim Tercihi" xml:space="preserve"><value>Единицы измерения</value></data>

@@ -1009,12 +1009,60 @@
             });
         }
 
-        PRESET_THEMES.forEach(function (preset) {
+        var favoritesApi = window.HwmonFavoriteThemes;
+
+        // Favorilenen temalar listenin başına taşınır; aynı favori durumundakiler arasında
+        // PRESET_THEMES'teki asıl sırayı korur (kararlı sıralama).
+        function sortedPresetThemes() {
+            var favIds = favoritesApi ? favoritesApi.load() : [];
+            return PRESET_THEMES.slice().sort(function (a, b) {
+                var aFav = favIds.indexOf(a.id) !== -1;
+                var bFav = favIds.indexOf(b.id) !== -1;
+                if (aFav === bFav) return 0;
+                return aFav ? -1 : 1;
+            });
+        }
+
+        function resortGrid() {
+            sortedPresetThemes().forEach(function (preset) {
+                var card = grid.querySelector('[data-preset-id="' + preset.id + '"]');
+                if (card) grid.appendChild(card);
+            });
+        }
+
+        sortedPresetThemes().forEach(function (preset) {
             var card = document.createElement("button");
             card.type = "button";
             card.className = "preset-theme-card";
             card.dataset.label = preset.label.toLocaleLowerCase(window.HwmonLocaleTag());
             card.dataset.presetId = preset.id;
+
+            if (favoritesApi) {
+                var favBtn = document.createElement("span");
+                favBtn.className = "preset-theme-fav-btn";
+                favBtn.setAttribute("role", "button");
+                favBtn.setAttribute("tabindex", "0");
+                favBtn.setAttribute("aria-label", t("Favorilere ekle/çıkar"));
+                function refreshFavBtn() {
+                    var fav = favoritesApi.isFavorite(preset.id);
+                    favBtn.textContent = fav ? "★" : "☆";
+                    favBtn.classList.toggle("is-favorite", fav);
+                    card.classList.toggle("is-favorite", fav);
+                }
+                refreshFavBtn();
+                function onToggleFav(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    favoritesApi.toggle(preset.id);
+                    refreshFavBtn();
+                    resortGrid();
+                }
+                favBtn.addEventListener("click", onToggleFav);
+                favBtn.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter" || e.key === " ") onToggleFav(e);
+                });
+                card.appendChild(favBtn);
+            }
 
             var activeBadge = document.createElement("span");
             activeBadge.className = "preset-theme-active-badge";
@@ -1082,6 +1130,139 @@
                 if (emptyNote) emptyNote.style.display = visibleCount === 0 ? "" : "none";
             });
         }
+    })();
+
+    // Arayüz stili (Panel'deki kart düzeni/görünümü), window.HwmonUiStyle (site.js); Hazır
+    // Temalar'la aynı kart-grid deseni ama renk yerine düzen seçiyor, o yüzden aksan renklerine/
+    // arka plana dokunmaz. UI_STYLES sırası, kullanıcının Panel'de göreceği önizleme sırasıyla aynı.
+    var UI_STYLES = [
+        { id: "classic", name: t("Klasik"), tag: t("Mevcut görünümünüz") },
+        { id: "bento", name: t("Bento Grid"), tag: t("Apple / Linear esintili") },
+        { id: "hud", name: t("Kokpit HUD"), tag: t("Oyuncu / sci-fi gösterge") },
+        { id: "minimal", name: t("Minimal Veri"), tag: t("Swiss / Vercel sadeliği") },
+        { id: "aurora", name: t("Aurora Cam"), tag: t("Gelişmiş glassmorphism") },
+        { id: "neumorphism", name: t("Yumuşak Kabartma"), tag: t("Neumorphism") },
+
+        // İkinci turdan (tasarım ekibinin 51 önerisi) en beğenilen 19'u; geri kalanı
+        // seçenek sayısını makul tutmak için kaldırıldı (bkz. site.css/site.js aynı not).
+        { id: "corporate-navy", name: t("Kurumsal Lacivert"), tag: t("Kurumsal/SaaS, güven veren") },
+        { id: "fintech", name: t("Fintech Yeşili"), tag: t("Nane yeşili, açık tema") },
+        { id: "cloud-white", name: t("Bulut Beyazı"), tag: t("Temiz SaaS beyazı") },
+        { id: "data-center", name: t("Veri Merkezi"), tag: t("Soğuk çelik gri") },
+        { id: "calm-spectrum", name: t("Sakin Spektrum"), tag: t("Çok düşük kontrast") },
+        { id: "high-readability", name: t("Yüksek Okunabilirlik"), tag: t("Saf siyah/beyaz") },
+        { id: "dyslexia-friendly", name: t("Disleksi Dostu"), tag: t("Sıcak krem zemin") },
+        { id: "editorial", name: t("Dergi Sayfası"), tag: t("Saf siyah/beyaz, editoryal") },
+        { id: "synthwave", name: t("Synthwave"), tag: t("80'lerin neon ufuk çizgisi") },
+        { id: "matrix", name: t("Dijital Yağmur"), tag: t("Siyah zemin, yeşil kod dokusu") },
+        { id: "glacier", name: t("Buzul"), tag: t("Buz gibi berrak, açık tema") },
+        { id: "zen-paper", name: t("Zen Kağıdı"), tag: t("Krem, kağıt dokulu") },
+        { id: "forest", name: t("Orman"), tag: t("Derin yeşil, ahşap tonlar") },
+        { id: "desert", name: t("Çöl Gün Batımı"), tag: t("Kum beji + alev turuncusu") },
+        { id: "typewriter", name: t("Daktilo"), tag: t("Sepya, eski kağıt") },
+        { id: "holo", name: t("Holografik"), tag: t("Değişen gökkuşağı parıltısı") },
+        { id: "pastel", name: t("Pastel Bulut"), tag: t("Lavanta/nane/şeftali") },
+        { id: "contrast", name: t("Yüksek Kontrast"), tag: t("Siyah/beyaz/sarı") },
+        { id: "blueprint", name: t("Mavi Baskı"), tag: t("Mühendislik çizimi, camgöbeği ızgara") }
+    ];
+
+    (function initUiStyleForm() {
+        var api = window.HwmonUiStyle;
+        var grid = document.getElementById("ui-style-grid");
+        if (!api || !grid) return;
+
+        function markActive() {
+            var current = api.load();
+            grid.querySelectorAll(".preset-theme-card").forEach(function (card) {
+                card.classList.toggle("is-active", card.dataset.uiStyleId === current);
+            });
+        }
+
+        var uiFavoritesApi = window.HwmonFavoriteUiStyles;
+
+        function sortedUiStyles() {
+            var favIds = uiFavoritesApi ? uiFavoritesApi.load() : [];
+            return UI_STYLES.slice().sort(function (a, b) {
+                var aFav = favIds.indexOf(a.id) !== -1;
+                var bFav = favIds.indexOf(b.id) !== -1;
+                if (aFav === bFav) return 0;
+                return aFav ? -1 : 1;
+            });
+        }
+
+        function resortUiStyleGrid() {
+            sortedUiStyles().forEach(function (style) {
+                var card = grid.querySelector('[data-ui-style-id="' + style.id + '"]');
+                if (card) grid.appendChild(card);
+            });
+        }
+
+        sortedUiStyles().forEach(function (style) {
+            var card = document.createElement("button");
+            card.type = "button";
+            card.className = "preset-theme-card";
+            card.dataset.uiStyleId = style.id;
+
+            if (uiFavoritesApi) {
+                var favBtn = document.createElement("span");
+                favBtn.className = "preset-theme-fav-btn";
+                favBtn.setAttribute("role", "button");
+                favBtn.setAttribute("tabindex", "0");
+                favBtn.setAttribute("aria-label", t("Favorilere ekle/çıkar"));
+                function refreshFavBtn() {
+                    var fav = uiFavoritesApi.isFavorite(style.id);
+                    favBtn.textContent = fav ? "★" : "☆";
+                    favBtn.classList.toggle("is-favorite", fav);
+                    card.classList.toggle("is-favorite", fav);
+                }
+                refreshFavBtn();
+                function onToggleFav(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    uiFavoritesApi.toggle(style.id);
+                    refreshFavBtn();
+                    resortUiStyleGrid();
+                }
+                favBtn.addEventListener("click", onToggleFav);
+                favBtn.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter" || e.key === " ") onToggleFav(e);
+                });
+                card.appendChild(favBtn);
+            }
+
+            var activeBadge = document.createElement("span");
+            activeBadge.className = "preset-theme-active-badge";
+            activeBadge.textContent = "✓ " + t("Kullanılıyor");
+            card.appendChild(activeBadge);
+
+            var swatch = document.createElement("span");
+            swatch.className = "ui-style-swatch ui-style-swatch--" + style.id;
+            for (var i = 0; i < 5; i++) swatch.appendChild(document.createElement("span"));
+            card.appendChild(swatch);
+
+            var label = document.createElement("span");
+            label.className = "preset-theme-label";
+            label.textContent = style.name;
+            card.appendChild(label);
+
+            var tag = document.createElement("span");
+            tag.className = "stat-sub";
+            tag.style.fontSize = ".76rem";
+            tag.style.marginTop = "-4px";
+            tag.textContent = style.tag;
+            card.appendChild(tag);
+
+            card.addEventListener("click", function () {
+                api.save(style.id);
+                api.apply(style.id);
+                markActive();
+                flashSavedNote("ui-style-saved-note");
+            });
+
+            grid.appendChild(card);
+        });
+
+        markActive();
     })();
 
     // Kart sıralaması, window.HwmonCardOrder (site.js) İşlemci/Ekran Kartı kartlarındaki değerlerin

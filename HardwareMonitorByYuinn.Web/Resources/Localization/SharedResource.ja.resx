@@ -414,6 +414,8 @@
   <data name="Ayarlarda ara" xml:space="preserve"><value>設定を検索</value></data>
   <data name="Özelleştirme" xml:space="preserve"><value>カスタマイズ</value></data>
   <data name="Hazır Temalar" xml:space="preserve"><value>プリセットテーマ</value></data>
+  <data name="Arayüz Stili" xml:space="preserve"><value>UIスタイル</value></data>
+  <data name="Tüm programın (menüler, butonlar, kartlar dâhil) renklerini, saydamlığını ve geçiş animasyonu tarzını seçin. Kart boyutları ve düzeni değişmez; aksan renkleriniz ve açık/koyu temanız korunur." xml:space="preserve"><value>アプリ全体(メニュー、ボタン、カードを含む)の色、透明度、トランジションアニメーションのスタイルを選択します。カードのサイズやレイアウトは変わりません。アクセントカラーとライト/ダークテーマはそのまま維持されます。</value></data>
   <data name="Renkler" xml:space="preserve"><value>色</value></data>
   <data name="Görünüm" xml:space="preserve"><value>外観</value></data>
   <data name="Birim Tercihi" xml:space="preserve"><value>単位設定</value></data>
