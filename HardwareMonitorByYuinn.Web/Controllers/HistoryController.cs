@@ -25,10 +25,19 @@ public sealed class HistoryController(IHistoryStore historyStore, SystemEventRea
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
         DateTime nowLocal = DateTime.Now;
-        HistoryStoreStatus status = await historyStore.GetStatusAsync(cancellationToken);
-        HistoryStoreStatus loginAttemptsStatus = await historyStore.GetLoginAttemptsSummaryAsync(cancellationToken);
-        HistoryStoreStatus gameSessionsStatus = await historyStore.GetGameSessionsSummaryAsync(cancellationToken);
-        HistoryStoreStatus processSamplesStatus = await historyStore.GetProcessSamplesSummaryAsync(cancellationToken);
+
+        // Dört özet de birbirinden bağımsız (ayrı .db dosyaları), art arda await etmek yerine
+        // paralel başlatılır; sayfa açılış süresi dördünün TOPLAMI değil, en yavaşı kadar sürer.
+        Task<HistoryStoreStatus> statusTask = historyStore.GetStatusAsync(cancellationToken);
+        Task<HistoryStoreStatus> loginAttemptsStatusTask = historyStore.GetLoginAttemptsSummaryAsync(cancellationToken);
+        Task<HistoryStoreStatus> gameSessionsStatusTask = historyStore.GetGameSessionsSummaryAsync(cancellationToken);
+        Task<HistoryStoreStatus> processSamplesStatusTask = historyStore.GetProcessSamplesSummaryAsync(cancellationToken);
+        await Task.WhenAll(statusTask, loginAttemptsStatusTask, gameSessionsStatusTask, processSamplesStatusTask);
+
+        HistoryStoreStatus status = statusTask.Result;
+        HistoryStoreStatus loginAttemptsStatus = loginAttemptsStatusTask.Result;
+        HistoryStoreStatus gameSessionsStatus = gameSessionsStatusTask.Result;
+        HistoryStoreStatus processSamplesStatus = processSamplesStatusTask.Result;
 
         // "Kayıtları Görüntüle" tarih kutuları en son kaydedilen dakikadan geriye 1 günlük bir
         // aralıkla dolu gelir; sayfa açılır açılmaz bir şey görünsün diye. Henüz hiç kayıt yoksa

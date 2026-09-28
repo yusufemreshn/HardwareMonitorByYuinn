@@ -68,6 +68,37 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
     private DateTime _lastPruneUtc = DateTime.MinValue;
     private bool _disposed;
 
+    // "Geçmiş" sayfası her açıldığında (bkz. HistoryController.Index) 4 ayrı .db dosyasında
+    // COUNT(*)+MIN+MAX çalıştırıyordu; process-samples.db 30 günlük saklama içinde milyonlarca
+    // satıra ulaşabildiğinden (her dakika, o an çalışan HER process için bir satır) bu COUNT(*)
+    // tam bir indeks taraması gerektiriyor ve sekmeyi belirgin şekilde yavaşlatıyordu (kullanıcı
+    // tarafından "sekmeler yavaş açılıyor" diye bulundu, canlı ölçümde process-samples.db 86 MB
+    // çıktı). Bu panel "şu an kaç kayıt var" gibi anlık olması gerekmeyen bir bilgi gösterdiği
+    // için sonucu StatusCacheDuration kadar önbelleğe almak yeterli; ardışık sekme tıklamalarında
+    // pahalı sorgu tekrar çalışmaz. Budama/manuel silme sonrası ilgili önbellek hemen geçersiz
+    // kılınır (bkz. InvalidateStatusCache çağrıları), aksi hâlde kullanıcı sildiği kayıtların hâlâ
+    // orada görünmesi gibi kafa karıştırıcı bir gecikme yaşardı.
+    //
+    // Süre 5 dakika: HistoryStatusWarmupService (Web/Services) uygulama açılır açılmaz (tepside
+    // sessiz/otomatik başlatma dahil, pencere hiç görünmese bile) bu 4 özeti bir kere hesaplayıp
+    // önbelleğe koyuyor, sonra da aynı sıklıkta tazeliyor; bu yüzden kullanıcı Geçmiş sekmesine saatler
+    // sonra bile tıklasa neredeyse her zaman taze bir önbellek bulur, COUNT(*)'ı O AN beklemez. Buradaki
+    // süre yalnızca ısıtıcı servis herhangi bir sebeple gecikirse/durursa devreye giren bir güvenlik
+    // ağı (kendi kendine iyileşme): ısıtıcının tazeleme aralığıyla (RefreshInterval) bilerek aynı
+    // tutuldu, farklı olsalar ikisi birbirini anlamsızca ezip gereksiz tekrar sorguya yol açabilirdi.
+    private static readonly TimeSpan StatusCacheDuration = TimeSpan.FromMinutes(5);
+    private readonly object _statusCacheLock = new();
+    private readonly StatusCache _samplesStatusCache = new();
+    private readonly StatusCache _loginAttemptsStatusCache = new();
+    private readonly StatusCache _gameSessionsStatusCache = new();
+    private readonly StatusCache _processSamplesStatusCache = new();
+
+    private sealed class StatusCache
+    {
+        public HistoryStoreStatus? Value;
+        public DateTime CachedAtUtc;
+    }
+
     public SqliteHistoryStore(ILogger<SqliteHistoryStore> logger) : this(logger, DefaultDatabasePath())
     {
     }
@@ -485,7 +516,10 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
         command.Parameters.AddWithValue("@cutoff", cutoffText);
         int deleted = command.ExecuteNonQuery();
         if (deleted > 0)
+        {
             _logger.LogInformation("Kalıcı geçmişten {Count} eski satır silindi ({RetentionDays} günden eski)", deleted, RetentionPeriod.TotalDays);
+            InvalidateStatusCache(_samplesStatusCache);
+        }
     }
 
     /// <summary>process_samples artık ayrı bir dosyada (process-samples.db) olduğu için budaması da
@@ -502,7 +536,8 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
             using SqliteCommand command = connection.CreateCommand();
             command.CommandText = "DELETE FROM process_samples WHERE timestamp_utc < @cutoff;";
             command.Parameters.AddWithValue("@cutoff", cutoffText);
-            command.ExecuteNonQuery();
+            if (command.ExecuteNonQuery() > 0)
+                InvalidateStatusCache(_processSamplesStatusCache);
         }
         catch (Exception ex)
         {
@@ -524,7 +559,8 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
             using SqliteCommand command = connection.CreateCommand();
             command.CommandText = "DELETE FROM game_sessions WHERE start_utc < @cutoff;";
             command.Parameters.AddWithValue("@cutoff", cutoffText);
-            command.ExecuteNonQuery();
+            if (command.ExecuteNonQuery() > 0)
+                InvalidateStatusCache(_gameSessionsStatusCache);
         }
         catch (Exception ex)
         {
@@ -546,7 +582,8 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
             using SqliteCommand command = connection.CreateCommand();
             command.CommandText = "DELETE FROM login_attempts WHERE timestamp_utc < @cutoff;";
             command.Parameters.AddWithValue("@cutoff", cutoffText);
-            command.ExecuteNonQuery();
+            if (command.ExecuteNonQuery() > 0)
+                InvalidateStatusCache(_loginAttemptsStatusCache);
         }
         catch (Exception ex)
         {
@@ -840,7 +877,10 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
         return results;
     }
 
-    public async Task<HistoryStoreStatus> GetStatusAsync(CancellationToken cancellationToken = default)
+    public Task<HistoryStoreStatus> GetStatusAsync(CancellationToken cancellationToken = default) =>
+        GetCachedStatusAsync(_samplesStatusCache, ComputeStatusAsync, cancellationToken);
+
+    private async Task<HistoryStoreStatus> ComputeStatusAsync(CancellationToken cancellationToken)
     {
         await using SqliteConnection connection = new(_connectionString);
         await connection.OpenAsync(cancellationToken);
@@ -868,7 +908,10 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
         };
     }
 
-    public async Task<HistoryStoreStatus> GetLoginAttemptsSummaryAsync(CancellationToken cancellationToken = default)
+    public Task<HistoryStoreStatus> GetLoginAttemptsSummaryAsync(CancellationToken cancellationToken = default) =>
+        GetCachedStatusAsync(_loginAttemptsStatusCache, ComputeLoginAttemptsSummaryAsync, cancellationToken);
+
+    private async Task<HistoryStoreStatus> ComputeLoginAttemptsSummaryAsync(CancellationToken cancellationToken)
     {
         await using SqliteConnection connection = new(_loginAttemptsConnectionString);
         await connection.OpenAsync(cancellationToken);
@@ -896,7 +939,10 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
         };
     }
 
-    public async Task<HistoryStoreStatus> GetGameSessionsSummaryAsync(CancellationToken cancellationToken = default)
+    public Task<HistoryStoreStatus> GetGameSessionsSummaryAsync(CancellationToken cancellationToken = default) =>
+        GetCachedStatusAsync(_gameSessionsStatusCache, ComputeGameSessionsSummaryAsync, cancellationToken);
+
+    private async Task<HistoryStoreStatus> ComputeGameSessionsSummaryAsync(CancellationToken cancellationToken)
     {
         await using SqliteConnection connection = new(_gameSessionsConnectionString);
         await connection.OpenAsync(cancellationToken);
@@ -924,7 +970,10 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
         };
     }
 
-    public async Task<HistoryStoreStatus> GetProcessSamplesSummaryAsync(CancellationToken cancellationToken = default)
+    public Task<HistoryStoreStatus> GetProcessSamplesSummaryAsync(CancellationToken cancellationToken = default) =>
+        GetCachedStatusAsync(_processSamplesStatusCache, ComputeProcessSamplesSummaryAsync, cancellationToken);
+
+    private async Task<HistoryStoreStatus> ComputeProcessSamplesSummaryAsync(CancellationToken cancellationToken)
     {
         await using SqliteConnection connection = new(_processSamplesConnectionString);
         await connection.OpenAsync(cancellationToken);
@@ -950,6 +999,39 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
             NewestSampleUtc = newest,
             DatabaseSizeBytes = DatabaseSizeOnDisk(connection)
         };
+    }
+
+    /// <summary>Bkz. sınıf başındaki StatusCache alanları notu: `cache`'de StatusCacheDuration
+    /// içinde hesaplanmış bir sonuç varsa hiç sorgu atmadan onu döner; yoksa/eskiyse `compute`'u
+    /// çalıştırıp sonucu önbelleğe alır.</summary>
+    private async Task<HistoryStoreStatus> GetCachedStatusAsync(
+        StatusCache cache,
+        Func<CancellationToken, Task<HistoryStoreStatus>> compute,
+        CancellationToken cancellationToken)
+    {
+        lock (_statusCacheLock)
+        {
+            if (cache.Value is { } cached && DateTime.UtcNow - cache.CachedAtUtc < StatusCacheDuration)
+                return cached;
+        }
+
+        HistoryStoreStatus fresh = await compute(cancellationToken);
+
+        lock (_statusCacheLock)
+        {
+            cache.Value = fresh;
+            cache.CachedAtUtc = DateTime.UtcNow;
+        }
+
+        return fresh;
+    }
+
+    private void InvalidateStatusCache(StatusCache cache)
+    {
+        lock (_statusCacheLock)
+        {
+            cache.Value = null;
+        }
     }
 
     /// <summary>
@@ -999,17 +1081,33 @@ public sealed class SqliteHistoryStore : IHistoryStore, IDisposable
         return deleted;
     }
 
-    public Task<int> DeleteOldestSamplesAsync(int days, CancellationToken cancellationToken = default) =>
-        DeleteOldestAsync(_connectionString, "samples", "timestamp_utc", days, cancellationToken);
+    public async Task<int> DeleteOldestSamplesAsync(int days, CancellationToken cancellationToken = default)
+    {
+        int deleted = await DeleteOldestAsync(_connectionString, "samples", "timestamp_utc", days, cancellationToken);
+        if (deleted > 0) InvalidateStatusCache(_samplesStatusCache);
+        return deleted;
+    }
 
-    public Task<int> DeleteOldestGameSessionsAsync(int days, CancellationToken cancellationToken = default) =>
-        DeleteOldestAsync(_gameSessionsConnectionString, "game_sessions", "start_utc", days, cancellationToken);
+    public async Task<int> DeleteOldestGameSessionsAsync(int days, CancellationToken cancellationToken = default)
+    {
+        int deleted = await DeleteOldestAsync(_gameSessionsConnectionString, "game_sessions", "start_utc", days, cancellationToken);
+        if (deleted > 0) InvalidateStatusCache(_gameSessionsStatusCache);
+        return deleted;
+    }
 
-    public Task<int> DeleteOldestProcessSamplesAsync(int days, CancellationToken cancellationToken = default) =>
-        DeleteOldestAsync(_processSamplesConnectionString, "process_samples", "timestamp_utc", days, cancellationToken);
+    public async Task<int> DeleteOldestProcessSamplesAsync(int days, CancellationToken cancellationToken = default)
+    {
+        int deleted = await DeleteOldestAsync(_processSamplesConnectionString, "process_samples", "timestamp_utc", days, cancellationToken);
+        if (deleted > 0) InvalidateStatusCache(_processSamplesStatusCache);
+        return deleted;
+    }
 
-    public Task<int> DeleteOldestLoginAttemptsAsync(int days, CancellationToken cancellationToken = default) =>
-        DeleteOldestAsync(_loginAttemptsConnectionString, "login_attempts", "timestamp_utc", days, cancellationToken);
+    public async Task<int> DeleteOldestLoginAttemptsAsync(int days, CancellationToken cancellationToken = default)
+    {
+        int deleted = await DeleteOldestAsync(_loginAttemptsConnectionString, "login_attempts", "timestamp_utc", days, cancellationToken);
+        if (deleted > 0) InvalidateStatusCache(_loginAttemptsStatusCache);
+        return deleted;
+    }
 
     // WAL modunda asıl veri, otomatik checkpoint tetiklenene kadar ana .db dosyasına değil "-wal"
     // dosyasına yazılır (ana dosya yalnızca birkaç KB'lık şema sayfası olarak kalabilir). Yalnızca

@@ -116,6 +116,7 @@ builder.Services.AddControllersWithViews()
 builder.Services.AddSignalR();
 builder.Services.AddBusinessServices();
 builder.Services.AddHostedService<BroadcastBackgroundService>();
+builder.Services.AddHostedService<HistoryStatusWarmupService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
