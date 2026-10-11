@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using HardwareMonitorByYuinn.Business.TimeSeries;
 using HardwareMonitorByYuinn.DataAccess.History;
 
 namespace HardwareMonitorByYuinn.Web.Desktop;
@@ -22,7 +23,7 @@ internal static class DesktopShellRunner
     /// kadar bloklar. Splash göstermez; yalnızca sistem tepsisinde sessiz başlarken kullanılır,
     /// o durumda zaten hiçbir pencere görünmeyecek.
     /// </summary>
-    internal static void Run(string startUrl, CancellationToken hostStopping, bool startMinimized = false)
+    internal static void Run(string startUrl, CancellationToken hostStopping, TimeSeriesStore timeSeriesStore, bool startMinimized = false)
     {
         var uiThread = new Thread(() =>
         {
@@ -30,7 +31,7 @@ internal static class DesktopShellRunner
             // Sessiz (tepsi) başlangıçta hiçbir pencere gösterilmediği ilkeye sadık kalınıp onarım da
             // sessiz yapılır; sorun log dosyasına yazılır, kullanıcıya ekstra bir pencere çıkmaz.
             RunRepairIfNeeded(showUi: false);
-            CreateAndRunShellForm(startUrl, hostStopping, startMinimized, splash: null);
+            CreateAndRunShellForm(startUrl, hostStopping, timeSeriesStore, startMinimized, splash: null);
         });
         uiThread.SetApartmentState(ApartmentState.STA);
         uiThread.Start();
@@ -78,7 +79,7 @@ internal static class DesktopShellRunner
         }
 
         splash.SetProgress(20);
-        CreateAndRunShellForm(handle.StartUrl!, handle.HostStopping, startMinimized: false, splash);
+        CreateAndRunShellForm(handle.StartUrl!, handle.HostStopping, handle.TimeSeriesStore!, startMinimized: false, splash);
     }
 
     private static void InitializeWinForms()
@@ -133,7 +134,7 @@ internal static class DesktopShellRunner
         return form;
     }
 
-    private static void CreateAndRunShellForm(string startUrl, CancellationToken hostStopping, bool startMinimized, SplashForm? splash)
+    private static void CreateAndRunShellForm(string startUrl, CancellationToken hostStopping, TimeSeriesStore timeSeriesStore, bool startMinimized, SplashForm? splash)
     {
         if (!WebView2RuntimeInstaller.IsInstalled() && !WebView2RuntimeInstaller.TryInstallSilently())
         {
@@ -146,7 +147,7 @@ internal static class DesktopShellRunner
             return;
         }
 
-        var form = new ShellForm(startUrl, startMinimized, splash);
+        var form = new ShellForm(startUrl, startMinimized, splash, timeSeriesStore);
 
         // Host taraflı bir durdurma (ör. RemoteAccessController.Restart'ın çağırdığı
         // StopApplication()) pencereyi otomatik kapatmaz; bu callback olmadan Kestrel arka planda
@@ -185,16 +186,18 @@ internal static class DesktopShellRunner
         internal volatile bool IsReady;
         internal string? StartUrl;
         internal CancellationToken HostStopping;
+        internal TimeSeriesStore? TimeSeriesStore;
 
         /// <summary>
         /// Kestrel/host hazır olduğunda çağrılır; bekleyen STA iş parçacığına devam sinyali verir ve
         /// pencere kapanana kadar (eskiden <c>uiThread.Join()</c> ile yapılan bloklamayla aynı
         /// şekilde) bloklar.
         /// </summary>
-        internal void Continue(string startUrl, CancellationToken hostStopping)
+        internal void Continue(string startUrl, CancellationToken hostStopping, TimeSeriesStore timeSeriesStore)
         {
             StartUrl = startUrl;
             HostStopping = hostStopping;
+            TimeSeriesStore = timeSeriesStore;
             IsReady = true;
             UiThread!.Join();
         }

@@ -2782,6 +2782,449 @@
         });
     })();
 
+    // Oyun içi izleme paneli (overlay), HKCU'da tutulur (bkz. Desktop/Overlay/OverlaySettingsStore.cs).
+    // WinForms tarafındaki OverlayForm aynı anahtarı kendi 1 sn'lik zamanlayıcısında okuduğundan,
+    // burada kaydedilen değişiklikler uygulamayı yeniden başlatmadan ~1 sn içinde overlay'e yansır.
+    (function initOverlayForm() {
+        var enabledCheckbox = document.getElementById("overlay-enabled");
+        var onlyDuringGameCheckbox = document.getElementById("overlay-only-during-game");
+        var cornerSelect = document.getElementById("overlay-corner");
+        var fontSizeSelect = document.getElementById("overlay-font-size");
+        var backgroundOpacitySlider = document.getElementById("overlay-background-opacity");
+        var backgroundColorInput = document.getElementById("overlay-background-color");
+        var labelColorInput = document.getElementById("overlay-label-color");
+        var valueColorInput = document.getElementById("overlay-value-color");
+        var errorBox = document.getElementById("overlay-error");
+        var saveButton = document.getElementById("overlay-save");
+        var tokenInput = document.querySelector("#overlay-form input[name='__RequestVerificationToken']");
+        var previewBox = document.getElementById("overlay-preview");
+        var previewStageEl = document.getElementById("overlay-preview-stage");
+        var layoutRowsEl = document.getElementById("overlay-layout-rows");
+        var poolEl = document.getElementById("overlay-layout-pool");
+        if (!enabledCheckbox || !saveButton || !tokenInput || !layoutRowsEl || !poolEl) return;
+
+        // "Serbest" (Custom) köşe modunda kutunun sol-üst köşesinin önizleme sahnesine göre yüzdesel
+        // konumu (0-100); sunucuya/geri yüklemeye bu yüzde üzerinden gidilir, piksel değil — böylece
+        // farklı ekran çözünürlüklerinde de orantılı kalır (bkz. OverlayForm.CustomLocation).
+        var customOffsetX = 0;
+        var customOffsetY = 0;
+        var previewDragState = null;
+
+        // key -> Web/Desktop/Overlay/OverlaySettings.cs'teki OverlayMetricKey üyesinin tam adı ve
+        // OverlayForm.GetLabel/GetWorstCaseValue ile eşleşen etiket/örnek değer (bkz. o dosya).
+        var METRIC_LABELS = {
+            CpuUsage: "CPU", CpuTemp: "CPU °C", GpuUsage: "GPU", GpuTemp: "GPU °C", Ram: "RAM", Fps: "FPS",
+            CpuClock: "CPU MHz", CpuPower: "CPU W", GpuClock: "GPU MHz", GpuHotSpot: "GPU Hot Spot",
+            GpuPower: "GPU W", GpuVram: "VRAM", RamUsedGb: "RAM GB", FpsLow1: "%1 Low", FpsLow01: "%0.1 Low",
+            FrameTime: "Kare Süresi", NetDown: "İndirme", NetUp: "Yükleme"
+        };
+        var PREVIEW_VALUES = {
+            CpuUsage: "42%", CpuTemp: "61°C", GpuUsage: "77%", GpuTemp: "68°C", Ram: "54%", Fps: "144",
+            CpuClock: "4200 MHz", CpuPower: "65 W", GpuClock: "2450 MHz", GpuHotSpot: "74°C", GpuPower: "210 W",
+            GpuVram: "6.2/8.0 GB", RamUsedGb: "12.1/32.0 GB", FpsLow1: "118", FpsLow01: "96",
+            FrameTime: "6.9 ms", NetDown: "85 Mbps", NetUp: "12 Mbps"
+        };
+        var ALL_KEYS = Object.keys(METRIC_LABELS);
+        var FONT_SIZE_PX = { Small: "12px", Medium: "14px", Large: "17px" };
+
+        // Sürükleme sırasında "şu an hangi chip sürükleniyor" bilgisini dataTransfer yerine burada
+        // tutmak (ayrıca dataTransfer.setData de yapılıyor, standartlara uygunluk için) dragover
+        // olaylarında senkron okuma gerektirmeyen daha basit/güvenilir bir model sağlıyor.
+        var draggedChip = null;
+
+        function hexToRgb(hex) {
+            var m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex || "");
+            if (!m) return { r: 16, g: 18, b: 26 };
+            return { r: parseInt(m[1], 16), g: parseInt(m[2], 16), b: parseInt(m[3], 16) };
+        }
+
+        function createChip(key) {
+            var chip = document.createElement("span");
+            chip.className = "overlay-chip";
+            chip.draggable = true;
+            chip.dataset.key = key;
+
+            var label = document.createElement("span");
+            label.textContent = METRIC_LABELS[key] || key;
+            chip.appendChild(label);
+
+            var moveBtn = document.createElement("button");
+            moveBtn.type = "button";
+            moveBtn.title = t("Kendi satırına taşı");
+            moveBtn.textContent = "⤵";
+            moveBtn.addEventListener("click", function () {
+                var row = createRow();
+                layoutRowsEl.appendChild(row);
+                row.appendChild(chip);
+                afterLayoutDomChanged();
+            });
+            chip.appendChild(moveBtn);
+
+            var removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.title = t("Kaldır");
+            removeBtn.textContent = "×";
+            removeBtn.addEventListener("click", function () {
+                poolEl.appendChild(chip);
+                afterLayoutDomChanged();
+            });
+            chip.appendChild(removeBtn);
+
+            chip.addEventListener("dragstart", function (e) {
+                draggedChip = chip;
+                chip.classList.add("overlay-chip-dragging");
+                e.dataTransfer.effectAllowed = "move";
+                e.dataTransfer.setData("text/plain", key);
+            });
+            chip.addEventListener("dragend", function () {
+                chip.classList.remove("overlay-chip-dragging");
+                draggedChip = null;
+            });
+
+            return chip;
+        }
+
+        // Bırakılan noktanın (clientX) satırdaki hangi chip'in SOLUNA denk geldiğini bulur; hiçbirine
+        // denk gelmiyorsa (en sağa bırakıldıysa) null döner, bu da "sona ekle" anlamına gelir.
+        function chipInsertionTarget(row, clientX) {
+            var chips = Array.prototype.filter.call(row.children, function (el) { return el !== draggedChip; });
+            for (var i = 0; i < chips.length; i++) {
+                var rect = chips[i].getBoundingClientRect();
+                if (clientX < rect.left + rect.width / 2) return chips[i];
+            }
+            return null;
+        }
+
+        function createRow() {
+            var row = document.createElement("div");
+            row.className = "overlay-layout-row";
+            row.addEventListener("dragover", function (e) {
+                if (!draggedChip) return;
+                e.preventDefault();
+                row.classList.add("overlay-layout-drag-over");
+            });
+            row.addEventListener("dragleave", function () {
+                row.classList.remove("overlay-layout-drag-over");
+            });
+            row.addEventListener("drop", function (e) {
+                e.preventDefault();
+                e.stopPropagation(); // dış kapsayıcının (layoutRowsEl) "yeni satır oluştur" drop'unu tetiklemesin
+                row.classList.remove("overlay-layout-drag-over");
+                if (!draggedChip) return;
+                row.insertBefore(draggedChip, chipInsertionTarget(row, e.clientX));
+                afterLayoutDomChanged();
+            });
+            return row;
+        }
+
+        function cleanupEmptyRows() {
+            Array.prototype.slice.call(layoutRowsEl.querySelectorAll(".overlay-layout-row")).forEach(function (row) {
+                if (row.children.length === 0) row.remove();
+            });
+        }
+
+        function afterLayoutDomChanged() {
+            cleanupEmptyRows();
+            renderPreview();
+        }
+
+        layoutRowsEl.addEventListener("dragover", function (e) {
+            if (!draggedChip) return;
+            e.preventDefault();
+            layoutRowsEl.classList.add("overlay-layout-drag-over");
+        });
+        layoutRowsEl.addEventListener("dragleave", function (e) {
+            if (e.target === layoutRowsEl) layoutRowsEl.classList.remove("overlay-layout-drag-over");
+        });
+        layoutRowsEl.addEventListener("drop", function (e) {
+            e.preventDefault();
+            layoutRowsEl.classList.remove("overlay-layout-drag-over");
+            if (!draggedChip) return;
+            var row = createRow();
+            layoutRowsEl.appendChild(row);
+            row.appendChild(draggedChip);
+            afterLayoutDomChanged();
+        });
+
+        poolEl.addEventListener("dragover", function (e) {
+            if (!draggedChip) return;
+            e.preventDefault();
+            poolEl.classList.add("overlay-layout-drag-over");
+        });
+        poolEl.addEventListener("dragleave", function () {
+            poolEl.classList.remove("overlay-layout-drag-over");
+        });
+        poolEl.addEventListener("drop", function (e) {
+            e.preventDefault();
+            poolEl.classList.remove("overlay-layout-drag-over");
+            if (!draggedChip) return;
+            poolEl.appendChild(draggedChip);
+            afterLayoutDomChanged();
+        });
+
+        function buildEditorFromLayout(raw) {
+            layoutRowsEl.innerHTML = "";
+            poolEl.innerHTML = "";
+
+            var rows = (raw || "").split("|").filter(Boolean).map(function (r) { return r.split(",").filter(Boolean); });
+            var usedKeys = {};
+            rows.forEach(function (keys) {
+                var row = createRow();
+                layoutRowsEl.appendChild(row);
+                keys.forEach(function (key) {
+                    if (ALL_KEYS.indexOf(key) === -1 || usedKeys[key]) return; // bilinmeyen/yinelenen token'lar yok sayılır
+                    usedKeys[key] = true;
+                    row.appendChild(createChip(key));
+                });
+            });
+            cleanupEmptyRows();
+
+            ALL_KEYS.forEach(function (key) {
+                if (!usedKeys[key]) poolEl.appendChild(createChip(key));
+            });
+
+            renderPreview();
+        }
+
+        function readLayoutFromDom() {
+            return Array.prototype.map.call(layoutRowsEl.querySelectorAll(".overlay-layout-row"), function (row) {
+                return Array.prototype.map.call(row.querySelectorAll(".overlay-chip"), function (chip) { return chip.dataset.key; }).join(",");
+            }).filter(Boolean).join("|");
+        }
+
+        // Önizleme, Düzen editörüyle (#overlay-layout-rows) AYNI DOM yapısından üretilir — editörde
+        // hangi değer hangi satırda/yan yanaysa önizlemede de birebir öyle görünür, ayrı bir model
+        // tutup senkron kalmaya çalışmaktan daha güvenilir.
+        function renderPreview() {
+            if (!previewBox) return;
+            previewBox.innerHTML = "";
+
+            Array.prototype.forEach.call(layoutRowsEl.querySelectorAll(".overlay-layout-row"), function (row) {
+                var keys = Array.prototype.map.call(row.querySelectorAll(".overlay-chip"), function (chip) { return chip.dataset.key; });
+                if (keys.length === 0) return;
+
+                var rowEl = document.createElement("div");
+                rowEl.className = "overlay-preview-row";
+                keys.forEach(function (key) {
+                    var item = document.createElement("div");
+                    item.className = "overlay-preview-item";
+                    var labelEl = document.createElement("span");
+                    labelEl.className = "overlay-preview-label";
+                    labelEl.textContent = METRIC_LABELS[key] || key;
+                    var valueEl = document.createElement("span");
+                    valueEl.className = "overlay-preview-value";
+                    valueEl.textContent = PREVIEW_VALUES[key] || "";
+                    item.appendChild(labelEl);
+                    item.appendChild(valueEl);
+                    rowEl.appendChild(item);
+                });
+                previewBox.appendChild(rowEl);
+            });
+
+            var rgb = hexToRgb(backgroundColorInput ? backgroundColorInput.value : "#10121a");
+            var opacity = backgroundOpacitySlider ? (parseInt(backgroundOpacitySlider.value, 10) || 0) / 100 : 0.8;
+            previewBox.style.background = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + "," + opacity + ")";
+            previewBox.style.fontSize = FONT_SIZE_PX[(fontSizeSelect && fontSizeSelect.value) || "Medium"];
+
+            var labelColor = labelColorInput ? labelColorInput.value : "#aab4c3";
+            var valueColor = valueColorInput ? valueColorInput.value : "#ffffff";
+            previewBox.querySelectorAll(".overlay-preview-label").forEach(function (el) { el.style.color = labelColor; });
+            previewBox.querySelectorAll(".overlay-preview-value").forEach(function (el) { el.style.color = valueColor; });
+
+            // Gerçek OverlayForm'un ekran köşesine yapışma davranışını küçük ölçekte taklit eder
+            // (bkz. site.css .overlay-preview-stage), kullanıcı hangi köşeyi seçtiğinde önizlemenin
+            // de o köşeye gittiğini görsün diye.
+            previewBox.style.top = "";
+            previewBox.style.bottom = "";
+            previewBox.style.left = "";
+            previewBox.style.right = "";
+            var margin = "12px";
+            var corner = cornerSelect ? cornerSelect.value : "TopRight";
+            if (corner === "Custom") {
+                positionPreviewFromPercent();
+            } else {
+                switch (corner) {
+                    case "TopLeft": previewBox.style.top = margin; previewBox.style.left = margin; break;
+                    case "BottomRight": previewBox.style.bottom = margin; previewBox.style.right = margin; break;
+                    case "BottomLeft": previewBox.style.bottom = margin; previewBox.style.left = margin; break;
+                    default: previewBox.style.top = margin; previewBox.style.right = margin; break; // TopRight
+                }
+            }
+        }
+
+        // customOffsetX/Y (yüzde), kutunun gidebileceği TOPLAM MESAFE (sahne genişliği/yüksekliği
+        // EKSİ kutunun kendi genişliği/yüksekliği) içindeki konumunun yüzdesidir — sahnenin ham
+        // genişliğinin yüzdesi DEĞİL (bkz. OverlayForm.CustomLocation'daki aynı düzeltmenin yorumu).
+        // Önizleme kutusu küçük sahnesine oranla büyük, gerçek overlay gerçek ekrana oranla küçük
+        // olduğundan, ham genişliğe göre hesaplanan bir yüzde iki bağlamda tutarsız sonuç verirdi:
+        // önizlemede "sona kadar" sürüklemek gerçek ekranda sağ kenara hiç yaklaşmazdı.
+        // X eksenindeki [min,max] konum aralığı: sol kenar TAM yaslı (taşma yok), sağ kenar kutunun
+        // %10'u kadar ötesine taşabiliyor (OverlayForm.CustomLocation ile birebir aynı formül/oran).
+        function xBounds(stageSize, boxSize) {
+            var rightOvershoot = boxSize * 0.10;
+            return { min: 0, max: Math.max(0, stageSize - boxSize + rightOvershoot) };
+        }
+
+        // Y ekseni: üst/alt ikisi de TAM yaslı (taşma yok, ilk sürümdeki gibi).
+        function yBounds(stageSize, boxSize) {
+            return { min: 0, max: Math.max(0, stageSize - boxSize) };
+        }
+
+        function positionPreviewFromPercent() {
+            if (!previewStageEl) return;
+            var stageRect = previewStageEl.getBoundingClientRect();
+            var boxRect = previewBox.getBoundingClientRect();
+            // Sayfa ilk açıldığında "Oyun İçi İzleme Paneli" aktif sekme olmayabilir (varsayılan
+            // "Hazır Temalar" gösterilir); o sırada bu panel display:none olduğundan stage'in boyutu
+            // 0x0 ölçülür ve kutu yanlışlıkla sol-üste (0,0) sabitlenirdi — kullanıcı panele daha
+            // sonra geçtiğinde hiçbir şey bu hesaplamayı tekrarlamıyordu (gerçek kullanıcı geri
+            // bildirimi: "sağ üstte bırakıyorum ama kapatıp açınca sol üstte gibi görünüyor"). Panel
+            // gizliyken hiçbir şey yapmadan çık; aşağıdaki ResizeObserver, panel görünür olduğu an
+            // (stage 0x0'dan gerçek boyuta geçtiği an) bu fonksiyonu otomatik tekrar çağırır.
+            if (stageRect.width === 0 || stageRect.height === 0) return;
+            var xRange = xBounds(stageRect.width, boxRect.width);
+            var yRange = yBounds(stageRect.height, boxRect.height);
+            var left = xRange.min + (customOffsetX / 100) * (xRange.max - xRange.min);
+            var top = yRange.min + (customOffsetY / 100) * (yRange.max - yRange.min);
+            previewBox.style.left = left + "px";
+            previewBox.style.top = top + "px";
+        }
+
+        // Stage, gizli bir panelden (0x0 boyut) görünür hâle geçtiğinde (kullanıcı sol menüden bu
+        // panele tıkladığında) boyutu gerçek değerine döner; bu an yakalanıp konum yeniden hesaplanır.
+        if (window.ResizeObserver && previewStageEl) {
+            new ResizeObserver(function () {
+                if (!previewDragState) positionPreviewFromPercent();
+            }).observe(previewStageEl);
+        }
+
+        // Önizleme kutusunu doğrudan fareyle sürükleyerek serbest konumlandırma. Pointer Events +
+        // setPointerCapture kullanılıyor (mousemove/mouseup DEĞİL): document üzerinde dinlenen düz
+        // mouse olayları, fare imleci tarayıcı penceresinin DIŞINA (ör. sağ kenara yakın bir yerde
+        // sürüklerken ekranın/pencerenin sınırını aşınca) çıktığı an artık ateşlenmiyor — bu da
+        // sürüklemenin sağ tarafta erken "takılı kalmış" gibi hissettirmesine yol açıyordu (gerçek
+        // kullanıcı geri bildirimi). setPointerCapture, imleç öğenin/pencerenin dışına çıksa bile
+        // sonraki tüm pointermove/pointerup olaylarını bu öğeye yönlendirir, sorunu kökten çözer.
+        previewBox.addEventListener("pointerdown", function (e) {
+            if (e.button !== 0 || !previewStageEl) return;
+            previewBox.setPointerCapture(e.pointerId);
+            var stageRect = previewStageEl.getBoundingClientRect();
+            var boxRect = previewBox.getBoundingClientRect();
+            previewDragState = {
+                pointerId: e.pointerId,
+                startX: e.clientX,
+                startY: e.clientY,
+                boxLeft: boxRect.left - stageRect.left,
+                boxTop: boxRect.top - stageRect.top,
+                stageWidth: stageRect.width,
+                stageHeight: stageRect.height,
+                boxWidth: boxRect.width,
+                boxHeight: boxRect.height
+            };
+            previewBox.classList.add("overlay-preview-dragging");
+            e.preventDefault();
+        });
+
+        previewBox.addEventListener("pointermove", function (e) {
+            if (!previewDragState || e.pointerId !== previewDragState.pointerId) return;
+            var dx = e.clientX - previewDragState.startX;
+            var dy = e.clientY - previewDragState.startY;
+            var xRange = xBounds(previewDragState.stageWidth, previewDragState.boxWidth);
+            var yRange = yBounds(previewDragState.stageHeight, previewDragState.boxHeight);
+            var left = Math.min(xRange.max, Math.max(xRange.min, previewDragState.boxLeft + dx));
+            var top = Math.min(yRange.max, Math.max(yRange.min, previewDragState.boxTop + dy));
+            previewBox.style.right = "";
+            previewBox.style.bottom = "";
+            previewBox.style.left = left + "px";
+            previewBox.style.top = top + "px";
+            var xSpan = xRange.max - xRange.min;
+            var ySpan = yRange.max - yRange.min;
+            customOffsetX = xSpan > 0 ? ((left - xRange.min) / xSpan) * 100 : 0;
+            customOffsetY = ySpan > 0 ? ((top - yRange.min) / ySpan) * 100 : 0;
+        });
+
+        function endPreviewDrag(e) {
+            if (!previewDragState || (e && e.pointerId !== previewDragState.pointerId)) return;
+            previewBox.releasePointerCapture(previewDragState.pointerId);
+            previewDragState = null;
+            previewBox.classList.remove("overlay-preview-dragging");
+            if (cornerSelect && cornerSelect.value !== "Custom") {
+                cornerSelect.value = "Custom";
+            }
+        }
+        previewBox.addEventListener("pointerup", endPreviewDrag);
+        previewBox.addEventListener("pointercancel", endPreviewDrag);
+
+        [cornerSelect, fontSizeSelect, backgroundOpacitySlider, backgroundColorInput, labelColorInput, valueColorInput]
+            .forEach(function (el) {
+                if (el) {
+                    el.addEventListener("input", renderPreview);
+                    el.addEventListener("change", renderPreview);
+                }
+            });
+
+        function showError(message) {
+            if (!errorBox) return;
+            errorBox.textContent = message;
+            errorBox.style.display = message ? "block" : "none";
+        }
+
+        function renderStatus(status) {
+            enabledCheckbox.checked = !!status.enabled;
+            if (onlyDuringGameCheckbox) onlyDuringGameCheckbox.checked = !!status.onlyShowDuringGame;
+            if (cornerSelect) cornerSelect.value = status.corner;
+            if (fontSizeSelect) fontSizeSelect.value = status.fontSize;
+            if (backgroundOpacitySlider) backgroundOpacitySlider.value = status.backgroundOpacity;
+            if (backgroundColorInput) backgroundColorInput.value = status.backgroundColor;
+            if (labelColorInput) labelColorInput.value = status.labelColor;
+            if (valueColorInput) valueColorInput.value = status.valueColor;
+            customOffsetX = typeof status.offsetX === "number" ? status.offsetX : 0;
+            customOffsetY = typeof status.offsetY === "number" ? status.offsetY : 0;
+
+            buildEditorFromLayout(status.layout);
+        }
+
+        fetch("/Overlay/Status")
+            .then(function (r) { return r.json(); })
+            .then(renderStatus)
+            .catch(function () { buildEditorFromLayout(""); /* durum okunamadıysa form varsayılan (kapalı, boş düzen) görünümde kalır */ });
+
+        saveButton.addEventListener("click", function () {
+            if (saveButton.disabled) return;
+            showError("");
+
+            var body = new URLSearchParams();
+            body.set("__RequestVerificationToken", tokenInput.value);
+            body.set("enabled", enabledCheckbox.checked ? "true" : "false");
+            body.set("onlyShowDuringGame", (onlyDuringGameCheckbox && onlyDuringGameCheckbox.checked) ? "true" : "false");
+            body.set("layout", readLayoutFromDom());
+            body.set("corner", cornerSelect ? cornerSelect.value : "TopRight");
+            body.set("offsetX", String(customOffsetX));
+            body.set("offsetY", String(customOffsetY));
+            body.set("fontSize", fontSizeSelect ? fontSizeSelect.value : "Medium");
+            body.set("backgroundOpacity", backgroundOpacitySlider ? backgroundOpacitySlider.value : "80");
+            body.set("backgroundColor", backgroundColorInput ? backgroundColorInput.value : "#10121a");
+            body.set("labelColor", labelColorInput ? labelColorInput.value : "#aab4c3");
+            body.set("valueColor", valueColorInput ? valueColorInput.value : "#ffffff");
+
+            saveButton.disabled = true;
+            fetch("/Overlay/Configure", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: body.toString()
+            }).then(function (r) {
+                if (!r.ok) return r.json().then(function (data) { throw new Error(data.error || t("Kaydedilemedi.")); });
+                return r.json();
+            }).then(function () {
+                flashSavedNote("overlay-saved-note");
+            }).catch(function (err) {
+                showError(err.message || t("Kaydedilemedi."));
+            }).finally(function () {
+                saveButton.disabled = false;
+            });
+        });
+    })();
+
     // Arayüz dili (tr/en), HKCU'da tutulur (bkz. Localization/LanguageSettings.cs). Kayıt
     // sonrası sayfa yeniden yüklenir: Razor tarafındaki tüm metinler (nav, bu panel vb.) sunucu
     // tarafında CultureInfo.CurrentUICulture'a göre render edildiğinden, değişikliğin görünmesi

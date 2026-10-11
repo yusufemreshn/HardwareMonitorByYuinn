@@ -1647,6 +1647,155 @@ html[data-density="detailed"] .stat-sub-row {
   pointer-events: none;
 }
 
+/* Oyun İçi İzleme Paneli önizlemesi: .glass-demo-backdrop'un renkli gradyanı burada da "arkasında
+   bir oyun varmış gibi" bir zemin görevi görüyor, overlay'in arka plan opaklığının gerçekten
+   şeffaf olup olmadığı böyle görülebiliyor. Kart, seçilen köşeye göre (site.js/settings.js)
+   mutlak konumlandırılır — gerçek OverlayForm'un ekran köşesine yapışma davranışını taklit eder. */
+/* #overlay-panel içindeki önizleme sütunu, genel panel-layout-column-preview'dan (260px) daha geniş:
+   dar bir sahnede kutunun gidebileceği gerçek mesafe (bkz. settings.js positionPreviewFromPercent)
+   çok kısa kalıp sürüklemeyi hassas/rahat yapmıyordu (kullanıcı geri bildirimi: "sağa gitme
+   limitini arttır"). */
+#overlay-panel .panel-layout-column-preview {
+  flex: 1 1 540px;
+  min-width: 540px;
+}
+
+.overlay-preview-stage {
+  position: relative;
+  /* Genişlik burada DOĞRUDAN (flex-basis/min-width'e güvenmeden) sabitlendi: önceki sürümde yalnızca
+     üstteki #overlay-panel sütun kuralı genişletiliyordu ama görsel olarak hiç değişmiyordu
+     (kullanıcı geri bildirimi: "değişmedi") — sahnenin kendi genişliğini doğrudan vermek bu
+     belirsizliği ortadan kaldırıyor. max-width:100%, dar pencerelerde taşmayı önlüyor. */
+  width: 536px;
+  max-width: 100%;
+  /* 6 satırın hepsi seçiliyken (varsayılan) kutu ~200px yüksekliğe çıkabiliyor; 160px'te alt kenar
+     kırpılıyordu (bkz. kullanıcı geri bildirimi), bu yüzden en kötü durumu (tüm satırlar + üst/alt
+     12px köşe boşluğu) rahatça karşılayacak kadar büyütüldü. */
+  min-height: 240px;
+  overflow: hidden;
+}
+
+/* pointer-events artık none DEĞİL: "Serbest" köşe modunda kullanıcı bu kutuyu doğrudan fareyle
+   sürükleyerek konumlandırabiliyor (bkz. settings.js initOverlayForm → preview sürükleme). */
+#overlay-preview {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  min-width: 120px;
+  font-weight: 600;
+  font-size: .82rem;
+  cursor: grab;
+}
+
+#overlay-preview.overlay-preview-dragging {
+  cursor: grabbing;
+  opacity: .85;
+}
+
+/* Bir satır, Düzen editöründeki (.overlay-layout-row) aynı gruplamayla 1+ öğeyi yan yana gösterir;
+   settings.js her değişiklikte bu elemanları sıfırdan kurar (bkz. renderPreview). */
+.overlay-preview-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  white-space: nowrap;
+}
+
+.overlay-preview-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Düzen editörü: değerler .overlay-layout-row'lara sürüklenip bırakılarak yan yana/alt alta
+   gruplanır; .overlay-layout-pool kullanılmayan (hiçbir satırda olmayan) değerleri tutar. */
+.overlay-layout-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 56px;
+  padding: 10px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+}
+
+.overlay-layout-rows.overlay-layout-drag-over {
+  border-color: var(--accent-gpu);
+}
+
+.overlay-layout-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px dashed transparent;
+}
+
+.overlay-layout-row.overlay-layout-drag-over {
+  border-color: var(--accent-gpu);
+  background: rgba(127, 127, 127, .12);
+}
+
+.overlay-layout-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+.overlay-layout-pool.overlay-layout-drag-over {
+  border-color: var(--accent-gpu);
+}
+
+.overlay-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 6px 6px 12px;
+  font-size: .85rem;
+  color: var(--text);
+  cursor: grab;
+  user-select: none;
+}
+
+.overlay-chip.overlay-chip-dragging {
+  opacity: .4;
+}
+
+.overlay-chip button {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: .8rem;
+  line-height: 1;
+  padding: 3px 5px;
+  border-radius: 6px;
+}
+
+.overlay-chip button:hover {
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+
+.overlay-layout-empty-hint {
+  color: var(--text-muted);
+  font-size: .82rem;
+}
+
 /* Grafik Tipi önizlemesi: her seri için küçük bir SVG şekil (site.js/settings.js tarafından
    çizgi/alan/bar seçimine göre çizilir). */
 .chart-type-preview-card {

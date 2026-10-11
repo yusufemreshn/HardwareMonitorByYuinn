@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Net;
 using HardwareMonitorByYuinn.Business;
+using HardwareMonitorByYuinn.Business.TimeSeries;
 using HardwareMonitorByYuinn.Web.Hubs;
 using HardwareMonitorByYuinn.Web.Localization;
 using HardwareMonitorByYuinn.Web.Logging;
@@ -178,6 +179,11 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Oyun içi izleme paneli (overlay), SignalR/ağ üzerinden değil doğrudan bu singleton'dan okur —
+// aynı süreçte zaten 1 sn'de bir güncellenen anlık görüntüye tekrar bir ağ/SignalR aboneliği
+// açmanın hiçbir faydası yok (bkz. Desktop/Overlay/OverlayForm.cs).
+TimeSeriesStore timeSeriesStore = app.Services.GetRequiredService<TimeSeriesStore>();
+
 // "Yeniden Başlat" (RemoteAccessController.Restart), BU süreç henüz tam kapanmadan (ApplicationStopped
 // sırasında) yeni bir örneği başlatır. Adlandırılmış Mutex nesnesi işletim sisteminde process
 // tamamen kapanana/handle'ı kapanana kadar var olmaya devam eder; ancak üstteki `using var` disposal'ı
@@ -294,14 +300,14 @@ else if (startMinimized)
     // pencereyi (ve splash'ı) hiç göstermeden doğrudan sistem tepsisinde başlatır; bu yüzden yukarıda
     // `earlyShell` hiç oluşturulmadı, burada eski basit `Run` çağrısı kullanılıyor.
     Task runTask = app.RunAsync();
-    HardwareMonitorByYuinn.Web.Desktop.DesktopShellRunner.Run("http://127.0.0.1:5250/", app.Lifetime.ApplicationStopping, startMinimized: true);
+    HardwareMonitorByYuinn.Web.Desktop.DesktopShellRunner.Run("http://127.0.0.1:5250/", app.Lifetime.ApplicationStopping, timeSeriesStore, startMinimized: true);
     await app.StopAsync();
     await runTask;
 }
 else
 {
     Task runTask = app.RunAsync();
-    earlyShell!.Continue("http://127.0.0.1:5250/", app.Lifetime.ApplicationStopping);
+    earlyShell!.Continue("http://127.0.0.1:5250/", app.Lifetime.ApplicationStopping, timeSeriesStore);
     await app.StopAsync();
     await runTask;
 }

@@ -104,6 +104,7 @@
             <ul class="settings-subnav">
                 <li><button type="button" data-target="startup-panel">@Localizer["Otomatik Başlatma"]</button></li>
                 <li><button type="button" data-target="close-behavior-panel">@Localizer["Pencere Kapatma Davranışı"]</button></li>
+                <li><button type="button" data-target="overlay-panel">@Localizer["Oyun İçi İzleme Paneli"]</button></li>
                 <li><button type="button" data-target="language-panel">@Localizer["Dil"]</button></li>
             </ul>
         </div>
@@ -827,6 +828,83 @@
             <div style="display:flex;align-items:center;gap:12px;">
                 <button type="button" id="close-behavior-save" class="btn-primary-hwmon">@Localizer["Kaydet"]</button>
                 <span id="close-behavior-saved-note" class="stat-sub" style="display:none;">@Localizer["Kaydedildi ✓"]</span>
+            </div>
+        </div>
+
+        <div class="panel" id="overlay-panel">
+            <h2 class="panel-title">@Localizer["Oyun İçi İzleme Paneli"]</h2>
+            <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 14px;">
+                @Localizer["Oyun oynarken ekranın köşesinde seçtiğiniz değerleri anlık gösteren küçük, tıklamaları oyuna geçiren (click-through) bir panel. Bu, oyunun kendisine hiç dokunmaz (grafik hook/süreç enjeksiyonu yok) — bu yüzden gerçek tam ekran özel modda görünmez, pencereli/kenarlıksız tam ekran oyunlarda sorunsuz çalışır."]
+                <strong>Ctrl+Alt+O</strong> @Localizer["ile her an anında açıp kapatabilirsiniz."]
+            </p>
+            <div class="panel-layout-columns">
+                <div class="panel-layout-column-main">
+                    <form id="overlay-form">
+                        @Html.AntiForgeryToken()
+                        <div class="thresholds-form" style="flex-direction:column;">
+                            <label class="threshold-field" style="justify-content:center;">
+                                <span class="hwmon-toggle-field">
+                                    @Localizer["Oyun içi izleme panelini etkinleştir"]<input type="checkbox" id="overlay-enabled">
+                                </span>
+                            </label>
+                            <label class="threshold-field" style="justify-content:center;">
+                                <span class="hwmon-toggle-field">
+                                    @Localizer["Sadece bir oyun algılandığında göster"]<input type="checkbox" id="overlay-only-during-game">
+                                </span>
+                            </label>
+                        </div>
+                        <p class="stat-sub" style="margin:18px 0 8px;">
+                            @Localizer["Gösterilecek değerler ve düzen"]
+                        </p>
+                        <p style="color:var(--text-muted);font-size:.82rem;margin:0 0 10px;">
+                            @Localizer["Bir değeri başka bir değerin üzerine sürükleyip bırakırsanız yan yana görünür; boş alana bırakırsanız kendi satırına geçer."] <span id="overlay-layout-chip-help-move">@Localizer["⤵ kendi satırına taşır"]</span>, <span id="overlay-layout-chip-help-remove">@Localizer["× kaldırır"]</span>.
+                        </p>
+                        <div class="overlay-layout-rows" id="overlay-layout-rows"></div>
+                        <p class="stat-sub" style="margin:16px 0 8px;">@Localizer["Kullanılmayanlar (eklemek için yukarı sürükleyin)"]</p>
+                        <div class="overlay-layout-pool" id="overlay-layout-pool"></div>
+                        <p class="stat-sub" style="margin:18px 0 8px;">@Localizer["Görünüm"]</p>
+                        <div class="thresholds-form">
+                            <label class="threshold-field">@Localizer["Konum"]
+                                <select id="overlay-corner">
+                                    <option value="TopRight">@Localizer["Sağ üst"]</option>
+                                    <option value="TopLeft">@Localizer["Sol üst"]</option>
+                                    <option value="BottomRight">@Localizer["Sağ alt"]</option>
+                                    <option value="BottomLeft">@Localizer["Sol alt"]</option>
+                                    <option value="Custom">@Localizer["Serbest (önizlemeden sürükleyin)"]</option>
+                                </select>
+                            </label>
+                            <label class="threshold-field">@Localizer["Yazı boyutu"]
+                                <select id="overlay-font-size">
+                                    <option value="Small">@Localizer["Küçük"]</option>
+                                    <option value="Medium">@Localizer["Orta"]</option>
+                                    <option value="Large">@Localizer["Büyük"]</option>
+                                </select>
+                            </label>
+                            <label class="threshold-field">@Localizer["Arka plan opaklığı"]
+                                <input type="range" id="overlay-background-opacity" min="0" max="100" step="5" style="width:160px;">
+                            </label>
+                        </div>
+                        <div class="colors-form" style="margin-top:14px;">
+                            <label class="color-field">@Localizer["Arka plan rengi"]<input type="color" id="overlay-background-color"></label>
+                            <label class="color-field">@Localizer["Etiket rengi"]<input type="color" id="overlay-label-color"></label>
+                            <label class="color-field">@Localizer["Değer rengi"]<input type="color" id="overlay-value-color"></label>
+                        </div>
+                    </form>
+                    <div id="overlay-error" style="display:none;color:var(--accent-danger);font-size:.85rem;margin:10px 0;"></div>
+                    <div style="display:flex;align-items:center;gap:12px;margin-top:14px;">
+                        <button type="button" id="overlay-save" class="btn-primary-hwmon">@Localizer["Kaydet"]</button>
+                        <span id="overlay-saved-note" class="stat-sub" style="display:none;">@Localizer["Kaydedildi ✓"]</span>
+                    </div>
+                </div>
+                <div class="panel-layout-column-preview">
+                    <span class="panel-layout-preview-label">@Localizer["Önizleme"]</span>
+                    <div id="overlay-preview-stage" class="glass-demo-backdrop overlay-preview-stage">
+                        <div id="overlay-preview"></div>
+                    </div>
+                    <p style="color:var(--text-muted);font-size:.8rem;margin:10px 0 0;max-width:220px;">
+                        @Localizer["Kutuyu sürükleyerek istediğiniz yere konumlandırabilirsiniz; bu, Konum'u otomatik olarak \"Serbest\"e çevirir. Gerçek oyun içi görünüm, arkasındaki oyun görüntüsüne göre az da olsa farklı algılanabilir."]
+                    </p>
+                </div>
             </div>
         </div>
 

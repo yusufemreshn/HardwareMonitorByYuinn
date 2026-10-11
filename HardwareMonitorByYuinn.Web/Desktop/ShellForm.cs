@@ -1,6 +1,8 @@
 using System.Drawing;
 using System.Text.Json;
 using System.Windows.Forms;
+using HardwareMonitorByYuinn.Business.TimeSeries;
+using HardwareMonitorByYuinn.Web.Desktop.Overlay;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 
@@ -19,6 +21,12 @@ internal sealed class ShellForm : Form
     private readonly WebView2 _webView = new() { Dock = DockStyle.Fill };
     private readonly NotifyIcon _trayIcon;
 
+    // ShellForm'un child/owned'ı DEĞİL: tepsiye küçültülüp bu pencere gizlense bile oyun içi
+    // panel görünür kalmaya devam etmeli (amaç tam olarak bu). Kendi görünürlüğünü (Ayarlar +
+    // oyun algılama + Ctrl+Alt+O) tamamen kendi içinde yönetir, bu yüzden burada hiç Show()
+    // çağrılmıyor.
+    private readonly OverlayForm _overlay;
+
     /// <summary>true olduğunda kapatma her zaman gerçek çıkıştır, tepsi ayarı ne olursa olsun.</summary>
     private bool _allowExit;
 
@@ -35,9 +43,11 @@ internal sealed class ShellForm : Form
     /// </summary>
     private bool _blockAutoShow;
 
-    public ShellForm(string startUrl, bool startMinimized = false, SplashForm? splash = null)
+    public ShellForm(string startUrl, bool startMinimized, SplashForm? splash, TimeSeriesStore timeSeriesStore)
     {
         Text = "HardwareMonitorByYuinn";
+
+        _overlay = new OverlayForm(timeSeriesStore);
 
         // Sabit varsayılan (kullanıcı isteğiyle 1280x1280). Ekran boyutuna göre küçültme burada
         // DEĞİL, aşağıdaki Load olayında yapılır; Screen.PrimaryScreen, elevated (UAC) bir
@@ -199,6 +209,7 @@ internal sealed class ShellForm : Form
         {
             _trayIcon.Dispose();
             _webView.Dispose();
+            _overlay.Dispose();
         }
 
         base.Dispose(disposing);
