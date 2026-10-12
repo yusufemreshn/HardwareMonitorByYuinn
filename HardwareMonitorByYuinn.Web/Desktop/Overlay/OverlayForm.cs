@@ -107,6 +107,14 @@ internal sealed class OverlayForm : Form
     [DllImport("gdi32.dll")]
     private static extern nint CreateDIBSection(nint hdc, ref BitmapInfoHeader header, uint usage, out nint bits, nint hSection, uint offset);
 
+    [DllImport("user32.dll")]
+    private static extern bool SetWindowPos(nint hWnd, nint hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
+
+    private static readonly nint HwndTopmost = new(-1);
+    private const uint SwpNoMove = 0x0002;
+    private const uint SwpNoSize = 0x0001;
+    private const uint SwpNoActivate = 0x0010;
+
     private const int ContentPadding = 14;
     private const int ItemGap = 20; // aynı satırdaki (yan yana) metrikler arası boşluk
     private const int RowGap = 4;   // satırlar (alt alta) arası ek boşluk
@@ -247,6 +255,17 @@ internal sealed class OverlayForm : Form
         if (!geometryChanged && (paintSettingsChanged || contentChanged))
         {
             Render();
+        }
+
+        // TopMost=true pencereyi yalnızca ilk ayarlandığında en üst banda koyuyor. Bazı oyunlar,
+        // özellikle kenarlıksız tam ekran modunda çalışırken, kendi pencerelerini periyodik olarak
+        // SetWindowPos(HWND_TOPMOST,...) ile tekrar en üste çekiyor ve bizim overlay'i aynı bandın
+        // altına itiyor. Çözüm olarak her saniyelik turda overlay'i de yeniden en üste zorluyoruz,
+        // oyunun kendini tekrar üste çekmesiyle aramızda en fazla bir saniyelik bir yarış oluyor
+        // ama bu gözle görülür bir soruna yol açmıyor.
+        if (Visible)
+        {
+            SetWindowPos(Handle, HwndTopmost, 0, 0, 0, 0, SwpNoMove | SwpNoSize | SwpNoActivate);
         }
     }
 
